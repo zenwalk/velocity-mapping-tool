@@ -31,9 +31,9 @@ function [exyz]=depthxyz(depthRaw,draft,pitchRaw,roll,heading,beamAngle,...
 
     % Correct draft for units
     if unitsID=='ft'
-            draft=draft*0.0328083;
+            draft=double(draft)*0.0328083;
         else
-            draft=draft*.01;
+            draft=double(draft)*.01;
     end;
         
     % Create geo matrix of x, y, and elevation of transducers    
