@@ -1,4 +1,6 @@
+#summary Installation instructions for VMT
 #labels Phase-Deploy
+<wiki:toc />
 =Installation of VMT and VMT Utilities=
 ==Running VMT in Matlab (recommended if possible):==
 Copy the ‘VMT’ directory and all its contents to your computer and set the directory within Matlab to the VMT directory. The easiest way to do this is to anonymously check out the Subversion Repository posted in this project page.  All custom functions called by VMT should be included in this directory and Matlab will look for them within this directory.  Matlab will also look to the Matlab program files for some built-in functions.  Errors may result if using old versions of Matlab and built in functions are not present.  Also, errors may result if the source code or functions are moved from the VMT directory, renamed, or modified. 
