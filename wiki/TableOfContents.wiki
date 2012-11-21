@@ -1,4 +1,5 @@
- * [GettingStarted Getting Started]: 
+# Landing page for VMT Wiki 
+* [GettingStarted Getting Started]: 
  The basics for processing ADCP data for velocity mapping. 
  * [VMTQuickRef Quick Reference Guide]: 
  A handy graphic identifying all features of the VMT graphical user interface
