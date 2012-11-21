@@ -1,4 +1,6 @@
 #summary Landing page for VMT Wiki
+ * [PrelimNotes Before You Start]
+ * [Install Installation Guide]
  * [GettingStarted Getting Started]
  * [VMTQuickRef Quick Reference Guide]
  * [InputReqs Data Input Requirements]
