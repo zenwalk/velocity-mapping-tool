@@ -6,4 +6,8 @@
   * [VMTQuickRef Quick Reference Guide]
   * [GettingStarted Getting Started]
   * [InputReqs Data Input Requirements]
+  * [TransectAvg Transect Averaging]
+  * [OutputFigures Output Figures]
+  * [OutputFormat File Output Formats]
   * [KnownBugs Known Bugs & Issues]
+  * [Updates List of Updates]
