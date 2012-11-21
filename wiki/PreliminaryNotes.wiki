@@ -1,7 +1,6 @@
 #labels Phase-Requirements
-#Preliminary notes about using VMT
 =Preliminary Notes=
-  * Any errors or issues should be reported to Dan Parsons, University of Leeds, ([parsons.daniel@btinternet.com]) or Ryan Jackson, USGS, ([pjackson@usgs.gov])
+  * Any errors or issues should be reported using the Issues tab of the project page.
   * VMT is best run inside the Matlab environment, but we have provided a compiled version of the program that will run without Matlab.  To use the compiled version, one must have the [http://www.mathworks.com/products/compiler/mcr/index.html Matlab Runtime Library 2012a (v 7.17)] installed.  Note that versions of VMT prior to 2.4b require the older [http://www.mathworks.com/products/compiler/mcr/index.html Matlab Runtime Library 2010a (v 7.13)].
   * Be patient, processing speed depends greatly on CPU and RAM.  Status of processing is shown in the Matlab command window (and in limited status windows).  A message will alert the user when processing and plotting are complete.  Alternatively, the user should check the lower left hand corner of the main MatLab screen to ensure a “busy” statement is not visible (the program may appear to be idle at times of heavy computations).  However, in some cases, “busy” does not appear and program is still running (not sure why).  The figures are plotted last, so if your figures have not appeared (or been updated), the program is likely still running.  Users running the compiled versions of VMT must rely on the status windows to alert you of progress.
   * The program has not been tested extensively on many platforms.  Some issues may result with plotting, saving figures, etc. on platforms with different graphics capabilities and screen resolution.  Please report these issues.
