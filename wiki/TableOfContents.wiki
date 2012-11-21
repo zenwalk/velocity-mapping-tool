@@ -1,4 +1,4 @@
-#Landing page for VMT Wiki 
+#summary Landing page for VMT Wiki
  * [GettingStarted Getting Started]
  * [VMTQuickRef Quick Reference Guide]
  * [InputReqs Data Input Requirements]
