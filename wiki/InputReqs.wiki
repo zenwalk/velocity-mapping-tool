@@ -1,5 +1,7 @@
+#summary Specifications for input ADCP files and other requirements
+<wiki:toc /> 
 =Input Data Requirements and Format=
-*Data input requirements and format for VMT are as follows:*
+==Data input requirements and format for VMT are as follows:==
   # Currently, the required input data format is the “ascii output” file format from WinRiver II
     # Classic format
     # Backscatter output
