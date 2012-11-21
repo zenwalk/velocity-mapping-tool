@@ -1,7 +1,4 @@
-# Landing page for VMT Wiki 
-* [GettingStarted Getting Started]: 
- The basics for processing ADCP data for velocity mapping. 
- * [VMTQuickRef Quick Reference Guide]: 
- A handy graphic identifying all features of the VMT graphical user interface
- * [InputReqs Data Input Requirements]: 
- A run down on the input requirements and formats for working with VMT
+#Landing page for VMT Wiki 
+ * [GettingStarted Getting Started]
+ * [VMTQuickRef Quick Reference Guide]
+ * [InputReqs Data Input Requirements]
