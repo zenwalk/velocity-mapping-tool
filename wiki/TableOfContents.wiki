@@ -1,5 +1,6 @@
 #summary Landing page for VMT Wiki
  * User Guide
+  * [Introduction Introduction]
   * [PreliminaryNotes Before You Start]
   * [InstallGuide Installation Guide]
   * [VMTQuickRef Quick Reference Guide]
