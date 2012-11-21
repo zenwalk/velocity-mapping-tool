@@ -1,3 +1,4 @@
+#summary Guide for quickly getting VMT up and running
 #labels Featured
 =Getting Started With VMT=
 
