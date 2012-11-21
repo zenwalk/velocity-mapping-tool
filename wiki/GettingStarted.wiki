@@ -1,5 +1,6 @@
 #summary Guide for quickly getting VMT up and running
 #labels Featured
+<wiki:toc /> 
 =Getting Started With VMT=
 
 ==Data Preparation:==
