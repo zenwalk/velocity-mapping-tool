@@ -11,7 +11,3 @@
   * [OutputFormat File Output Formats]
   * [KnownBugs Known Bugs & Issues]
   * [Updates List of Updates]
-
- * Sediment VMT User Guide
-  * Intro
-  * Test...
