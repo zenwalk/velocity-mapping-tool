@@ -26,8 +26,18 @@ for zi = 1 : z
     y=cat(1,y,A(zi).Comp.yUTM);
 
     figure(1); hold on
-    %plot(A(zi).Comp.xUTM,A(zi).Comp.yUTM,'r'); hold on
     plot(A(zi).Comp.xUTMraw,A(zi).Comp.yUTMraw,'b'); hold on
+    
+    % Plot the various reject and/or adjusted GPS location data for
+    % reference
+    %plot(A(zi).Comp.xUTM,A(zi).Comp.yUTM,'r'); hold on
+    plot(...
+        ...A(zi).Comp.xUTMraw(A(zi).Comp.gps_reject_locations),...
+        ...A(zi).Comp.yUTMraw(A(zi).Comp.gps_reject_locations),'g.',...
+        ...A(zi).Comp.xUTMraw(A(zi).Comp.gps_repeat_locations),...
+        ...A(zi).Comp.yUTMraw(A(zi).Comp.gps_repeat_locations),'y.',...
+        A(zi).Comp.xUTMraw(A(zi).Comp.gps_fly_aways),...
+        A(zi).Comp.yUTMraw(A(zi).Comp.gps_fly_aways),'r.')
     
     %Find the mean east and north velocity for eact transect (for mean flow
     %direction)
