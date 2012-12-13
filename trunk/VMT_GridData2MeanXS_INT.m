@@ -215,17 +215,19 @@ for zi = 1 : z  %FIXME  This loop is responsible for nearly half of the total ru
     % Sort vectors by dl
     A(zi).Comp.dlsort = sort(A(zi).Comp.dl,'ascend');
 
-    % Map indices  %FIXME  This computation is VERY slow.  Suggest revising
-    % for speed
-    for i = 1 : A(zi).Sup.noe
-        for k = 1 : A(zi).Sup.noe
-
-            if A(zi).Comp.dlsort(i,1) == A(zi).Comp.dl(k,1)
-                A(zi).Comp.vecmap(i,1) = k;
-
-            end
-        end
-    end
+    % FLE 12-13-12: Commented out old code. Line 231 accomplishes the same,
+    % but much, much faster.
+    %for i = 1 : A(zi).Sup.noe
+    %    for k = 1 : A(zi).Sup.noe
+    %
+    %        if A(zi).Comp.dlsort(i,1) == A(zi).Comp.dl(k,1)
+    %            A(zi).Comp.vecmap(i,1) = k;
+    %
+    %        end
+    %    end
+    %end
+    % Sort vectors by dl
+    [A(zi).Comp.dlsort,A(zi).Comp.vecmap] = sort(A(zi).Comp.dl,'ascend');
 
     % GPS position fix
     % if distances from the left bank are the same for two ensembles the
