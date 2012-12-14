@@ -80,7 +80,7 @@ for zi = 1 : z
     vel2    = dist2./delta_time_elapsed;
     
     % Compute a threshold velocity based on the data
-    vel_threshold   = (nanstd([dist1;dist2]) + nanmedian([dist1;dist2]))./...
+    vel_threshold   = 1.5*(nanstd([dist1;dist2]) + nanmedian([dist1;dist2]))./...
         (std(delta_time_elapsed) + median(delta_time_elapsed));
     suspect1        = (dist1>vel_threshold);
     suspect2        = (dist2>vel_threshold);
