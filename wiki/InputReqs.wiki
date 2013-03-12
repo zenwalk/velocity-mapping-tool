@@ -5,7 +5,7 @@
   # Currently, the required input data format is the “ascii output” file format from WinRiver II
     # Classic format
     # Backscatter output
-    # *METRIC* units (all input data is in metric units, but figures can be plotted in English units)
+    # *METRIC* units (all input data are in metric units, but figures can be plotted in English units)
     # Ensure no spaces are in the file names (replace with underscore if necessary).  Spaces can cause problems in MatLab. 
     # Files should be of the standard format “{{{*_ASC.TXT}}}” (case does matter).  If the files you have do not work (maybe from a previous version of WR or WRII), try outputting new ascii files from the latest version of WRII and run VMT again.
   # Data must include valid GPS data within the ascii file (currently does not read the {{{*.GPS.txt files}}}).
