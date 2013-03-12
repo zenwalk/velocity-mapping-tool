@@ -14,7 +14,7 @@ VMT can be run using either the Matlab source code (recommended) or compiled exe
 <img width="600" src="http://hydroacoustics.usgs.gov/movingboat/VMT/VMTLayout.png" alt="VMT Layout">
 
 ==Discussion of Computations==
-The main processing component of the software projects data collected along several irregular ship tracks, or measurement transects, onto a straight-line plane that defines a measurement cross section. The velocity data from individual transects are then averaged to produce a composite representation of the cross-sectional flow field. For more details see Velocity Mapping Toolbox (VMT): a processing and visualization suite for moving-vessel ADCP measurements, ESPL, by Parsons et al. (2012).
+The main processing component of the software projects data collected along several irregular ship tracks, or measurement transects, onto a straight-line plane that defines a measurement cross section. The velocity data from individual transects are then averaged to produce a composite representation of the cross-sectional flow field. For more details see Velocity Mapping Toolbox (VMT): a processing and visualization suite for moving-vessel ADCP measurements, ESPL, by Parsons et al. (2013).
 
 ==Limitations==
  * Only moving-boat transects are supported. The software does not support stationary profile data.
