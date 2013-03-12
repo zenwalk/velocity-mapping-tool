@@ -14,7 +14,7 @@ VMT can be run using either the Matlab source code (recommended) or compiled exe
 <img width="600" src="http://hydroacoustics.usgs.gov/movingboat/VMT/VMTLayout.png" alt="VMT Layout">
 
 ==Discussion of Computations==
-The main processing component of the software projects data collected along several irregular ship tracks, or measurement transects, onto a straight-line plane that defines a measurement cross section. The velocity data from individual transects are then averaged to produce a composite representation of the cross-sectional flow field. For more details see Velocity Mapping Toolbox (VMT): a processing and visualization suite for moving-vessel ADCP measurements, ESPL, by Parsons et al. (accepted).
+The main processing component of the software projects data collected along several irregular ship tracks, or measurement transects, onto a straight-line plane that defines a measurement cross section. The velocity data from individual transects are then averaged to produce a composite representation of the cross-sectional flow field. For more details see Velocity Mapping Toolbox (VMT): a processing and visualization suite for moving-vessel ADCP measurements, ESPL, by Parsons et al. (2012).
 
 ==Limitations==
  * Only moving-boat transects are supported. The software does not support stationary profile data.
@@ -27,6 +27,6 @@ The main processing component of the software projects data collected along seve
 <sup>1</sup>The use of trade, product, or firm names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
 
 ==Selected References==
- # Parsons, D.R., P.R. Jackson, J.A. Czuba, F.L. Engel, B.L. Rhoads, K. Oberg, J.L Best, K.K. Johnson, and J.D. Riley. Accepted. Velocity Mapping Toolbox (VMT): A processing and visualization suite for moving-vessel ADCP measurements. Earth Surface Processes & Landforms.
+ # Parsons, D. R., Jackson, P. R., Czuba, J. A., Engel, F. L., Rhoads, B. L., Oberg, K. A., Best, J. L., Mueller, D. S., Johnson, K. K. and Riley, J. D. (2013), Velocity Mapping Toolbox (VMT): a processing and visualization suite for moving-vessel ADCP measurements. Earth Surf. Process. Landforms. doi: 10.1002/esp.3367
  # Lane, S.N., K.F. Bradbrook, K.S. Richards, P.M. Biron, and A.G. Roy (2000) Secondary circulation cells in river channel confluences: Measurement artefacts or coherent flow structures?, Hydrol. Processes, 14, 2047- 2071. 
  # Rhoads, B.L., and S.T. Kenworthy (1999) On secondary circulation, helical motion and Rozovskii-based analysis of time-averaged two-dimensional velocity fields at confluences. Earth Surface Processes and Landforms, 24, 369-375. 
