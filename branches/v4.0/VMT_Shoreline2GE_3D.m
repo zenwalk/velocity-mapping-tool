@@ -1,9 +1,9 @@
 function VMT_Shoreline2GE_3D(A,Map,vscale,voffset)
-
-%This function outputs the shoreline (3-D) from VMT to Google Earth
-%(saved as a .kmz file in the VMTProcFiles directory).  The file is then opened in Google Earth is for viewing.
-
-%P.R. Jackson, USGS, 1-19-09
+% Outputs the shoreline (3-D) from VMT to Google Earth (saved as a .kmz
+% file in the VMTProcFiles directory).  The file is then opened in Google
+% Earth is for viewing.
+%
+% P.R. Jackson, USGS, 1-19-09
 
 
 brks = find(Map.UTMe == -9999);

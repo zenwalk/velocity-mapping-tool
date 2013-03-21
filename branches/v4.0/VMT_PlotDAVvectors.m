@@ -1,9 +1,9 @@
 function VMT_PlotDAVvectors(Easting,Northing,DAVeast,DAVnorth,ascale,QuiverSpacing,plot_metric)
-
-%This function plots a plan view vector field using the given velocity
-%components.  Input DAV are assumend to be in meters per second.
-
-%P.R. Jackson, USGS, 5-11-11
+% Plots a plan view vector field using the given velocity
+% components.  Input DAV are assumend to be in meters per second.
+% Used by ASCII2GIS tool
+%
+% P.R. Jackson, USGS, 5-11-11
 
 warning off
 disp('Plotting Plan View with Depth-Averaged Velocity Vectors...')

@@ -1,17 +1,15 @@
 function [z,A,V,zmin,zmax] = VMT_PlotXSContMultiPlot(z,A,V,var,exag)
-
-%This function plots contours for the variable 'var' within the
-%mean cross section given by the structure V. IF data is not supplied, user
-%will be prompted to load data (browse to data).
-
-% V2 adds the capability to plot Rozovskii variables. 8/31/09
-
+% Currently not implemented
+% Plots contours for the variable 'var' within the
+% mean cross section given by the structure V. IF data is not supplied, user
+% will be prompted to load data (browse to data).
+%
 % Multiplot allows the user to plot multiple cross sections on the same
 % plot. P.R. Jackson, 6-28-10  (NOT WORKING YET)
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-10-08 
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-10-08 
 
 
 
