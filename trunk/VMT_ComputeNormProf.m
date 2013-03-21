@@ -1,14 +1,13 @@
 function [znm,vm] = VMT_ComputeNormProf(zn,v,n)
-
 % Computes the normaized median profile from multiemsemble data.
-
+%
 % Inputs:
-
+%
 % zn: matrix of normized, bed origin bin locations (#bins x #ens)
 % v:  matrix of observed velocity magniitude (#bins x #ens)
 % n:  number of cells to use in the profile binning
-
-%P.R. Jackson, USGS, 8-31-12
+%
+% P.R. Jackson, USGS, 8-31-12
 
 % Reshape the matrices to create vectors
 zn_vec = reshape(zn,size(zn,1)*size(zn,2),1);

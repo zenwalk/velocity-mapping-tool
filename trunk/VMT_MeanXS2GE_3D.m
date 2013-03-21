@@ -1,9 +1,9 @@
 function VMT_MeanXS2GE_3D(A,V,pathstr,filestr,vscale,voffset)
-
-%This function outputs the mean cross section (3-D) from VMT to Google Earth
-%(saved as a .kmz file in the VMTProcFiles directory).  The file is then opened in Google Earth for viewing.
-
-%P.R. Jackson, USGS, 1-16-09
+% Outputs the mean cross section (3-D) from VMT to Google Earth (saved as a
+% .kmz file in the VMTProcFiles directory).  The file is then opened in
+% Google Earth for viewing.
+%
+% P.R. Jackson, USGS, 1-16-09
 
 
 %Output the mean cross section to Google Earth

@@ -1,9 +1,8 @@
 function xyzdata = VMT_BuildXYZOutput(V)
-
-%Takes multiple ensembles and writes them to an xyz data file with columns
-%for each variable.
-
-%P.R. Jackson, 3-24-09
+% Takes multiple ensembles and writes them to an xyz data file with columns
+% for each variable.
+%
+% P.R. Jackson, 3-24-09
 
 format long
 xyzdata = [];

@@ -1,9 +1,10 @@
 function VMT_BlankShoreline(X,Y,Map)
-
-%Effectivly clips a contour plot to a shoreline boundary by overlaying a patch to block out land.  Requires
-%the mapping toolbox.  X is the UTM easting vector of the data extent, Y is
-%the northing vector, and Map is the MAP data structure for the shoreline
-%file.
+% This function is not implemented currently.
+% 
+% Effectivly clips a contour plot to a shoreline boundary by overlaying a
+% patch to block out land.  Requires the mapping toolbox.  X is the UTM
+% easting vector of the data extent, Y is the northing vector, and Map is
+% the MAP data structure for the shoreline file.
 
 %P.R. Jackson, 4-13-09
 

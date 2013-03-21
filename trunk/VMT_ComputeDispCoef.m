@@ -1,8 +1,7 @@
 function [k,kc,Ey,Q] = VMT_ComputeDispCoef(z,A,V)
-
-%Driver function to extract VMT data for computation of the longitudinal dispersion
-%coefficient.
-
+% Driver function to extract VMT data for computation of the longitudinal
+% dispersion coefficient.
+%
 % P.R. Jackson, USGS 11-17-10
 
 %% Define the processing steps

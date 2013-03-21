@@ -1,10 +1,8 @@
-function VMT_BuildTecplotFile_Bruce(V,Rozovskii)
-
+function VMT_BuildTecplotFile(V,savefile)
 % Takes the processed data structure and writes a TecPlot ASCII data file.
-% Modified from code by Dan Parsons and P.R. Jackson
 %
-% Frank L. Engel (fengel2@illinois.edu)
-% Last Edited: 9/01/2009
+% Frank L. Engel, USGS
+% Last Edited: 2/20/2013
 %
 % TecPlot Variable List
 % +=======================================================================+
@@ -39,7 +37,7 @@ function VMT_BuildTecplotFile_Bruce(V,Rozovskii)
 
 format long
 
-disp('Creating TecPlot Data Grid...')
+%disp('Creating TecPlot Data Grid...')
 % Create block style matrix of all processed data
 tecdata = [];
 
@@ -49,25 +47,25 @@ Dist = sort(V.mcsDist,2,'descend');
 
 % Create phi in degrees for each bin to place into Tecplot matrix
 for k = 1:size(V.mcsMag,1)
-    phi_deg(k,:) = Rozovskii.phi_deg;
-    U(k,:) = Rozovskii.U;
-    V1(k,:) = Rozovskii.V; % renamed V1 to be different than struc V
+    phi_deg(k,:) = V.Roz.phi_deg;
+    U(k,:) = V.Roz.U;
+    V1(k,:) = V.Roz.V; % renamed V1 to be different than struc V
 end
 
 % Rotate the depth-avg. vectors (no W vector computed)
 Z = zeros(size(V.mcsMag,1),size(V.mcsMag,2));
-[U_rot, V_rot, W_rot] = vrotation(U,V1,Z,Rozovskii.alpha);
+[U_rot, V_rot, W_rot] = vrotation(U,V1,Z,V.Roz.alpha);
 
 % Build tecplot data matrix
 for k = 1:size(V.mcsX,2)
     for i = 1:size(V.mcsX,1)
         tempvec = [V.mcsX(i,k) V.mcsY(i,k) V.mcsDepth(i,k) Dist(i,k) ...
             V.u(i,k) V.v(i,k) V.w(i,k) V.vp(i,k) V.vs(i,k) U_rot(i,k) ...
-            V_rot(i,k) Rozovskii.ux(i,k) Rozovskii.uy(i,k) ...
-            Rozovskii.uz(i,k) V.mcsMag(i,k) V.mcsBack(i,k) ...
-            V.mcsDir(i,k) Rozovskii.up(i,k) Rozovskii.us(i,k) ...
-            Rozovskii.upy(i,k) Rozovskii.usy(i,k) ...
-            phi_deg(i,k) Rozovskii.theta_deg(i,k)];
+            V_rot(i,k) V.Roz.ux(i,k) V.Roz.uy(i,k) ...
+            V.Roz.uz(i,k) V.mcsMag(i,k) V.mcsBack(i,k) ...
+            V.mcsDir(i,k) V.Roz.up(i,k) V.Roz.us(i,k) ...
+            V.Roz.upy(i,k) V.Roz.usy(i,k) ...
+            phi_deg(i,k) V.Roz.theta_deg(i,k)];
         tecdata = [tecdata; tempvec];
     end
 end
@@ -78,7 +76,8 @@ n = find(isnan(tecdata));
 tecdata(n) = nodata;
 
 % Name of output file (needs to be modified to take handle args from GUI)
-outfile=['tecplot_Rosovskii_outfile.dat'];
+%outfile=['tecplot_Rosovskii_outfile.dat'];
+outfile = [savefile(1:end-4) '.dat'];
 
 % Print out a TECPLOT FILE
 fid = fopen(outfile,'w');
@@ -116,10 +115,10 @@ for m = 1:size(tecdata,1)
 end
 fclose(fid);
 
-disp('Saving Tecplot ASCII Data file...')
-directory = pwd;
-fileloc = [directory '\' outfile];
-disp(fileloc)
+%disp('Saving Tecplot ASCII Data file...')
+%directory = pwd;
+%fileloc = [directory '\' outfile];
+%disp(outfile)
 
 
 format short

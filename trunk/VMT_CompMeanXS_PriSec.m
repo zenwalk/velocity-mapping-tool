@@ -1,17 +1,16 @@
-function [A,V] = VMT_CompMeanXS_PriSec(z,A,V)
-
-%This routine computes the mean cross section velocity components (Primary and secondary) 
-%from individual transects that have been previously mapped to a common grid and averaged.  
-%The Primary velocity is defined as the component of the flow in the direction of the discharge
-%(i.e. rotated from the streamwise direction so the secrondary discharge is
-%zero).
-
+function [A,V,log_text] = VMT_CompMeanXS_PriSec(z,A,V)
+% Computes the mean cross section velocity components (Primary
+% and secondary) from individual transects that have been previously mapped
+% to a common grid and averaged. The Primary velocity is defined as the
+% component of the flow in the direction of the discharge (i.e. rotated
+% from the streamwise direction so the secrondary discharge is zero).
+%
 % This is referred to as the "zero net cross-stream discharge definition"
 % (see Lane et al. 2000, Hydrological Processes 14, 2047-2071)
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-9-08 
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-9-08 
 
 
 %% Rotate velocities into p and s components for the mean transect
@@ -42,7 +41,8 @@ qsi=-qxi.*sind(V.alphasp)+qyi.*cosd(V.alphasp);
 
 V.Qp=nansum(nansum(qpi));%cm*m^2/s
 V.Qs=nansum(nansum(qsi));%cm*m^2/s
-disp(['Secondary Discharge after Rotation (ZSD definition; m^3/s) = ' num2str(V.Qs/100)])
+%disp(['Secondary Discharge after Rotation (ZSD definition; m^3/s) = ' num2str(V.Qs/100)])
+log_text = ['      Qs after rotation (ZSD; m^3/s) = ' num2str(V.Qs/100)];
 
 V.vp=qpi./(dy.*dz);%cm/s
 V.vs=qsi./(dy.*dz);%cm/s
