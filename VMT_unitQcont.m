@@ -1,5 +1,5 @@
 function A = VMT_unitQcont(A,V,z)
-%VMT_UNITQCONT applies unit discharge continuity correction MCS velocities
+% VMT_UNITQCONT applies unit discharge continuity correction MCS velocities
 % This routine computes the correction, then applies it to the North and
 % East velocity components of each ensemble and bin for the ADCP data. This
 % routine runs BEFORE the data are gridded to the mean cross section, so

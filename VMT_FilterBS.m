@@ -1,10 +1,9 @@
 function A = VMT_FilterBS(z,A)
-
-%This routine filters the backscatter data.
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-9-08 
+% This routine filters the backscatter data.
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-9-08 
 
 
 %% Filter
@@ -12,8 +11,8 @@ function A = VMT_FilterBS(z,A)
 
 for zi = 1 : z
 
-    A(zi).Clean.backstandf=nan(A(zi).Sup.nBins,A(zi).Sup.noe);
-    A(zi).Clean.bsf=nan(A(zi).Sup.nBins,A(zi).Sup.noe);
+    A(zi).Clean.backstandf=nan(double(A(zi).Sup.nBins),A(zi).Sup.noe);
+    A(zi).Clean.bsf=nan(double(A(zi).Sup.nBins),A(zi).Sup.noe);
 
     % Determine the standard deviation of the backscatter for the four beams in
     % one bin in one ensemble

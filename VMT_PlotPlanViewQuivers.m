@@ -1,44 +1,81 @@
-function VMT_PlotPlanViewQuivers(z,A,V,Map,drng,ascale,QuiverSpacing)
+function [PVdata,fig_planview_handle,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map,drng,ascale,QuiverSpacing,pvsmwin,pshore,plot_english,varargin)
+% This function plots a plan view of the measurement region with a vector
+% field of depth averaged velocity for each processed mean cross section.
+%
+% ASC version is for plotting ASCII loaded data. 9/2/09 (also has new
+% pvsmwin input for the filter window)
+%
+% Added DOQQ plotting capabilities (PRJ, 6-23-10)
+% Added english units option
+% Added vector data output option in GUI
+%
+% User Notes:
+%
+% 1. Supply z, A, V, and Map for plotting a single mean cross section
+% 2. Leave z, A, V, and Map blank (i.e. [],[],[],[]) to load multiple,
+%   (preprocessed and saved) cross sections. In this case, user must supply
+%   a cell array of filenames, and a path
+% 3. Leave drng blank (i.e. []) for full depth means or specify
+%   the a 2 component vector of depths in meters (drng = [ dupper dlower])
+%   of the depth range to average and plot
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-10-08 
+% Last modified: F.L. Engel, USGS, 2/20/2013
 
-%This function plots a plan view of the measurement region with a vector field of
-%depth averaged velocity for each processed mean cross section.
 
-%User Notes:
-
-%1. Supply z, A, V, and Map for plotting a single mean cross section
-%2. Leave z, A, V, and Map blank (i.e. [],[],[],[]) to load multiple,
-%   (preprocessed and saved) cross section.  The user will be prompted to load
-%   the files and load the Map file.
-%3. Leave drng blank (i.e. []) for full depth means or specify
-%   the a 2 component vector of depths in meters (drng = [ dupper dlower]) of the 
-%   depth range to average and plot
-
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-10-08 
-
-
-disp('Plotting Plan View with Depth-Averaged Velocity Vectors...')
+warning off
+% disp('Plotting Plan View with Depth-Averaged Velocity Vectors...')
 
 %% User Input
 
 %QuiverSpacing   = 15;  %Plots a quiver every X emsembles
 %ascale          = 1.5; %Set to 1 for autoscaling and other values for increased or decreased arrow lengths
+if exist('plot_english')==0
+    plot_english  = 0;
+    disp('No units specified, plotting in metric units by default')
+end
 
 %% Plot Quivers on Area Map
 
-windowSize      = QuiverSpacing; %Size of window for running average in smoothing of mean vel vectors (set = to quiversapcing so vectors represent mean of nearest vectors)
-
-figure(2); clf
-
-if isempty(z) & isempty(A) & isempty(V) & isempty(Map)
-    mapmult = 1;
-    [zPathName,zFileName,zf] = VMT_SelectFiles;  %Have the user select the preprocessed input files
-else
-    mapmult = 0;
-    zf = 1;  %Plot only a single cross section
+if isnan(drng)
+    drng = [];
 end
+
+windowSize      = pvsmwin; %Size of window for running average in smoothing of mean vel vectors (set in GUI)
+
+% See if PLOT 1 exists already, if so clear the figure
+fig_planview_handle = findobj(0,'name','Plan View Map');
+
+if ~isempty(fig_planview_handle) &&  ishandle(fig_planview_handle)
+    figure(fig_planview_handle); clf
+else
+    fig_planview_handle = figure('name','Plan View Map'); clf
+    %set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+end
+
+% Turn off the menu bar, and keep only specified tools
+disableMenuBar(fig_planview_handle)
+
+
+if ~isempty(varargin)
+    mapmult = true;
+    zPathName = varargin{2};
+    zFileName = varargin{1};
+    zf = length(zFileName);
+else
+    mapmult = false;
+    zf = 1;
+end
+
+% if isempty(z) & isempty(A) & isempty(V) & isempty(Map)
+%     mapmult = 1;
+%     [zPathName,zFileName,zf] = VMT_SelectFiles;  %Have the user select the preprocessed input files
+% else
+%     mapmult = 0;
+%     zf = 1;  %Plot only a single cross section
+% end
 
 for n=1:zf
     if mapmult
@@ -54,9 +91,13 @@ for n=1:zf
         V.mcsEast(indx,:) = nan;
         V.mcsNorth(indx,:) = nan;
         
-        if n == 1
-            disp(['Plotting Depth Range ' num2str(drng(1)) 'm to ' num2str(drng(2)) 'm'])
-        end
+%         if n == 1
+%             if plot_english
+%                 disp(['Plotting Depth Range ' num2str(drng(1)*3.281) 'ft to ' num2str(drng(2)*3.281) 'ft'])
+%             else 
+%                 disp(['Plotting Depth Range ' num2str(drng(1)) 'm to ' num2str(drng(2)) 'm'])
+%             end
+%         end
         
         clear indx
     end
@@ -76,14 +117,27 @@ for n=1:zf
     
 
     %Smooth using a running mean defined by WindowSize (averages
-    %'windowsize' ensembles together
-    V.mcsX1sm = filter(ones(1,windowSize)/windowSize,1,V.mcsX1);
-    V.mcsY1sm = filter(ones(1,windowSize)/windowSize,1,V.mcsY1);
-    V.mcsEast1sm = filter(ones(1,windowSize)/windowSize,1,V.mcsEast1);
-    V.mcsNorth1sm = filter(ones(1,windowSize)/windowSize,1,V.mcsNorth1);
+    %'2*windowsize+1' ensembles together (centered on node (boxcar filter))
+    if windowSize == 0
+        V.mcsX1sm     = V.mcsX1;
+        V.mcsY1sm     = V.mcsY1;
+        V.mcsEast1sm  = V.mcsEast1;
+        V.mcsNorth1sm = V.mcsNorth1;
+    else
+%         V.mcsX1sm     = filter(ones(1,windowSize)/windowSize,1,V.mcsX1);
+%         V.mcsY1sm     = filter(ones(1,windowSize)/windowSize,1,V.mcsY1);
+%         V.mcsEast1sm  = filter(ones(1,windowSize)/windowSize,1,V.mcsEast1);
+%         V.mcsNorth1sm = filter(ones(1,windowSize)/windowSize,1,V.mcsNorth1);
+        
+        V.mcsEast1sm  = nanmoving_average(V.mcsEast1,windowSize);  %added 1-7-10, prj
+        V.mcsNorth1sm = nanmoving_average(V.mcsNorth1,windowSize);
+        V.mcsX1sm     = V.mcsX1;
+        V.mcsY1sm     = V.mcsY1;
+    end
     
     for zi = 1 : z
         Mag(:,:,zi) = A(zi).Comp.mcsMag(:,:);
+        %Mag(:,:,zi) = A(zi).Clean.vMag(:,:);
     end
     numavg = nansum(~isnan(Mag),3);
     numavg(numavg==0) = NaN;
@@ -125,21 +179,90 @@ for n=1:zf
     end
 end
 vr = sqrt(toquiv(:,3).^2+toquiv(:,4).^2);
-figure(2); hold on
-if ~isempty(Map)
-    VMT_PlotShoreline(Map)
+
+% Save only the good data  %Added 3-28-12 PRJ
+gdindx = find(~isnan(vr));
+toquiv = toquiv(gdindx,:);
+
+figure(fig_planview_handle); hold on
+% if pdoqq
+%     VMT_OverlayDOQQ
+% end
+if pshore
+    if ~isempty(Map) 
+        VMT_PlotShoreline(Map)
+    end
 end
 %quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,vr,1);
-quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale);
-colorbar('FontSize',16);
-caxis([nanmin(vr) nanmax(vr)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
-if ~isempty(drng)
-    title({'Depth-Averaged Velocities (cm/s)'; ['Averaged over depths ' num2str(drng(1)) 'm to ' num2str(drng(2)) 'm']},'Color','w');
-else
-    title('Depth-Averaged Velocities (cm/s)','Color','w');
+if plot_english
+    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,ascale);  %*0.03281 to go from cm/s to ft/s
+    colorbar%('FontSize',16,'XColor','w','YColor','w');
+    if sum(~isnan(vr)) == 0
+        errordlg('No Data in Specified Depth Range','Plotting Error');
+    end
+    log_text = {sprintf('   DAV range: %6.3f to %6.3f ft/s', nanmin(vr)*0.03281,nanmax(vr)*0.03281)};
+    caxis([nanmin(vr*0.03281) nanmax(vr*0.03281)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
+    if ~isempty(drng)
+        title({'Depth-Averaged Velocities (ft/s)'; ['Averaged over depths ' num2str(drng(1)*3.281) 'ft to ' num2str(drng(2)*3.281) 'ft']})%,'Color','w');
+    else
+        title('Depth-Averaged Velocities (ft/s)')%,'Color','w');
+    end
+else  %plot in metric units
+    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale);
+    colorbar%('FontSize',16,'XColor','w','YColor','w');
+    if sum(~isnan(vr)) == 0
+        errordlg('No Data in Specified Depth Range','Plotting Error');
+    end
+    log_text = {sprintf('   DAV range: %6.3f to %6.3f m/s', nanmin(vr),nanmax(vr))};
+    caxis([nanmin(vr) nanmax(vr)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
+    if ~isempty(drng)
+        title({'Depth-Averaged Velocities (cm/s)'; ['Averaged over depths ' num2str(drng(1)) 'm to ' num2str(drng(2)) 'm']})%,'Color','w');
+    else
+        title('Depth-Averaged Velocities (cm/s)')%,'Color','w');
+    end
 end
 
 xlabel('UTM Easting (m)')
 ylabel('UTM Northing (m)')
+figure(fig_planview_handle); box on
+%set(gcf,'Color',[0 0 0]) %[0.2 0.2 0.2]
+%set(gca,'Color',[0.8,0.733,0.533]) %[0.3 0.3 0.3]
 set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+set(gca,'TickDir','out')
+
+% Format the ticks for UTM and allow zooming and panning
+ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM
+hdlzm = zoom;
+set(hdlzm,'ActionPostCallback',@mypostcallback_zoom);
+set(hdlzm,'Enable','on');
+hdlpn = pan;
+set(hdlpn,'ActionPostCallback',@mypostcallback_pan);
+set(hdlpn,'Enable','on');
+
+% Display the figure
+% Hide the figure until the end (this makes the rendering look better)
+%set(fig_planview_handle,'visible','on')
+
+%% Save the planview data as output and to an *.anv file with spacing and smoothing (for iRiC) 
+outmat = zeros(size(toquiv,1),5);
+outmat(:,1:2) = toquiv(:,1:2);  % In metric units
+outmat(:,4:5) = toquiv(:,3:4)./100;  %Converts cm/s to m/s
+
+%Screen to ID missing data
+goodrows = [];
+for i = 1:length(outmat)
+    rowsum = sum(isnan(outmat(i,:)));
+    if rowsum == 0
+        goodrows = [goodrows; i];
+    end
+end
+
+PVdata.outmat = outmat(goodrows,:)';
+
+function mypostcallback_zoom(obj,evd)
+ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM (when zooming) 
+
+function mypostcallback_pan(obj,evd)
+ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM (when panning) 
+
 

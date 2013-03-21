@@ -1,11 +1,12 @@
 function VMT_PlotShorelineFilled(Map)
-
-%Plots a shoreline map given the shoreline data structure 'Map' (see
-%VMT_LoadMap.m) on the current map
-
-%Shoreline is is filled with channel cutout in this version.
-
-%P.R. Jackson, 12-9-08
+% Plots a shoreline map given the shoreline data structure 'Map' (see
+% VMT_LoadMap.m) on the current map
+%
+% Shoreline is is filled with channel cutout in this version. 
+%
+% See Also: VMT_PlotShoreline
+%
+% P.R. Jackson, 12-9-08
 
 brks = find(Map.UTMe == -9999);
 

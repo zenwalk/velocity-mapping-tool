@@ -1,22 +1,25 @@
-function [z,A,V,zmin,zmax] = VMT_PlotXSCont(z,A,V,var,exag,zerosecq)
-
-%This function plots contours for the variable 'var' within the
-%mean cross section given by the structure V. IF data is not supplied, user
-%will be prompted to load data (browse to data).
-
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-10-08 
-
+function [z,A,V,zmin,zmax,log_text,fig_contour_handle] = VMT_PlotXSCont(z,A,V,var,exag,plot_english)
+% Plots contours for the variable 'var' within the mean cross section given
+% by the structure V. IF data is not supplied, user will be prompted to
+% load data (browse to data).
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-10-08 
+% Last modified: F.L. Engel, USGS, 2/20/2013
 
 
-disp(['Plotting Mean Cross Section Contour Plot: ' var])
+
+%disp(['Plotting Mean Cross Section Contour Plot: ' var])
+log_text = {['Plotting Mean Cross Section Contour Plot']};
 
 %% User Input
 
 %exag=50;    %Vertical exaggeration
-
+if exist('plot_english') == 0
+    plot_english = 0;  %plot english units (else metric)
+    disp('No units specified, plotting in metric units by default')
+end
 
 %% Load the data if not supplied
 if isempty(z) & isempty(A) & isempty(V) 
@@ -27,6 +30,19 @@ end
 
 %% Plot contours
 
+% See if PLOT 3 exists already, if so clear the figure
+fig_contour_handle = findobj(0,'name','Mean Cross Section Contour');
+
+if ~isempty(fig_contour_handle) &&  ishandle(fig_contour_handle)
+    figure(fig_contour_handle); clf
+else
+    fig_contour_handle = figure('name','Mean Cross Section Contour'); clf
+    %set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+end
+
+% Turn off the menu bar, and keep only specified tools
+disableMenuBar(fig_contour_handle)
+
 clvls = 60;
 
 %Find the direction of primary discharge (flip if necessary)
@@ -34,7 +50,7 @@ binwidth  = diff(V.mcsDist,1,2);
 binwidth  = horzcat(binwidth(:,1), binwidth);
 binheight = diff(V.mcsDepth,1,1);
 binheight = vertcat(binheight, binheight(1,:));
-flux = nansum(nansum(V.u./100.*binwidth.*binheight)); %Not a true measured discharge because of averaging, smoothing, etc. but close 
+flux = nansum(nansum(V.u./100.*binwidth.*binheight)); %Not a true measured discharge because of averaging, smoothing, edges, etc. but close 
 
 % if zerosecq
 %     pdmin = nanmin(nanmin(V.vp));
@@ -49,111 +65,324 @@ else
     flipxs = 0;
 end
 
+if flipxs 
+    %disp(['Streamwise Flow Direction (Normal to mean XS; deg) = ' num2str(V.phi - 180)])
+    %disp(['Primary Flow Direction (deg) = ' num2str(V.phisp - 180)])
+    msg_str_1 = {['   Streamwise Flow Direction (Normal to mean XS; deg) = ' num2str(V.phi - 180)];...
+        ['   Primary Flow Direction (deg) = ' num2str(V.phisp - 180)]};
+else
+    %disp(['Streamwise Flow Direction (Normal to mean XS; deg) = ' num2str(V.phi)])
+    %disp(['Primary Flow Direction (deg) = ' num2str(V.phisp)])
+    msg_str_1 = {['   Streamwise Flow Direction (Normal to mean XS; deg) = ' num2str(V.phi)];...
+        ['   Primary Flow Direction (deg) = ' num2str(V.phisp)]};
+end
+%disp(['Deviation from Streamwise Direction (deg) = ' num2str(V.alphasp)])
+%disp(['Horizontal Grid Node Spacing (m) = ' num2str(A(1).hgns)])
+
+%Display in message box for compiled version
+msg_string = {['   Deviation from Streamwise Direction (deg) = ' num2str(V.alphasp)];...
+    ...['   Horizontal Grid Node Spacing (m) = ' num2str(A(1).hgns)]...
+    };
+%msgbox([msg_str_1, msg_string],'VMT Cross Section Characteristics','help','replace');
+log_text = vertcat(log_text,msg_str_1,msg_string);
+
 switch var
-    case{'primary'}  %Plots the primary velocity
+    case{'streamwise'}  %Plots the streamwise velocity
         if flipxs
-            if zerosecq
-                wtp=['-V.vp'];
-                zmin=floor(nanmin(nanmin(-V.vp)));
-                zmax=ceil(nanmax(nanmax(-V.vp)));
-            else
-                wtp=['-V.u'];
-                zmin=floor(nanmin(nanmin(-V.u)));
-                zmax=ceil(nanmax(nanmax(-V.u)));
-            end
+            wtp=['-V.uSmooth'];
+            zmin=floor(nanmin(nanmin(-V.uSmooth)));
+            zmax=ceil(nanmax(nanmax(-V.uSmooth)));
         else
-            if zerosecq
-                wtp=['V.vp'];
-                zmin=floor(nanmin(nanmin(V.vp)));
-                zmax=ceil(nanmax(nanmax(V.vp)));
-            else
-                wtp=['V.u'];
-                zmin=floor(nanmin(nanmin(V.u)));
-                zmax=ceil(nanmax(nanmax(V.u)));
-            end
+            wtp=['V.uSmooth'];
+            zmin=floor(nanmin(nanmin(V.uSmooth)));
+            zmax=ceil(nanmax(nanmax(V.uSmooth)));
         end
         zinc = (zmax - zmin) / clvls;
-        zlevs = zmin:zinc:zmax;                  
-    case{'secondary'} %Plots the secondary velocity
-        if zerosecq
-            wtp=['V.vs'];
-            zmax=ceil(max(abs(nanmin(nanmin(V.vs))),abs(nanmax(nanmax(V.vs)))));
-        else
-            wtp=['V.v'];
-            zmax=ceil(max(abs(nanmin(nanmin(V.v))),abs(nanmax(nanmax(V.v)))));
-        end
+        zlevs = zmin:zinc:zmax;     
+    case{'transverse'} %Plots the transverse velocity
+        wtp=['V.vSmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.vSmooth))),abs(nanmax(nanmax(V.vSmooth)))));
         zmin=-zmax;
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
     case{'vertical'} %Plots the vertical velocity
-        wtp=['V.w'];
-        zmax=ceil(max(abs(nanmin(nanmin(V.w))),abs(nanmax(nanmax(V.w)))));
+        wtp=['V.wSmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.wSmooth))),abs(nanmax(nanmax(V.wSmooth)))));
         zmin=-zmax;
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
-    case{'backscatter'} %Plots the backscatter
-        wtp=['V.mcsBack'];
-        zmin=floor(nanmin(nanmin(V.mcsBack)));
-        zmax=ceil(nanmax(nanmax(V.mcsBack)));
-        zinc = (zmax - zmin) / clvls;
-        zlevs = zmin:zinc:zmax;
     case{'mag'} %Plots the velocity magnitude
-        wtp=['V.mcsMag'];
-        zmin=floor(nanmin(nanmin(V.mcsMag)));
-        zmax=ceil(nanmax(nanmax(V.mcsMag)));
+        wtp=['V.mcsMagSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsMagSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsMagSmooth)));
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
-    case{'dirdevp'} %Plots the directional deviation from the primary velocity
-        wtp=['V.mcsDirDevp'];
-        %zmax=ceil(max(abs(nanmin(nanmin(V.mcsDirDevp))),abs(nanmax(nanmax(V.mcsDirDevp)))));
-        %zmin=-zmax;
-        zmin=floor(nanmin(nanmin(V.mcsDirDevp)));
-        zmax=ceil(nanmax(nanmax(V.mcsDirDevp)));
+    case{'primary_zsd'}  %Plots the primary velocity with zero secondary discharge definition
+        if flipxs
+            wtp=['-V.vpSmooth'];
+            zmin=floor(nanmin(nanmin(-V.vpSmooth)));
+            zmax=ceil(nanmax(nanmax(-V.vpSmooth)));
+        else
+            wtp=['V.vpSmooth'];
+            zmin=floor(nanmin(nanmin(V.vpSmooth)));
+            zmax=ceil(nanmax(nanmax(V.vpSmooth)));
+        end
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;                  
+    case{'secondary_zsd'} %Plots the secondary velocity with zero secondary discharge definition
+        wtp=['V.vsSmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.vsSmooth))),abs(nanmax(nanmax(V.vsSmooth)))));
+        zmin=-zmax;
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
+    case{'primary_roz'}  %Plots the primary velocity with Rozovskii definition
+%         wtp=['V.Roz.upSmooth'];
+%         zmin=floor(nanmin(nanmin(V.Roz.upSmooth)));
+%         zmax=ceil(nanmax(nanmax(V.Roz.upSmooth)));
+        
+        if flipxs
+            wtp=['-V.Roz.upSmooth'];  
+            zmin=floor(nanmin(nanmin(-V.Roz.upSmooth)));
+            zmax=ceil(nanmax(nanmax(-V.Roz.upSmooth)));
+        else
+            wtp=['V.Roz.upSmooth'];
+            zmin=floor(nanmin(nanmin(V.Roz.upSmooth)));
+            zmax=ceil(nanmax(nanmax(V.Roz.upSmooth)));
+        end
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;                
+    case{'secondary_roz'} %Plots the secondary velocity with Rozovskii definition
+        wtp=['V.Roz.usSmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.Roz.usSmooth))),abs(nanmax(nanmax(V.Roz.usSmooth)))));
+        zmin=-zmax;
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'primary_roz_x'}  %Plots the primary velocity with Rozovskii definition (downstream component)
+%         wtp=['V.Roz.upxSmooth'];
+%         zmin=floor(nanmin(nanmin(V.Roz.upxSmooth)));
+%         zmax=ceil(nanmax(nanmax(V.Roz.upxSmooth)));
+      
+        if flipxs
+            wtp=['-V.Roz.upxSmooth'];  
+            zmin=floor(nanmin(nanmin(-V.Roz.upxSmooth)));
+            zmax=ceil(nanmax(nanmax(-V.Roz.upxSmooth)));
+        else
+            wtp=['V.Roz.upxSmooth'];
+            zmin=floor(nanmin(nanmin(V.Roz.upxSmooth)));
+            zmax=ceil(nanmax(nanmax(V.Roz.upxSmooth)));
+        end
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax; 
+    case{'primary_roz_y'}  %Plots the primary velocity with Rozovskii definition (cross-stream component)
+        wtp=['V.Roz.upySmooth'];
+        zmin=floor(nanmin(nanmin(V.Roz.upySmooth)));
+        zmax=ceil(nanmax(nanmax(V.Roz.upySmooth)));
+            
+%         if flipxs
+%             wtp=['-V.Roz.upySmooth'];  
+%             zmin=floor(nanmin(nanmin(-V.Roz.upySmooth)));
+%             zmax=ceil(nanmax(nanmax(-V.Roz.upySmooth)));
+%         else
+%             wtp=['V.Roz.upySmooth'];
+%             zmin=floor(nanmin(nanmin(V.Roz.upySmooth)));
+%             zmax=ceil(nanmax(nanmax(V.Roz.upySmooth)));
+%         end
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'secondary_roz_x'} %Plots the secondary velocity with Rozovskii definition (downstream component)
+        wtp=['V.Roz.usxSmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.Roz.usxSmooth))),abs(nanmax(nanmax(V.Roz.usxSmooth)))));
+        zmin=-zmax;
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'secondary_roz_y'} %Plots the secondary velocity with Rozovskii definition (cross-stream component)
+        wtp=['V.Roz.usySmooth'];
+        zmax=ceil(max(abs(nanmin(nanmin(V.Roz.usySmooth))),abs(nanmax(nanmax(V.Roz.usySmooth)))));
+        zmin=-zmax;
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;        
+    case{'backscatter'} %Plots the backscatter
+        wtp=['V.mcsBackSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsBackSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsBackSmooth)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'flowangle'} %Plots the flow direction (N = 0.0 deg)
+        wtp=['V.mcsDirSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsDirSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsDirSmooth)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'vorticity_vw'} 
+        wtp=['V.vorticity_vw'];
+        zmin=floor(nanmin(V.vorticity_vw(:)));
+        zmax=ceil(nanmax(V.vorticity_vw(:)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'vorticity_zsd'}
+        wtp=['V.vorticity_zsd'];
+        zmin=floor(nanmin(V.vorticity_zsd(:)));
+        zmax=ceil(nanmax(V.vorticity_zsd(:)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'vorticity_roz'} 
+        wtp=['V.vorticity_roz'];
+        zmin = floor(nanmin(V.vorticity_roz(:)));
+        zmax = ceil(nanmax(V.vorticity_roz(:)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+
+%     case{'dirdevp'} %Plots the directional deviation from the primary velocity
+%         wtp=['V.mcsDirDevp'];
+%         %zmax=ceil(max(abs(nanmin(nanmin(V.mcsDirDevp))),abs(nanmax(nanmax(V.mcsDirDevp)))));
+%         %zmin=-zmax;
+%         zmin=floor(nanmin(nanmin(V.mcsDirDevp)));
+%         zmax=ceil(nanmax(nanmax(V.mcsDirDevp)));
+%         zinc = (zmax - zmin) / clvls;
+%         zlevs = zmin:zinc:zmax;
 end
 
-        
-figure(3); clf
-pcolor(V.mcsDist,V.mcsDepth,eval(wtp(1,:)))
-% contour(V.mcsDist,V.mcsDepth,eval(wtp(1,:)),zlevs,'Fill','on','Linestyle','none'); hold on
-plot(V.mcsDist(1,:),V.mcsBed,'w','LineWidth',2); hold on
+
+figure(fig_contour_handle); hold all
+if plot_english
+    convfact = 0.03281; %cm/s to ft/s
+    switch var
+        case{'backscatter'}
+            convfact = 1.0; 
+        case{'flowangle'}
+            convfact = 1.0;
+    end
+    contour_handle = pcolor(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact); hold on
+    shading interp
+%     contour(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact,zlevs*convfact,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
+    bed_handle = plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,'w', 'LineWidth',2); hold on
+else
+    contour_handle = pcolor(V.mcsDist,V.mcsDepth,eval(wtp)); hold on
+    shading interp
+%     contour(V.mcsDist,V.mcsDepth,eval(wtp),zlevs,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
+    bed_handle = plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on
+end
+
+
+
+%Plot the grid node for a check
+if 0
+    plot(V.mcsDist,V.mcsDepth,'k.','MarkerSize',3); hold on
+    [goodcellsx,goodcellsy] = find(isnan(eval(wtp)) == 0);
+    plot(V.mcsDist(1,goodcellsy),V.mcsDepth(goodcellsx,1),'w.','MarkerSize',3); hold on
+end
+
+if plot_english
+    unitlabel = '(ft/s)';
+else
+    unitlabel = '(cm/s)';
+end
 
 switch var
-    case{'primary'}
-        title('Streamwise (Primary) Velocity (cm/s)')
-    case{'secondary'}
-        title('Transverse (Secondary) Velocity (cm/s)')
+    case{'streamwise'}
+        title_handle = title(['Streamwise Velocity ' unitlabel]);
+    case{'transverse'}
+        title_handle = title(['Transverse Velocity ' unitlabel]);
     case{'vertical'}
-        title('Vertical Velocity (cm/s)')
-    case{'backscatter'}
-        title('Backscatter Intensity (dB)')
+        title_handle = title(['Vertical Velocity ' unitlabel]);
     case{'mag'}
-        title('Velocity Magnitude (Primary and Secondary) (cm/s)')
-    case{'dirdevp'}
-        title('Deviation from Primary Flow Direction (deg)')
+        title_handle = title(['Velocity Magnitude (Streamwise and Transverse) ' unitlabel]);
+    case{'primary_zsd'}
+        title_handle = title(['Primary Velocity (Zero Secondary Discharge Definition) ' unitlabel]);
+    case{'secondary_zsd'}
+        title_handle = title(['Secondary Velocity (Zero Secondary Discharge Definition) ' unitlabel]);
+    case{'primary_roz'}
+        title_handle = title(['Primary Velocity (Rozovskii Definition) ' unitlabel]);
+    case{'secondary_roz'}
+        title_handle = title(['Secondary Velocity (Rozovskii Definition) ' unitlabel]); 
+    case{'primary_roz_x'}
+        title_handle = title(['Primary Velocity (Rozovskii Definition; Downstream Component) ' unitlabel]);    
+    case{'primary_roz_y'}
+        title_handle = title(['Primary Velocity (Rozovskii Definition; Cross-Stream Component) ' unitlabel]);        
+    case{'secondary_roz_x'}
+        title_handle = title(['Secondary Velocity (Rozovskii Definition; Downstream Component) ' unitlabel]);        
+    case{'secondary_roz_y'}
+        title_handle = title(['Secondary Velocity (Rozovskii Definition; Cross-Stream Component) ' unitlabel]);        
+    case{'backscatter'}
+        title_handle = title('Backscatter Intensity (dB)');
+    case{'flowangle'}
+        title_handle = title('Flow Direction (deg)');
+    case{'vorticity_vw'}
+        title_handle = title('Streamwise Vorticity');
+    case{'vorticity_zsd'}
+        title_handle = title('Streamwise Vorticity (Zero Secondary Discharge Definition)');
+    case{'vorticity_roz'}
+        title_handle = title('Streamwise Vorticity (Rozovskii Definition)');
+%     case{'dirdevp'}
+%         title('Deviation from Primary Flow Direction (deg)')
 end
-hdl = colorbar; hold all
-caxis([zmin zmax])
-xlim([nanmin(nanmin(V.mcsDist)) nanmax(nanmax(V.mcsDist))])
-ylim([0 max(V.mcsBed)])
-set(gca,'YDir','reverse')
-if flipxs
-    set(gca,'XDir','reverse')
+colorbar_handle = colorbar; hold all
+
+if plot_english
+    caxis([zmin*convfact zmax*convfact])
+    xlim([nanmin(nanmin(V.mcsDist*3.281)) nanmax(nanmax(V.mcsDist*3.281))])
+    ylim([0 max(V.mcsBed*3.281)])
+    set(gca,'YDir','reverse')
+    if flipxs
+        set(gca,'XDir','reverse')
+    end
+    ylabel_handle = ylabel('Depth (ft)');
+    xlabel_handle = xlabel('Distance (ft)');
+else
+    caxis([zmin zmax])
+    xlim([nanmin(nanmin(V.mcsDist)) nanmax(nanmax(V.mcsDist))])
+    ylim([0 max(V.mcsBed)])
+    set(gca,'YDir','reverse')
+    if flipxs
+        set(gca,'XDir','reverse')
+    end
+    ylabel_handle = ylabel('Depth (m)');
+    xlabel_handle = xlabel('Distance (m)');
 end
-ylabel('Depth (m)','Color','w')
-xlabel('Distance (m)','Color','w')
-set(gca,'DataAspectRatio',[exag 1 1],'PlotBoxAspectRatio',[exag 1 1])
-%set(gcf,'Color','k');
-set(gca,'FontSize',14)
-set(get(gca,'Title'),'FontSize',14,'Color','w') 
-%set(gca,'Color','k')
-set(gca,'XColor','w')
-set(gca,'YColor','w')
-set(gca,'ZColor','w')
-set(gcf,'InvertHardCopy','off')
-set(gcf,'Color',[0.2 0.2 0.2])
-set(gca,'Color',[0.3 0.3 0.3])
 
+if strcmp(var,'vorticity_vw')||strcmp(var,'vorticity_zsd')||strcmp(var,'vorticity_roz')
+    rng = zmax - zmin;
+    cmr = [linspace(0,1,25)'];
+    cmr = [cmr; linspace(1,1,25)'];
+    cmg = [linspace(0,1,25)'];
+    cmg = [cmg; linspace(1,0,25)'];
+    cmb = [linspace(1,1,25)'];
+    cmb = [cmb; linspace(1,0,25)'];
+    figure(3)
+    colormap([cmr cmg cmb])
+    caxis([-rng/2 rng/2])
+else
+    colormap jet
+end
 
+% Tag the elements in the figure
+set(contour_handle,                 'Tag','ContouredVelocities')
+set(bed_handle,                     'Tag','PlotBedElevation')
+set(colorbar_handle,                'Tag','ColorBar')
+set(title_handle,                   'Tag','ContourPlotTitle')
+set(ylabel_handle,                  'Tag','yLabelText')
+set(xlabel_handle,                  'Tag','xLabelText')
+
+% Adjust the plot
+set(gca,...
+    'DataAspectRatio',   [exag 1 1],...
+    'PlotBoxAspectRatio',[exag 1 1]...
+    ...'FontSize',          14)
+    )
+% set(get(gca,'Title'),   'FontSize',14,'Color','w') 
+% set(get(gca,'xlabel'),  'FontSize',14,'Color','w') 
+% set(get(gca,'ylabel'),  'FontSize',14,'Color','w') 
+% set(gca,...
+%     'XColor','w',...
+%     'YColor','w',...
+%     'ZColor','w',...
+%     'Color',[0.3 0.3 0.3])
+% set(gcf,...
+%     'InvertHardCopy','off',...
+%     'Color','k')
+%figure('Name','Cross Section','NumberTitle','off')
+% scrsz = get(0,'ScreenSize');
+% figure('OuterPosition',[1 scrsz(4) scrsz(3) scrsz(4)])
+
+%figure(5); clf; compass(V.mcsEast,V.mcsNorth) 
 

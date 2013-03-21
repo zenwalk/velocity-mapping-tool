@@ -1,12 +1,11 @@
 function VMT_BuildTecplot_XSBathy(V,savefile)
-
 % Takes the processed data structure and writes a TecPlot ASCII data file
 % containing the mean cross section bathymetry.
-% Modified from code by Frank L. Engel (fengel2@illinois.edu)
-
+% Modified from code by Frank L. Engel, USGS
+%
 % P.R. Jackson, USGS
-% Last Edited: 11-7-2011
-
+% Last Edited: 2/20/2013
+%
 % 11-7-11: Fixed the issue with improper IJK dimensions which caused files
 % to not load properly into Tecplot. (PRJ)
 %
@@ -18,14 +17,14 @@ function VMT_BuildTecplot_XSBathy(V,savefile)
 % |   Y                |   UTM Northing (m)                               |
 % |   BedDepth         |   Bed depth (m)                                  |
 % |   Dist             |   dist across XS, oriented looking u/s (m)       |
-% |   BedElev          |   Bed elevation (m)                                  |
+% |   BedElev          |   Bed elevation (m)                              |
 % +=======================================================================+
 % 
 
 
 format long
 
-disp('Creating TecPlot Data Grid...')
+% disp('Creating TecPlot Data Grid...')
 % Create block style matrix of all processed data
 tecdata = [];
 
@@ -45,7 +44,7 @@ tecdata(n) = nodata;
 
 % Name of output file (needs to be modified to take handle args from GUI)
 %outfile=['tecplot_Rosovskii_outfile.dat'];
-outfile = [savefile(1:end-4) '_TECOUT_XSBathy.dat'];
+outfile = [savefile(1:end-4) '_XSBathy.dat'];
 
 % Print out a TECPLOT FILE
 fid = fopen(outfile,'w');

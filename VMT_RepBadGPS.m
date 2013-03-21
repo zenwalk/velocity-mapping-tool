@@ -1,21 +1,21 @@
 function A = VMT_RepBadGPS(z,A)
-
-% This routine replaces bad GPS data with bottom track data.
-
+% Replaces bad GPS data with bottom track data.
+%
 % (adapted from code by J. Czuba)
-
+%
 % Known bugs--Will result in bad values if GPS and Bottom track are both
 % bad.  FIXED-9-8-09 with interpolation of missing bottom track from good
 % data (may have issues with lots of missing data).
-
+%
 % Added capability to detect fly-away GPS points. Works in most cases, but
 % may still miss a few fly-aways. Identified fly-aways are replaced with
 % interpolation of bottom track (FLE 12-12-12)
-
+%
 % Rearranged the identification of bad values to use logical indexing,
 % which is faster, and easier to trace (FLE 12-12-12)
-
-%P.R. Jackson, USGS, 12-9-08 
+%
+% P.R. Jackson, USGS, 12-9-08 
+% Last modified: F.L. Engel, USGS 12/12/2012
 
 
 %% Replace bad GPS with BT
