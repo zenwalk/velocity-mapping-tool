@@ -1,7 +1,7 @@
 function lam = VMT_LayerAveMean(x,y)
-
-%This function computes the layer averaged mean of y over the depth range.  Assumes the data outside the depth range have been set to NaN.
-
+% Computes the layer averaged mean of y over the depth range.
+% Assumes the data outside the depth range have been set to NaN.
+%
 % P.R. Jackson, USGS 1-7-09
 
 % Preallocate

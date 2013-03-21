@@ -1,9 +1,8 @@
 function A = VMT_DxDyfromLB(z,A,V)
-
-%Computes the x distance and y distance from the point on the left bank.
-%Left bank is defined by the mean flow direction for the set of transects.
-
-%P.R. Jackson, USGS, 1-21-09
+% Computes the x distance and y distance from the point on the left bank.
+% Left bank is defined by the mean flow direction for the set of transects.
+%
+% P.R. Jackson, USGS, 1-21-09
 
 %V.mfd
 %V.m

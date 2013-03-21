@@ -1,10 +1,9 @@
 function [xo,yo,mag,dir] = VMT_VelVectMagDir(xi,yi,Veast,Vnorth)
-
-%This function computes the magnitude and direction of velocity vectors
-%given the east velocity and north velocity at specified points.  Positions
-%x and y of the observations are passed through.
-
-%P.R. Jackson, USGS, 1-15-09
+% Computes the magnitude and direction of velocity vectors given the east
+% velocity and north velocity at specified points.  Positions x and y of
+% the observations are passed through.
+%
+% P.R. Jackson, USGS, 1-15-09
 
 %Compute the magnitude
 

@@ -1,11 +1,11 @@
 function [A,V] = VMT_CompMeanXS_UVW(z,A,V)
-
-%This routine computes the mean cross section velocity components (UVW) 
-%from individual transects that have been previously mapped to a common grid and averaged. 
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-9-08 
+% Computes the mean cross section velocity components (U,V,W)
+% from individual transects that have been previously mapped to a common
+% grid and averaged.
+% 
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-9-08 
 
 
 %% Rotate velocities into u, v, and w components

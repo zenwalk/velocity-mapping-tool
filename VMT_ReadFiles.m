@@ -1,74 +1,40 @@
-function [zPathName,zFileName,savefile,A,z] = VMT_ReadFiles;
+function [zPathName,zFileName,savefile,A,z] = VMT_ReadFiles(zPathName,zFileName)
+% Read in multiple ASCII output files from WinRiver or WinRiverII.
+%
+% Added save path functionality (PRJ, 6-23-10)
+% (adapted from code by J. Czuba)
+%
+% See also: tfile (utils folder)
+%
+% P.R. Jackson, USGS, 12-11-08 
+% Last modified: F.L. Engel, USGS, 2/20/2013 
 
-%This function reads in multiple ASCII output files from WR of WRII.
 
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-11-08 
-
-%Added save path functionality (PRJ, 6-23-10)
 
 %% Read in multiple ASCII .TXT Files
 % This program reads in multiple ASCII text files into a single structure.
 
-%% Determine Files to Process
-% Prompt user for directory containing files
-defaultpath = 'C:\';
-asciipath = [];
-if exist('VMT\LastDir.mat','file') == 2
-    load('VMT\LastDir.mat');
-    if exist(asciipath,'dir') == 7
-        asciipath = uigetdir(asciipath,'Select the Directory Containing ASCII Output Data Files (*.txt)');
-    else
-        asciipath = uigetdir(defaultpath,'Select the Directory Containing ASCII Output Data Files (*.txt)');
-    end
-else
-    asciipath = uigetdir(defaultpath,'Select the Directory Containing ASCII Output Data Files (*.txt)');
+if ischar(zFileName)
+    zFileName = {zFileName};
+elseif iscellstr(zFileName)
+    zFileName = sort(zFileName);       
 end
-zPathName = asciipath;
-Files = dir(zPathName);
-allFiles = {Files.name};
-filefind = strfind(allFiles,'ASC.TXT')';
-filesidx=nan(size(filefind,1),1);
-for i=1:size(filefind,1)
-    filesidx(i,1)=size(filefind{i},1);
-end
-filesidx=find(filesidx>0);
-files=allFiles(filesidx);
+%msgbox('Loading Data...','VMT Status','help','replace')
 
-if isempty(files)
-    errordlg(['No ASC.TXT files found in ' asciipath '.  Ensure data files are in the form "*_ASC.TXT" (Standard WRII naming convention).']);
-end
-
-% Allow user to select which files are to be processed
-selection = listdlg('ListSize',[300 300],'ListString', files,'Name','Select Data Files');
-zFileName = files(selection);
-
-% Determine number of files to be processed
-if  isa(zFileName,'cell')
-    z=size(zFileName,2);
-    zFileName=sort(zFileName);       
-else
-    z=1;
-    zFileName={zFileName}
-end
-msgbox('Loading Data...','VMT Status','help','replace');
 %% Read in Selected Files
-% Initialize row counter
-j=0;
-st=['A'; 'B'; 'C'; 'D'; 'E'; 'F'];
+% Initialize the data structure
+z = length(zFileName);
+A = initStructure(z);
+
 % Begin master loop
 for zi=1:z
     % Open txt data file
-    if  isa(zFileName,'cell')
-        fileName=strcat(zPathName,'\',zFileName(zi));
-        fileName=char(fileName);
-    else
-        fileName=strcat(zPathName,zFileName);
-    end
+    fileName = fullfile(zPathName,zFileName{zi});
 
     % screenData 0 leaves bad data as -32768, 1 converts to NaN
-    screenData=1;
+    % ignoreBS 0 processes BS data, 1 ignores it
+    screenData = 1;
+    ignoreBS   = 0;
 
     % tfile reads the data from an RDI ASCII output file and puts the
     % data in a Matlab data structure with major groups of:
@@ -77,17 +43,18 @@ for zi=1:z
     % Nav - navigation data including GPS.
     % Sensor - Sensor data
     % Q - discharge related data
-    ignoreBS = 0;
+
     try
         [A(zi)]=tfile(fileName,screenData,ignoreBS);
-        if 0 %troubleshooting 8-20-12 (PRJ)
-            A(zi).Sup.intUnits = cellstr('dB');
-            A(zi).Sup.vRef = cellstr('VTG');
-            A(zi).Sup.units = cellstr('cm');
-        end
-        %[A(zi)]=tfile_opt(fileName,screenData);  %Implemented new
-        %optimized tfile (PRJ 8-20-12) (Something weird is going on here,
-        %don't use yet)
+        
+        [~,file_name,extension] = fileparts(fileName);
+        new_message = strrep(['Loading file ' file_name extension],'_','\_');
+%         if ishandle(h_waitbar)
+%             waitbar(zi/z,h_waitbar,new_message)
+%         else
+%             h_waitbar = waitbar(zi/z,new_message,'Name','Loading Files');
+%         end
+
     catch err
         erstg = {'                                                      ',...
                  'An unknown error occurred when reading the ASCII file.',...
@@ -115,24 +82,100 @@ for zi=1:z
 
 end
 
-%% Save data returned by tfile to .mat with same prefix as ASCII 
-%(saving now takes place after processing, but savefile is generated here)
-idx=strfind(zFileName,'_');
-namecut=zFileName{1}(1:idx{1}(end));
-%numcut1=zFileName{1}(idx{1}(end)-3:idx{1}(end)-1);
-numcut2=zFileName{z}(idx{z}(end)-3:idx{z}(end)-1);
-[s,mess,messid] = mkdir([zPathName '\VMTProcFiles']); 
-disp(mess)
-%savefile=strcat(zPathName,'\VMTProcFiles\',namecut,'_',numcut1,'_',numcut2,'.mat');
-savefile=strcat(zPathName,'\VMTProcFiles\',namecut,numcut2,'.mat');
-%save(savefile, 'A','z')
+% Get rid of the waitbar
+% if ishandle(h_waitbar)
+%     delete(h_waitbar)
+% end
 
-% Save the paths
+% Save data returned by tfile to .mat with same prefix as ASCII 
+[file_root_name,the_rest] = strtok(zFileName,'_');
+file_numbers = strtok(the_rest,'_');
 
-if exist('LastDir.mat','file') == 2
-    save('LastDir.mat','asciipath','-append')
-else
-    save('LastDir.mat','asciipath')
-end
+save_dir = fullfile(zPathName,'VMTProcFiles');
+[~,mess,~] = mkdir(save_dir); 
+% disp(mess)
 
+savefile = [file_root_name{1} '_' file_numbers{1} '_' file_numbers{end} '.mat'];
+savefile = fullfile(save_dir,savefile);
 
+%%%%%%%%%%%%%%%%%%%%%%
+% Embedded Functions %
+%%%%%%%%%%%%%%%%%%%%%%
+
+function A = initStructure(z)
+   Sup = struct('absorption_dbpm',{}, ...
+                'bins',{}, ...
+                'binSize_cm',{}, ...
+                'nBins',{}, ...
+                'blank_cm',{}, ...
+                'draft_cm',{}, ...
+                'ensNo',{}, ...
+                'nPings',{}, ...
+                'noEnsInSeg',{}, ...
+                'noe',{}, ...
+                'note1',{}, ...
+                'note2',{}, ...
+                'intScaleFact_dbpcnt',{}, ...
+                'intUnits',{}, ...
+                'vRef',{}, ...
+                'wm',{}, ...
+                'units',{}, ...
+                'year',{}, ...
+                'month',{}, ...
+                'day',{}, ...
+                'hour',{}, ...
+                'minute',{}, ...
+                'second',{}, ...
+                'sec100',{}, ...
+                'timeElapsed_sec',{}, ...
+                'timeDelta_sec100',{});
+   Wat = struct('binDepth',{}, ...
+                'backscatter',{}, ...
+                'vDir',{}, ...
+                'vMag',{}, ...
+                'vEast',{}, ...
+                'vError',{}, ...
+                'vNorth',{}, ...
+                'vVert',{}, ...
+                'percentGood',{});
+   Nav = struct('bvEast',{}, ...
+                'bvError',{}, ...
+                'bvNorth',{}, ...
+                'bvVert',{}, ...
+                'depth',{}, ...
+                'dsDepth',{}, ...
+                'dmg',{}, ...
+                'length',{}, ...
+                'totDistEast',{}, ...
+                'totDistNorth',{}, ...
+                'altitude',{}, ...
+                'altitudeChng',{}, ...
+                'gpsTotDist',{}, ...
+                'gpsVariable',{}, ...
+                'gpsVeast',{}, ...
+                'gpsVnorth',{}, ...
+                'lat_deg',{}, ...
+                'long_deg',{}, ...
+                'nSats',{}, ...
+                'hdop',{});
+   Sensor = struct('pitch_deg',{}, ...
+                   'roll_deg',{}, ...
+                   'heading_deg',{}, ...
+                   'temp_degC',{});
+     Q = struct('endDepth',{}, ...
+                'endDist',{}, ...
+                'bot',{}, ...
+                'end',{}, ...
+                'meas',{}, ...
+                'start',{}, ...
+                'top',{}, ...
+                'unit',{}, ...
+                'startDepth',{}, ...
+                'startDist',{});
+            A(z).Sup = Sup;
+            A(z).Wat = Wat;
+            A(z).Nav = Nav;
+            A(z).Sensor = Sensor;
+            A(z).Q = Q;
+            
+            % [EOF] initStructure

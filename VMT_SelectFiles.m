@@ -1,20 +1,20 @@
 function [zPathName,zFileName,zf] = VMT_SelectFiles;
+% Prompts the user to select preprocessed transect files output by
+% VMT_ReadFiles.
+%
+% (adapted from code by J. Czuba)
+%
+% P.R. Jackson, USGS, 12-11-08
+% Last modified: 3/21/2013
+% Frank L. Engel, USGS IL WSC
 
-%This function prompts the user to select preprocessed transect files
-%output by VMT_ReadFiles.
-
-%(adapted from code by J. Czuba)
-
-%P.R. Jackson, USGS, 12-11-08
-
-%Added save path functionality (PRJ, 6-23-10)
 
 %% Load the files
 
 % Prompt user for directory containing files
 defaultpath = 'C:\';
 matpath = [];
-if exist('VMT\LastDir.mat','file') == 2
+if 0 %exist('VMT\LastDir.mat','file') == 2
     load('VMT\LastDir.mat');
     if exist(matpath,'dir') == 7
         matpath = uigetdir(matpath,'Select the Directory Containing Processed Data Files (*.mat)');
@@ -53,8 +53,8 @@ else
 end
 
 %% Save the path
-if exist('LastDir.mat','file') == 2
-    save('LastDir.mat','matpath','-append')
-else
-    save('LastDir.mat','matpath')
-end
+% if exist('LastDir.mat','file') == 2
+    % save('LastDir.mat','matpath','-append')
+% else
+    % save('LastDir.mat','matpath')
+% end
