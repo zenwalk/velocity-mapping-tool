@@ -86,13 +86,13 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.0_beta';
+guiparams.vmt_version = 'v4.0_beta_r2';
 
 % Draw the VMT Background
 % -----------------
 pos = get(handles.figure1,'position');
 axes(handles.VMTBackground);
-if isempty(dir(fullfile(matlabroot,'toolbox','images')))
+if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
     X = imread('VMT_Background.png');
     imdisp(X,'size',[pos(4) pos(3)]) % Avoids problems with users not having Image Processing TB
 else
@@ -141,7 +141,7 @@ function figure1_ResizeFcn(hObject, eventdata, handles)
 % -----------------
 pos = get(handles.figure1,'position');
 axes(handles.VMTBackground);
-if isempty(dir(fullfile(matlabroot,'toolbox','images')))
+if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
     X = imread('VMT_Background.png');
     imdisp(X,'size',[pos(4) pos(3)]) % Avoids problems with users not having Image Processing TB
 else
@@ -201,7 +201,7 @@ guiprefs = getappdata(handles.figure1,'guiprefs');
 % current_file = fullfile(guiparams.data_folder,guiparams.data_files{1});
 % current_file = fullfile(guiprefs.mat_path,guiprefs.mat_file);
 if iscell(guiprefs.mat_file)
-    uifile = fullfile(guiparams.data_folder,guiparams.data_files{1});
+    uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file{1});
 else
     uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file);
 end
@@ -416,6 +416,57 @@ setappdata(handles.figure1,'guiparams',guiparams)
 function menuExportMultibeamBathymetry_Callback(hObject, eventdata, handles)
 ExportMultibeamBathymetry_Callback(hObject, eventdata, handles);
 % [EOF] menuExportMultibeamBathymetry_Callback
+
+
+% --------------------------------------------------------------------
+function menuSaveANVFile_Callback(hObject, eventdata, handles)
+
+% Get the Application Data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
+PVdata    = guiparams.iric_anv_planview_data;
+iric_path = guiprefs.iric_path;
+iric_file = guiprefs.iric_file;
+
+% Is there any planview data?
+if isempty(PVdata)
+    % Nothing to do, warn user
+    log_text = {'No planview plot data to export. User must Plot Plan View first.'};
+    warndlg(log_text{:},'Nothing to export')
+else
+    % Save the planview data as output and to an *.anv file with spacing
+    % and smoothing (for iRiC)
+    log_text = {'Exporting iRic formated ANV vector file...'};
+    [iric_file,iric_path] = uiputfile('*.anv','Save *.anv file',...
+        fullfile(iric_path,iric_file));
+    
+    if ischar(iric_path) % The user did not hit "Cancel"
+        outfile = fullfile(iric_path,iric_file);
+        log_text = vertcat(log_text,{outfile});
+        ofid   = fopen(outfile, 'wt');
+        outcount = fprintf(ofid,...
+            '%8.2f  %8.2f  %5.2f  %3.3f  %3.3f\n',PVdata.outmat);
+        fclose(ofid);
+    else
+        % Return default iric_path and iric_file
+        iric_path = guiprefs.iric_path;
+        iric_file = guiprefs.iric_file;
+    end
+end
+
+% Push messages to Log Window:
+% ----------------------------
+statusLogging(handles.LogWindow, log_text)
+
+% Store the persistent preferences:
+% ---------------------------------
+guiprefs.iric_file = iric_file;
+guiprefs.iric_path = iric_path;
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'iric')
+
+% [EOF] menuSaveANVFile_Callback
 
 % --------------------------------------------------------------------
 function menuParameters_Callback(hObject, eventdata, handles)
@@ -812,8 +863,14 @@ try
     % Construct a URL to a local file which can be interpreted by any
     % web-browser
     rootpath = strrep(pwd,filesep,'/');
-    web(['file:///' rootpath '/doc/index.html']) % Produced with m2html (FEX)
-catch err %#ok<NASGU>
+    webaddress = ['file:///' rootpath '/doc/index.html'];
+    system(['start ' webaddress]);
+%     [stat,h,url] = web(webaddress) % Produced with m2html (FEX)
+catch err 
+    error('VMT:guiInterface',...
+        horzcat('Unable to open function library. \n',...
+        'Attempted to find function library at the URL:\n',...
+        '   %s'), webaddress)
     return
 end
 
@@ -1180,7 +1237,7 @@ if iscell(guiparams.mat_file) % Multiple MAT files loaded
     V = [];
     Map = [];
     depth_range = [guiparams.depth_range_min guiparams.depth_range_max];
-    [~,~,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map, ...
+    [PVdata,~,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map, ...
         depth_range, ...
         guiparams.vector_scale_plan_view, ...
         guiparams.vector_spacing_plan_view, ...
@@ -1249,7 +1306,7 @@ else
     depth_range = [guiparams.depth_range_min guiparams.depth_range_max];
     % if ~guiparams.map_depth_averaged_velocities
     
-    [~,~,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map, ...
+    [PVdata,~,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map, ...
         depth_range, ...
         guiparams.vector_scale_plan_view, ...
         guiparams.vector_spacing_plan_view, ...
@@ -1280,6 +1337,10 @@ if guiparams.add_background
     statusLogging(handles.LogWindow, log_text)
 end
 
+% Save the PVdata to persistent guiparams
+% ---------------------------------------
+guiparams.iric_anv_planview_data = PVdata;
+setappdata(handles.figure1,'guiparams',guiparams);
 
 % Force plot to be formated properly
 % ----------------------------------
@@ -2393,12 +2454,13 @@ function load_prefs(hfigure)
 % already exist.
 
 % Preferences:
-% 'ascii'               Path and filenames of current ASCII files
-% 'mat'                 Path and filename of current MAT file
-% 'tecplot'             Path and filename of last Tecplot file
-% 'kmz'                 Path and filename of last KMZ file
-% 'multibeambathymetry' Path and filename of last Multibeam Bathymetry file
-% 'log'                 Path and filename of last Log file 
+% 'ascii'                Path and filenames of current ASCII files
+% 'mat'                  Path and filename of current MAT file
+% 'tecplot'              Path and filename of last Tecplot file
+% 'kmz'                  Path and filename of last KMZ file
+% 'multibeambathymetry'  Path and filename of last Multibeam Bathymetry file
+% 'log'                  Path and filename of last Log file 
+% 'iric'                 Path and filename of last iRic ANV file 
 
 % Originals
 % prefs = {'ascii2gispath' 'ascii2kmlpath' 'asciipath'   'doqqpath' ...
@@ -2548,6 +2610,28 @@ else % Initialize Log
     log.path = pwd;
     log.file = '';
     setpref('VMT','log',log)
+end
+
+% iRic
+if ispref('VMT','iric')
+    iric = getpref('VMT','iric');
+    if exist(iric.path,'dir')
+        guiprefs.iric_path = iric.path;
+    else
+        guiprefs.iric_path = pwd;
+    end
+    if exist(fullfile(iric.path,iric.file),'file')
+        guiprefs.iric_file = iric.file;
+    else
+        guiprefs.iric_file = '';
+    end
+else % Initialize Log
+    guiprefs.iric_path = pwd;
+    guiprefs.iric_file = '';
+    
+    iric.path = pwd;
+    iric.file = '';
+    setpref('VMT','iric',iric)
 end
 
 % guiprefs.presentation = true;
@@ -2742,9 +2826,9 @@ switch enable_state
             handles.menuOpenASCII
             handles.menuOpenMAT
             ],'Enable','on')
-        set([handles.menuSave
-            handles.menuParameters
-            ],'Enable','off')
+%         set([handles.menuSave
+%             handles.menuParameters
+%             ],'Enable','off')
         
         set([handles.toolbarLoadData
             ],'Enable','on')
@@ -2801,7 +2885,7 @@ switch enable_state
             handles.menuOpen
             handles.menuOpenASCII
             handles.menuOpenMAT
-            handles.menuSave
+            ...handles.menuSave
             handles.menuSaveMAT
             handles.menuSaveTecplot
             handles.menuSaveKMZFile
@@ -3892,18 +3976,24 @@ guiparams.multibeambathymetry_path          = pwd;
 guiparams.multibeambathymetry_file          = '';
 guiparams.log_path                          = pwd;
 guiparams.log_file                          = '';
-guiparams.has_mapping_toolbox               = ...
-    ~isempty(dir(fullfile(matlabroot,'toolbox','map')));
+% Avoids problems of not finding the MCR root when running as a standalone
+% application
+if isdeployed 
+    guiparams.has_mapping_toolbox           = true;
+else
+    guiparams.has_mapping_toolbox               = ...
+        ~isempty(dir(fullfile(matlabroot,'toolbox','map')));
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % IN MEMORY DATA STORAGE %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-guiparams.z                    = [];
-guiparams.A                    = [];
-guiparams.V                    = [];
-guiparams.Map                  = [];
-guiparams.savefile             = [];
-guiparams.planview_output_data = [];
+guiparams.z                      = [];
+guiparams.A                      = [];
+guiparams.V                      = [];
+guiparams.Map                    = [];
+guiparams.savefile               = [];
+guiparams.iric_anv_planview_data = [];
 % guiparams.zmin = []; % Don't need to store these?
 % guiparams.zmax = [];
 % guiprefs = getappdata(handles.figure1,'guiprefs');
@@ -3913,5 +4003,7 @@ guiparams.data_files  = {''};
 % [EOF] createGUIparams
 
 % [EOF] VMT
+
+
 
 
