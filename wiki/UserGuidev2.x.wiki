@@ -1,10 +1,10 @@
 #summary Landing page for VMT Wiki
 #sidebar TableOfContents
-=User Guide=
+=VMT v 2.x User Guide=
   * [Introduction Introduction]: A short discusion of the purpose and scope of the Velocity Mapping Toolbox. This is a must read if you are new to VMT.
   * [PreliminaryNotes Before You Start]: This contains a list of tips and tricks that you should be aware of before implementing VMT in your own projects.
   * [InstallGuide Installation Guide]: A brief set of instructions for installing and running VMT.
-  * [VMTQuickRef Quick Reference Guide]: A handy graphic identifying each component of the VMT user interface.
+  * [VMTQuickRefv2.42 Quick Reference Guide]: A handy graphic identifying each component of the VMT user interface.
   * [GettingStarted Getting Started]: A short guide for how to import, process and analyze ADCP data in VMT.
   * [InputReqs Data Input Requirements]: Specific guidlines on the required format for input ADCP data.
   * [TransectAvg Transect Averaging]: Description of how VMT averages data onto a mean cross section.

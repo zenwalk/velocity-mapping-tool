@@ -1,9 +1,9 @@
 #summary Landing page for VMT Wiki
- * User Guide
+ * VMT v 2.x User Guide
   * [Introduction Introduction]
   * [PreliminaryNotes Before You Start]
   * [InstallGuide Installation Guide]
-  * [VMTQuickRef Quick Reference Guide]
+  * [VMTQuickRefv2.42 Quick Reference Guide]
   * [GettingStarted Getting Started]
   * [InputReqs Data Input Requirements]
   * [TransectAvg Transect Averaging]
