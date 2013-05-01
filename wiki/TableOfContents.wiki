@@ -3,7 +3,7 @@
   * [Introduction Introduction]
   * [PreliminaryNotes Before You Start]
   * [InstallGuide Installation Guide]
-  * [VMTQuickRefv2.42 Quick Reference Guide]
+  * [VMTQuickRefv242 Quick Reference Guide]
   * [GettingStarted Getting Started]
   * [InputReqs Data Input Requirements]
   * [TransectAvg Transect Averaging]
