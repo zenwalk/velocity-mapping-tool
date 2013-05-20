@@ -1,0 +1,7 @@
+#summary Landing page for VMT Wiki
+#sidebar TableOfContents
+=The Velocity Mapping Toolbox User Guide=
+
+This is the User Guide for VMT version 4.0. It is currently under construction. Check back soon.
+
+In the meantime, please refernece the old [UserGuidev2x].

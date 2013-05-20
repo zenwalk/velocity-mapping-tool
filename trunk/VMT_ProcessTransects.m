@@ -1,4 +1,4 @@
-function [A,V,log_text] = VMT_ProcessTransects(z,A,setends)
+function [A,V,log_text] = VMT_ProcessTransects(z,A,setends,unitQcorrection)
 % Driver program to process multiple transects at a single cross-section
 % for velocity mapping.
 %
@@ -15,10 +15,9 @@ function [A,V,log_text] = VMT_ProcessTransects(z,A,setends)
 % (adapted from code by J. Czuba)
 %
 % P.R. Jackson, USGS, 12-9-08 
-% Last modified: F.L. Engel, USGS, 2/20/2013
+% Last modified: F.L. Engel, USGS, 5/20/2013
 
-% FIXME: Hard coded unitQ for now (FLE)
-unitQcorrection = false;
+
 
 log_text = {'   Processing Data...Please Be Patient.'};
 
@@ -38,6 +37,10 @@ try
     %% Grid the measured data along the mean cross-section
     %[A,V] = VMT_GridData2MeanXS(z,A,V);
     [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection);
+    if unitQcorrection
+        log_text = vertcat(log_text,...
+            {'      Streamwise unit discharge continuity enforced'});
+    end
     %msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');
     %log_text = {log_text; grid_data_log_text};
 

@@ -86,7 +86,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.0_beta_r2';
+guiparams.vmt_version = 'v4.0';
 
 % Draw the VMT Background
 % -----------------
@@ -473,6 +473,37 @@ function menuParameters_Callback(hObject, eventdata, handles)
 % Empty
 
 % --------------------------------------------------------------------
+function menuProcessingParameters_Callback(hObject, eventdata, handles)
+% Empty
+
+% --------------------------------------------------------------------
+function menuUnitDischargeCorrection_Callback(hObject, eventdata, handles)
+% Turn ON or OFF Unit Discharge Correction
+
+% Get the Application Data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+
+% Update the GUI & Application Data:
+% ----------------------------------
+status = get(handles.menuUnitDischargeCorrection,'Checked');
+switch status
+    case 'on' % Turn it off
+        set(handles.menuUnitDischargeCorrection, 'Checked','off')
+        guiparams.unit_discharge_correction = false;
+    case 'off' % Turn it on
+        set(handles.menuUnitDischargeCorrection, 'Checked','on')
+        guiparams.unit_discharge_correction = true;
+end
+
+% Re-store the Application data:
+% ------------------------------
+setappdata(handles.figure1,'guiparams',guiparams)
+
+
+%  [EOF] menuUnitDischargeCorrection_Callback
+
+% --------------------------------------------------------------------
 function menuPlottingParameters_Callback(hObject, eventdata, handles)
 % Empty
 
@@ -768,11 +799,6 @@ end
 
 % [EOF] menuStylePresentation_Callback
 
-
-% --------------------------------------------------------------------
-function menuProcessingParameters_Callback(hObject, eventdata, handles)
-% Empty
-
 % --------------------------------------------------------------------
 function menuKMZExport_Callback(hObject, eventdata, handles)
 
@@ -1001,7 +1027,9 @@ if ischar(pathname) % The user did not hit "Cancel"
     
     A(1).hgns = guiparams.horizontal_grid_node_spacing;
     A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,guiparams.set_cross_section_endpoints);
+    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+        guiparams.set_cross_section_endpoints,...
+        guiparams.unit_discharge_correction);
     
     % Push messages to Log Window:
     % ----------------------------
@@ -1182,7 +1210,8 @@ setends = guiparams.set_cross_section_endpoints;
 % ----------------------
 A(1).hgns = guiparams.horizontal_grid_node_spacing;
 A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-[A,V,processing_log_text] = VMT_ProcessTransects(z,A,guiparams.set_cross_section_endpoints);
+[A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+    guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
 
 % Push messages to Log Window:
 % ----------------------------
@@ -1283,7 +1312,8 @@ else
     % ----------------------
     A(1).hgns = guiparams.horizontal_grid_node_spacing;
     A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,guiparams.set_cross_section_endpoints);
+    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+        guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
     
     % Push messages to Log Window:
     % ----------------------------
@@ -1378,7 +1408,8 @@ statusLogging(handles.LogWindow, log_text)
 % ----------------------
 A(1).hgns = guiparams.horizontal_grid_node_spacing;
 A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-[A,V,processing_log_text] = VMT_ProcessTransects(z,A,guiparams.set_cross_section_endpoints);
+[A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+    guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
 
 % Push messages to Log Window:
 % ----------------------------
@@ -1557,9 +1588,9 @@ if ischar(the_file)
         A = guiparams.A;
         A(1).hgns = guiparams.horizontal_grid_node_spacing;
         A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-        [~,V] = VMT_ProcessTransectsV3_new(guiparams.z, ...
-            A, ...
-            guiparams.set_cross_section_endpoints);
+        [~,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+            guiparams.set_cross_section_endpoints,...
+            guiparams.unit_discharge_correction);
     end
     VMT_BuildTecplotFile(V,fullfile(guiparams.tecplot_path,guiparams.tecplot_file));
     
@@ -1623,9 +1654,9 @@ if ischar(the_file)
         A = guiparams.A;
         A(1).hgns = guiparams.horizontal_grid_node_spacing;
         A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-        [~,V] = VMT_ProcessTransectsV3_new(guiparams.z, ...
-            A, ...
-            guiparams.set_cross_section_endpoints);
+        [~,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+            guiparams.set_cross_section_endpoints,...
+            guiparams.unit_discharge_correction);
     end
     VMT_MeanXS2GE_3D(A,V,[], ...
         fullfile(guiparams.kmz_path,guiparams.kmz_file), ...
@@ -4003,6 +4034,9 @@ guiparams.data_files  = {''};
 % [EOF] createGUIparams
 
 % [EOF] VMT
+
+
+
 
 
 
