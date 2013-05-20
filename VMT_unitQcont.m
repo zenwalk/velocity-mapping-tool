@@ -85,7 +85,7 @@ function A = VMT_unitQcont(A,V,z)
 % 
 % SEE ALSO: interp1, nanmean, smooth
 
-disp('Applying streamwise unit discharge correction...')
+% disp('Applying streamwise unit discharge correction...')
 % Create matrix of all depths, with their stations
 h2_interp = [];
 for zi = 1:z

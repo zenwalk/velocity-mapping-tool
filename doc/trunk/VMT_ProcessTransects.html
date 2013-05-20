@@ -23,7 +23,7 @@
 <div class="box"><strong>Driver program to process multiple transects at a single cross-section</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function [A,V,log_text] = VMT_ProcessTransects(z,A,setends) </strong></div>
+<div class="box"><strong>function [A,V,log_text] = VMT_ProcessTransects(z,A,setends,unitQcorrection) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> Driver program to process multiple transects at a single cross-section
@@ -42,7 +42,7 @@
  (adapted from code by J. Czuba)
 
  P.R. Jackson, USGS, 12-9-08 
- Last modified: F.L. Engel, USGS, 2/20/2013</pre></div>
+ Last modified: F.L. Engel, USGS, 5/20/2013</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -57,7 +57,7 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [A,V,log_text] = VMT_ProcessTransects(z,A,setends)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [A,V,log_text] = VMT_ProcessTransects(z,A,setends,unitQcorrection)</a>
 0002 <span class="comment">% Driver program to process multiple transects at a single cross-section</span>
 0003 <span class="comment">% for velocity mapping.</span>
 0004 <span class="comment">%</span>
@@ -74,68 +74,71 @@ This function is called by:
 0015 <span class="comment">% (adapted from code by J. Czuba)</span>
 0016 <span class="comment">%</span>
 0017 <span class="comment">% P.R. Jackson, USGS, 12-9-08</span>
-0018 <span class="comment">% Last modified: F.L. Engel, USGS, 2/20/2013</span>
+0018 <span class="comment">% Last modified: F.L. Engel, USGS, 5/20/2013</span>
 0019 
-0020 <span class="comment">% FIXME: Hard coded unitQ for now (FLE)</span>
-0021 unitQcorrection = false;
-0022 
-0023 log_text = {<span class="string">'   Processing Data...Please Be Patient.'</span>};
-0024 
-0025 <span class="keyword">try</span>
-0026     <span class="comment">%disp('Processing Data...')</span>
-0027     warning off
-0028         
-0029     <span class="comment">%% Map ensembles to mean cross-section</span>
-0030     [A,V,map_xs_log_text] = <a href="VMT_MapEns2MeanXS.html" class="code" title="function [A,V,log_text] = VMT_MapEns2MeanXSV2(z,A,setends)">VMT_MapEns2MeanXS</a>(z,A,setends);
-0031     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0032     log_text = vertcat(log_text, map_xs_log_text);
-0033     
-0034     <span class="comment">%% Set the probe type</span>
-0035     <span class="comment">%V.probeType = A(1).probeType;</span>
-0036     V.probeType = <span class="string">'RG'</span>;
-0037     
-0038     <span class="comment">%% Grid the measured data along the mean cross-section</span>
-0039     <span class="comment">%[A,V] = VMT_GridData2MeanXS(z,A,V);</span>
-0040     [A,V] = <a href="VMT_GridData2MeanXS.html" class="code" title="function [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection)">VMT_GridData2MeanXS</a>(z,A,V,unitQcorrection);
-0041     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0042     <span class="comment">%log_text = {log_text; grid_data_log_text};</span>
-0043 
-0044     <span class="comment">%% Computes the mean data for the mean cross-section</span>
-0045     <span class="comment">%[A,V] = VMT_CompMeanXS(z,A,V);</span>
-0046     [A,V,comp_xs_log_text] = <a href="VMT_CompMeanXS.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS(z,A,V)">VMT_CompMeanXS</a>(z,A,V);
-0047     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0048     log_text = vertcat(log_text, comp_xs_log_text);
-0049 
-0050     <span class="comment">%% Decompose the velocities into u, v, and w components</span>
-0051     [A,V] = <a href="VMT_CompMeanXS_UVW.html" class="code" title="function [A,V] = VMT_CompMeanXS_UVW(z,A,V)">VMT_CompMeanXS_UVW</a>(z,A,V);
-0052     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0053 
-0054     <span class="comment">%% Decompose the velocities into primary and secondary components</span>
-0055     [A,V,comp_prisec_log_text] = <a href="VMT_CompMeanXS_PriSec.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS_PriSec(z,A,V)">VMT_CompMeanXS_PriSec</a>(z,A,V);
-0056     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0057     log_text = vertcat(log_text, comp_prisec_log_text);
-0058 
-0059     <span class="comment">%% Perform the Rozovskii computations</span>
-0060     [V,roz_log_text] = <a href="VMT_Rozovskii.html" class="code" title="function [V,log_text] = VMT_Rozovskii(V,A)">VMT_Rozovskii</a>(V,A);
-0061     log_text = vertcat(log_text, roz_log_text);
-0062     
-0063     <span class="comment">%figure(4); clf</span>
-0064     <span class="comment">%plot3(V.mcsX,V.mcsY,V.mcsDepth(1))</span>
-0065     <span class="comment">%disp('Processing Completed')</span>
-0066     log_text = vertcat(log_text, <span class="string">'   Processing Completed.'</span>);
-0067 <span class="keyword">catch</span> err
-0068     erstg = {<span class="string">'An unexpected error occurred during processing. Execution stopped.'</span>};
-0069     errordlg(erstg,<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
-0070     log_text = vertcat(log_text, erstg);
-0071     rethrow(err)
-0072     <span class="keyword">return</span>
-0073 <span class="keyword">end</span>
-0074 
-0075 
-0076 <span class="comment">%% Notes:</span>
+0020 
+0021 
+0022 log_text = {<span class="string">'   Processing Data...Please Be Patient.'</span>};
+0023 
+0024 <span class="keyword">try</span>
+0025     <span class="comment">%disp('Processing Data...')</span>
+0026     warning off
+0027         
+0028     <span class="comment">%% Map ensembles to mean cross-section</span>
+0029     [A,V,map_xs_log_text] = <a href="VMT_MapEns2MeanXS.html" class="code" title="function [A,V,log_text] = VMT_MapEns2MeanXSV2(z,A,setends)">VMT_MapEns2MeanXS</a>(z,A,setends);
+0030     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0031     log_text = vertcat(log_text, map_xs_log_text);
+0032     
+0033     <span class="comment">%% Set the probe type</span>
+0034     <span class="comment">%V.probeType = A(1).probeType;</span>
+0035     V.probeType = <span class="string">'RG'</span>;
+0036     
+0037     <span class="comment">%% Grid the measured data along the mean cross-section</span>
+0038     <span class="comment">%[A,V] = VMT_GridData2MeanXS(z,A,V);</span>
+0039     [A,V] = <a href="VMT_GridData2MeanXS.html" class="code" title="function [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection)">VMT_GridData2MeanXS</a>(z,A,V,unitQcorrection);
+0040     <span class="keyword">if</span> unitQcorrection
+0041         log_text = vertcat(log_text,<span class="keyword">...</span>
+0042             {<span class="string">'      Streamwise unit discharge continuity enforced'</span>});
+0043     <span class="keyword">end</span>
+0044     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0045     <span class="comment">%log_text = {log_text; grid_data_log_text};</span>
+0046 
+0047     <span class="comment">%% Computes the mean data for the mean cross-section</span>
+0048     <span class="comment">%[A,V] = VMT_CompMeanXS(z,A,V);</span>
+0049     [A,V,comp_xs_log_text] = <a href="VMT_CompMeanXS.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS(z,A,V)">VMT_CompMeanXS</a>(z,A,V);
+0050     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0051     log_text = vertcat(log_text, comp_xs_log_text);
+0052 
+0053     <span class="comment">%% Decompose the velocities into u, v, and w components</span>
+0054     [A,V] = <a href="VMT_CompMeanXS_UVW.html" class="code" title="function [A,V] = VMT_CompMeanXS_UVW(z,A,V)">VMT_CompMeanXS_UVW</a>(z,A,V);
+0055     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0056 
+0057     <span class="comment">%% Decompose the velocities into primary and secondary components</span>
+0058     [A,V,comp_prisec_log_text] = <a href="VMT_CompMeanXS_PriSec.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS_PriSec(z,A,V)">VMT_CompMeanXS_PriSec</a>(z,A,V);
+0059     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0060     log_text = vertcat(log_text, comp_prisec_log_text);
+0061 
+0062     <span class="comment">%% Perform the Rozovskii computations</span>
+0063     [V,roz_log_text] = <a href="VMT_Rozovskii.html" class="code" title="function [V,log_text] = VMT_Rozovskii(V,A)">VMT_Rozovskii</a>(V,A);
+0064     log_text = vertcat(log_text, roz_log_text);
+0065     
+0066     <span class="comment">%figure(4); clf</span>
+0067     <span class="comment">%plot3(V.mcsX,V.mcsY,V.mcsDepth(1))</span>
+0068     <span class="comment">%disp('Processing Completed')</span>
+0069     log_text = vertcat(log_text, <span class="string">'   Processing Completed.'</span>);
+0070 <span class="keyword">catch</span> err
+0071     erstg = {<span class="string">'An unexpected error occurred during processing. Execution stopped.'</span>};
+0072     errordlg(erstg,<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
+0073     log_text = vertcat(log_text, erstg);
+0074     rethrow(err)
+0075     <span class="keyword">return</span>
+0076 <span class="keyword">end</span>
 0077 
-0078 <span class="comment">%1. I removed scripts at the end of the original code that computes</span>
-0079 <span class="comment">%standard deviations (12-9-08)</span></pre></div>
-<hr><address>Generated on Tue 30-Apr-2013 10:18:12 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0078 
+0079 <span class="comment">%% Notes:</span>
+0080 
+0081 <span class="comment">%1. I removed scripts at the end of the original code that computes</span>
+0082 <span class="comment">%standard deviations (12-9-08)</span></pre></div>
+<hr><address>Generated on Mon 20-May-2013 10:41:05 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

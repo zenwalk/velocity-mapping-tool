@@ -1,14 +1,13 @@
 function Map = VMT_LoadMap(filetype,coord);
-%
 % This routine loads a map file from either a text file or a .mat file. 
 %
 % Input:  filetype = 'txt' for a text file (2 col (x,y), no headers); 'mat' for a matlab data file 
 %        coord    = 'UTM' for UTM coordinates or 'LL' for latitude, longitude (in dec deg)
 %        zone     = zone for UTM coordinates (Removed from Input--will be
 %        determined from the data automatically)
-
-
-%P.R. Jackson, 12-9-08
+% 
+% 
+% P.R. Jackson, 12-9-08
 % Last Modified: Frank L. Engel, 3/13/2013
 
 switch filetype
