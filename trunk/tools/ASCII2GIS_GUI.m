@@ -62,7 +62,7 @@ guidata(hObject, handles);
 % ----------------------------------------
 filesep = '\'; % windows
 utilspath = [pwd filesep 'utils'];
-docspath  = [pwd filesep 'docs'];
+docspath  = [pwd filesep 'doc'];
 toolspath = [pwd filesep 'tools'];
 addpath(utilspath,docspath,toolspath)
 
@@ -307,7 +307,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 
 %overlay DOQQ
 msgbox('Adding Background','VMT Status','help','replace');
-VMT_OverlayDOQQ
+log_text = VMT_OverlayDOQQ(pwd);
 msgbox('Replotting Complete','VMT Status','help','replace');
 
 

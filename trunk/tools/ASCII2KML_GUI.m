@@ -62,7 +62,7 @@ guidata(hObject, handles);
 % ----------------------------------------
 filesep = '\'; % windows
 utilspath = [pwd filesep 'utils'];
-docspath  = [pwd filesep 'docs'];
+docspath  = [pwd filesep 'doc'];
 toolspath = [pwd filesep 'tools'];
 addpath(utilspath,docspath,toolspath)
 

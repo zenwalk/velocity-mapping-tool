@@ -810,8 +810,8 @@ This function is called by:
 0737 hf = findobj(<span class="string">'type'</span>,<span class="string">'figure'</span>);
 0738 valid_names = {<span class="string">'Plan View Map'</span>; <span class="string">'Mean Cross Section Contour'</span>};
 0739 
-0740 <span class="comment">% Defaults for Print Stlye Figure</span>
-0741 <span class="comment">% -------------------------------</span>
+0740 <span class="comment">% Defaults for Presentation Stlye Figure</span>
+0741 <span class="comment">% --------------------------------------</span>
 0742 BkgdColor   = <span class="string">'black'</span>;
 0743 AxColor     = <span class="string">'white'</span>;
 0744 FigColor    = <span class="string">'black'</span>; <span class="comment">% [0.3 0.3 0.3]</span>
@@ -2930,1190 +2930,1170 @@ This function is called by:
 2857             handles.menuOpenASCII
 2858             handles.menuOpenMAT
 2859             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2860 <span class="comment">%         set([handles.menuSave</span>
-2861 <span class="comment">%             handles.menuParameters</span>
-2862 <span class="comment">%             ],'Enable','off')</span>
-2863         
-2864         set([handles.toolbarLoadData
-2865             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2866         set([handles.toolbarSaveMatFile
-2867             handles.toolbarSaveBathymetry
-2868             handles.toolbarSaveFigures
-2869             handles.toolbarPlottingParameters
-2870             handles.toolbarProcessingParameters
-2871             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2872         
-2873         <span class="comment">%         set([handles.SaveMATFile</span>
-2874         <span class="comment">%              handles.SaveTecplotFile</span>
-2875         <span class="comment">%              handles.SaveGoogleEarthFile</span>
-2876         <span class="comment">%              ],'Enable','off')</span>
-2877         
-2878         <span class="comment">%         set([handles.ExportMultibeamBathymetry</span>
-2879         <span class="comment">%              handles.BeamAngle</span>
-2880         <span class="comment">%              handles.MagneticVariation</span>
-2881         <span class="comment">%              handles.WSE</span>
-2882         <span class="comment">%              handles.OutputAuxiliaryData</span>
-2883         <span class="comment">%              ],'Enable','off')</span>
+2860         
+2861         set([handles.toolbarLoadData
+2862             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2863         set([handles.toolbarSaveMatFile
+2864             handles.toolbarSaveBathymetry
+2865             handles.toolbarSaveFigures
+2866             handles.toolbarPlottingParameters
+2867             handles.toolbarProcessingParameters
+2868             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2869         
+2870         set([handles.DepthRangeMin
+2871             handles.DepthRangeMax
+2872             handles.VectorScalePlanView
+2873             handles.VectorSpacingPlanview
+2874             handles.SmoothingWindowSize
+2875             handles.MapDepthAveragedVelocities
+2876             handles.DisplayShoreline
+2877             handles.AddBackground
+2878             handles.PlotPlanView
+2879             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2880         
+2881         set([handles.HorizontalGridNodeSpacing
+2882             handles.PlotShiptracks
+2883             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
 2884         
-2885         set([handles.DepthRangeMin
-2886             handles.DepthRangeMax
-2887             handles.VectorScalePlanView
-2888             handles.VectorSpacingPlanview
-2889             handles.SmoothingWindowSize
-2890             handles.MapDepthAveragedVelocities
-2891             handles.DisplayShoreline
-2892             handles.AddBackground
-2893             handles.PlotPlanView
-2894             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2895         
-2896         set([handles.HorizontalGridNodeSpacing
-2897             <span class="keyword">...</span><span class="comment">handles.SetCrossSectionEndpoints</span>
-2898             handles.PlotShiptracks
-2899             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2900         
-2901         set([handles.Contour
-2902             handles.VerticalExaggeration
-2903             handles.VectorScaleCrossSection
-2904             handles.HorizontalVectorSpacing
-2905             handles.VerticalVectorSpacing
-2906             handles.HorizontalSmoothingWindow
-2907             handles.VerticalSmoothingWindow
-2908             handles.PlotSecondaryFlowVectors
-2909             handles.SecondaryFlowVectorVariable
-2910             handles.IncludeVerticalVelocity
-2911             handles.PlotCrossSection
-2912             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2913         
-2914     <span class="keyword">case</span> <span class="string">'fileloaded'</span>
-2915         set([handles.menuFile
-2916             handles.menuOpen
-2917             handles.menuOpenASCII
-2918             handles.menuOpenMAT
-2919             <span class="keyword">...</span><span class="comment">handles.menuSave</span>
-2920             handles.menuSaveMAT
-2921             handles.menuSaveTecplot
-2922             handles.menuSaveKMZFile
-2923             handles.menuParameters
-2924             handles.menuPlottingParameters
-2925             handles.menuMetric
-2926             handles.menuEnglish
-2927             handles.menuBathymetryExportSettings
-2928             handles.menuExportMultibeamBathymetry
-2929             handles.menuKMZExport
-2930             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2931         
-2932         set([handles.toolbarLoadData
-2933             handles.toolbarSaveMatFile
-2934             handles.toolbarSaveBathymetry
-2935             handles.toolbarSaveFigures
-2936             handles.toolbarPlottingParameters
-2937             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2938         set([handles.toolbarProcessingParameters
-2939             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2940         
-2941            
-2942         set([handles.DepthRangeMin
-2943             handles.DepthRangeMax
-2944             handles.VectorScalePlanView
-2945             handles.VectorSpacingPlanview
-2946             handles.SmoothingWindowSize
-2947             handles.MapDepthAveragedVelocities
-2948             handles.DisplayShoreline
-2949             handles.PlotPlanView
-2950             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2951         <span class="keyword">if</span> guiparams.has_mapping_toolbox
-2952             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2953         <span class="keyword">else</span>
-2954             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2955         <span class="keyword">end</span>
-2956         
-2957         set([handles.HorizontalGridNodeSpacing
-2958             <span class="keyword">...</span><span class="comment">handles.SetCrossSectionEndpoints</span>
-2959             handles.PlotShiptracks
-2960             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2961         
-2962         set([handles.Contour
-2963             handles.VerticalExaggeration
-2964             handles.VectorScaleCrossSection
-2965             handles.HorizontalVectorSpacing
-2966             handles.VerticalVectorSpacing
-2967             handles.HorizontalSmoothingWindow
-2968             handles.VerticalSmoothingWindow
-2969             handles.PlotSecondaryFlowVectors
-2970             handles.SecondaryFlowVectorVariable
-2971             handles.IncludeVerticalVelocity
-2972             handles.PlotCrossSection
-2973             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2974     <span class="keyword">case</span> <span class="string">'multiplematfiles'</span>
-2975         set([handles.menuFile
-2976             handles.menuOpen
-2977             handles.menuOpenASCII
-2978             handles.menuOpenMAT
-2979             handles.menuParameters
-2980             handles.menuPlottingParameters
-2981             handles.menuMetric
-2982             handles.menuEnglish
-2983             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2984         set([handles.menuSave
-2985             handles.menuSaveMAT
-2986             handles.menuBathymetryExportSettings
-2987             handles.menuExportMultibeamBathymetry
-2988             handles.menuKMZExport
-2989             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-2990         
-2991         set([handles.toolbarLoadData
-2992             handles.toolbarSaveFigures
-2993             handles.toolbarPlottingParameters
-2994             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-2995         set([handles.toolbarProcessingParameters
-2996             handles.toolbarSaveMatFile
-2997             handles.toolbarSaveBathymetry
+2885         set([handles.Contour
+2886             handles.VerticalExaggeration
+2887             handles.VectorScaleCrossSection
+2888             handles.HorizontalVectorSpacing
+2889             handles.VerticalVectorSpacing
+2890             handles.HorizontalSmoothingWindow
+2891             handles.VerticalSmoothingWindow
+2892             handles.PlotSecondaryFlowVectors
+2893             handles.SecondaryFlowVectorVariable
+2894             handles.IncludeVerticalVelocity
+2895             handles.PlotCrossSection
+2896             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2897         
+2898     <span class="keyword">case</span> <span class="string">'fileloaded'</span>
+2899         set([handles.menuFile
+2900             handles.menuOpen
+2901             handles.menuOpenASCII
+2902             handles.menuOpenMAT
+2903             handles.menuSaveMAT
+2904             handles.menuSaveTecplot
+2905             handles.menuSaveKMZFile
+2906             handles.menuParameters
+2907             handles.menuPlottingParameters
+2908             handles.menuMetric
+2909             handles.menuEnglish
+2910             handles.menuBathymetryExportSettings
+2911             handles.menuExportMultibeamBathymetry
+2912             handles.menuKMZExport
+2913             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2914         
+2915         set([handles.toolbarLoadData
+2916             handles.toolbarSaveMatFile
+2917             handles.toolbarSaveBathymetry
+2918             handles.toolbarSaveFigures
+2919             handles.toolbarPlottingParameters
+2920             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2921         set([handles.toolbarProcessingParameters
+2922             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2923         
+2924            
+2925         set([handles.DepthRangeMin
+2926             handles.DepthRangeMax
+2927             handles.VectorScalePlanView
+2928             handles.VectorSpacingPlanview
+2929             handles.SmoothingWindowSize
+2930             handles.MapDepthAveragedVelocities
+2931             handles.DisplayShoreline
+2932             handles.PlotPlanView
+2933             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2934         <span class="keyword">if</span> guiparams.has_mapping_toolbox
+2935             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2936         <span class="keyword">else</span>
+2937             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2938         <span class="keyword">end</span>
+2939         
+2940         set([handles.HorizontalGridNodeSpacing
+2941             handles.PlotShiptracks
+2942             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2943         
+2944         set([handles.Contour
+2945             handles.VerticalExaggeration
+2946             handles.VectorScaleCrossSection
+2947             handles.HorizontalVectorSpacing
+2948             handles.VerticalVectorSpacing
+2949             handles.HorizontalSmoothingWindow
+2950             handles.VerticalSmoothingWindow
+2951             handles.PlotSecondaryFlowVectors
+2952             handles.SecondaryFlowVectorVariable
+2953             handles.IncludeVerticalVelocity
+2954             handles.PlotCrossSection
+2955             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2956     <span class="keyword">case</span> <span class="string">'multiplematfiles'</span>
+2957         set([handles.menuFile
+2958             handles.menuOpen
+2959             handles.menuOpenASCII
+2960             handles.menuOpenMAT
+2961             handles.menuParameters
+2962             handles.menuPlottingParameters
+2963             handles.menuMetric
+2964             handles.menuEnglish
+2965             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2966         set([handles.menuSaveMAT
+2967             handles.menuBathymetryExportSettings
+2968             handles.menuExportMultibeamBathymetry
+2969             handles.menuKMZExport
+2970             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2971         
+2972         set([handles.toolbarLoadData
+2973             handles.toolbarSaveFigures
+2974             handles.toolbarPlottingParameters
+2975             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2976         set([handles.toolbarProcessingParameters
+2977             handles.toolbarSaveMatFile
+2978             handles.toolbarSaveBathymetry
+2979             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2980         
+2981         set([handles.DepthRangeMin
+2982             handles.DepthRangeMax
+2983             handles.VectorScalePlanView
+2984             handles.VectorSpacingPlanview
+2985             handles.SmoothingWindowSize
+2986             handles.MapDepthAveragedVelocities
+2987             handles.DisplayShoreline
+2988             handles.PlotPlanView
+2989             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2990         <span class="keyword">if</span> guiparams.has_mapping_toolbox
+2991             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+2992         <span class="keyword">else</span>
+2993             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+2994         <span class="keyword">end</span>
+2995         
+2996         set([handles.HorizontalGridNodeSpacing
+2997             handles.PlotShiptracks
 2998             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
 2999         
-3000         set([handles.DepthRangeMin
-3001             handles.DepthRangeMax
-3002             handles.VectorScalePlanView
-3003             handles.VectorSpacingPlanview
-3004             handles.SmoothingWindowSize
-3005             handles.MapDepthAveragedVelocities
-3006             handles.DisplayShoreline
-3007             handles.PlotPlanView
-3008             ],<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-3009         <span class="keyword">if</span> guiparams.has_mapping_toolbox
-3010             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'on'</span>)
-3011         <span class="keyword">else</span>
-3012             set(handles.AddBackground,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-3013         <span class="keyword">end</span>
-3014         
-3015         set([handles.HorizontalGridNodeSpacing
-3016             <span class="keyword">...</span><span class="comment">handles.SetCrossSectionEndpoints</span>
-3017             handles.PlotShiptracks
-3018             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-3019         
-3020         set([handles.Contour
-3021             handles.VerticalExaggeration
-3022             handles.VectorScaleCrossSection
-3023             handles.HorizontalVectorSpacing
-3024             handles.VerticalVectorSpacing
-3025             handles.HorizontalSmoothingWindow
-3026             handles.VerticalSmoothingWindow
-3027             handles.PlotSecondaryFlowVectors
-3028             handles.SecondaryFlowVectorVariable
-3029             handles.IncludeVerticalVelocity
-3030             handles.PlotCrossSection
-3031             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-3032     <span class="keyword">otherwise</span>
-3033 <span class="keyword">end</span>
+3000         set([handles.Contour
+3001             handles.VerticalExaggeration
+3002             handles.VectorScaleCrossSection
+3003             handles.HorizontalVectorSpacing
+3004             handles.VerticalVectorSpacing
+3005             handles.HorizontalSmoothingWindow
+3006             handles.VerticalSmoothingWindow
+3007             handles.PlotSecondaryFlowVectors
+3008             handles.SecondaryFlowVectorVariable
+3009             handles.IncludeVerticalVelocity
+3010             handles.PlotCrossSection
+3011             ],<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+3012     <span class="keyword">otherwise</span>
+3013 <span class="keyword">end</span>
+3014 
+3015 <span class="comment">% Temporary</span>
+3016 set(handles.MapDepthAveragedVelocities,<span class="string">'Value'</span>,0,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+3017 
+3018 <span class="comment">% [EOF] set_enable</span>
+3019 
+3020 <span class="comment">%% Compute the longitudinal dispersion coefficient</span>
+3021 
+3022 <span class="comment">%% --- Executes on button press in zerosecq_chkbox.</span>
+3023 <span class="comment">%function zerosecq_chkbox_Callback(hObject, eventdata, handles)</span>
+3024 <span class="comment">% hObject    handle to zerosecq_chkbox (see GCBO)</span>
+3025 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+3026 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+3027 
+3028 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of zerosecq_chkbox</span>
+3029 
+3030 
+3031 <span class="comment">% --------------------------------------------------------------------</span>
+3032 <a name="_sub90" href="#_subfunctions" class="code">function [english_units,set_cross_section_endpoints,plot_presentation_style,plot_print_style] = </a><span class="keyword">...</span>
+3033     plotParametersDialog(english_units,set_cross_section_endpoints,plot_presentation_style,plot_print_style,hf)
 3034 
-3035 <span class="comment">% Temporary</span>
-3036 set(handles.MapDepthAveragedVelocities,<span class="string">'Value'</span>,0,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
-3037 
-3038 <span class="comment">% [EOF] set_enable</span>
-3039 
-3040 <span class="comment">%% Compute the longitudinal dispersion coefficient</span>
-3041 
-3042 <span class="comment">%% --- Executes on button press in zerosecq_chkbox.</span>
-3043 <span class="comment">%function zerosecq_chkbox_Callback(hObject, eventdata, handles)</span>
-3044 <span class="comment">% hObject    handle to zerosecq_chkbox (see GCBO)</span>
-3045 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
-3046 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
-3047 
-3048 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of zerosecq_chkbox</span>
-3049 
-3050 
-3051 <span class="comment">% --------------------------------------------------------------------</span>
-3052 <a name="_sub90" href="#_subfunctions" class="code">function [english_units,set_cross_section_endpoints,plot_presentation_style,plot_print_style] = </a><span class="keyword">...</span>
-3053     plotParametersDialog(english_units,set_cross_section_endpoints,plot_presentation_style,plot_print_style,hf)
-3054 
-3055 w = 500;
-3056 h = 110;
-3057 dx = 10;
-3058 dy = 35;
-3059 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
-3060 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Plotting Parameters'</span>, <span class="keyword">...</span>
-3061     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
-3062     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3063     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
-3064     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
-3065     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
-3066     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3035 w = 500;
+3036 h = 110;
+3037 dx = 10;
+3038 dy = 35;
+3039 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
+3040 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Plotting Parameters'</span>, <span class="keyword">...</span>
+3041     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
+3042     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3043     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
+3044     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
+3045     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3046     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3047     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3048     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
+3049     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3050     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+3051 dialog_params.english_units               = english_units;
+3052 dialog_params.set_cross_section_endpoints = set_cross_section_endpoints;
+3053 dialog_params.presentation                = plot_presentation_style; <span class="comment">%presentation;</span>
+3054 dialog_params.print                       = plot_print_style; <span class="comment">%print;</span>
+3055 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3056 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
+3057 
+3058 <span class="comment">% Build the graphics:</span>
+3059 <span class="comment">% -------------------</span>
+3060 handles.UnitsPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
+3061     <span class="string">'Title'</span>, <span class="string">'Units'</span>, <span class="keyword">...</span>
+3062     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3063     <span class="string">'Position'</span>,[dx dy (w-3*dx)/3 h-dx-dy+10]);
+3064 handles.UnitsMetric = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3065     <span class="string">'Parent'</span>,handles.UnitsPanel, <span class="keyword">...</span>
+3066     <span class="string">'String'</span>,<span class="string">'Metric'</span>, <span class="keyword">...</span>
 3067     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3068     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
-3069     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3070     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
-3071 dialog_params.english_units               = english_units;
-3072 dialog_params.set_cross_section_endpoints = set_cross_section_endpoints;
-3073 dialog_params.presentation                = plot_presentation_style; <span class="comment">%presentation;</span>
-3074 dialog_params.print                       = plot_print_style; <span class="comment">%print;</span>
-3075 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3076 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
-3077 
-3078 <span class="comment">% Build the graphics:</span>
-3079 <span class="comment">% -------------------</span>
-3080 handles.UnitsPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
-3081     <span class="string">'Title'</span>, <span class="string">'Units'</span>, <span class="keyword">...</span>
+3068     <span class="string">'Position'</span>,[15 35 100 22]);
+3069 handles.UnitsEnglish = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3070     <span class="string">'Parent'</span>,handles.UnitsPanel, <span class="keyword">...</span>
+3071     <span class="string">'String'</span>,<span class="string">'English'</span>, <span class="keyword">...</span>
+3072     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3073     <span class="string">'Position'</span>,[15 10 100 22]);
+3074 
+3075 handles.EndpointsPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
+3076     <span class="string">'Title'</span>, <span class="string">'Cross-Section Endpoints'</span>, <span class="keyword">...</span>
+3077     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3078     <span class="string">'Position'</span>,[(w+dx)/3 dy (w-3*dx)/3 h-dx-dy+10]);
+3079 handles.EndpointsAutomatic = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3080     <span class="string">'Parent'</span>,handles.EndpointsPanel, <span class="keyword">...</span>
+3081     <span class="string">'String'</span>,<span class="string">'Automatic'</span>, <span class="keyword">...</span>
 3082     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3083     <span class="string">'Position'</span>,[dx dy (w-3*dx)/3 h-dx-dy+10]);
-3084 handles.UnitsMetric = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3085     <span class="string">'Parent'</span>,handles.UnitsPanel, <span class="keyword">...</span>
-3086     <span class="string">'String'</span>,<span class="string">'Metric'</span>, <span class="keyword">...</span>
+3083     <span class="string">'Position'</span>,[15 35 100 22]);
+3084 handles.EndpointsManual = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3085     <span class="string">'Parent'</span>,handles.EndpointsPanel, <span class="keyword">...</span>
+3086     <span class="string">'String'</span>,<span class="string">'Set Manually'</span>, <span class="keyword">...</span>
 3087     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3088     <span class="string">'Position'</span>,[15 35 100 22]);
-3089 handles.UnitsEnglish = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3090     <span class="string">'Parent'</span>,handles.UnitsPanel, <span class="keyword">...</span>
-3091     <span class="string">'String'</span>,<span class="string">'English'</span>, <span class="keyword">...</span>
+3088     <span class="string">'Position'</span>,[15 10 100 22]);
+3089 
+3090 handles.StylePanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
+3091     <span class="string">'Title'</span>, <span class="string">'Plot Style'</span>, <span class="keyword">...</span>
 3092     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3093     <span class="string">'Position'</span>,[15 10 100 22]);
-3094 
-3095 handles.EndpointsPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
-3096     <span class="string">'Title'</span>, <span class="string">'Cross-Section Endpoints'</span>, <span class="keyword">...</span>
+3093     <span class="string">'Position'</span>,[w-w/3 dy (w-3*dx)/3 h-dx-dy+10]);
+3094 handles.StylePresentation = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3095     <span class="string">'Parent'</span>,handles.StylePanel, <span class="keyword">...</span>
+3096     <span class="string">'String'</span>,<span class="string">'Presentation'</span>, <span class="keyword">...</span>
 3097     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3098     <span class="string">'Position'</span>,[(w+dx)/3 dy (w-3*dx)/3 h-dx-dy+10]);
-3099 handles.EndpointsAutomatic = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3100     <span class="string">'Parent'</span>,handles.EndpointsPanel, <span class="keyword">...</span>
-3101     <span class="string">'String'</span>,<span class="string">'Automatic'</span>, <span class="keyword">...</span>
+3098     <span class="string">'Position'</span>,[15 35 100 22]);
+3099 handles.StylePrint = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3100     <span class="string">'Parent'</span>,handles.StylePanel, <span class="keyword">...</span>
+3101     <span class="string">'String'</span>,<span class="string">'Print'</span>, <span class="keyword">...</span>
 3102     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3103     <span class="string">'Position'</span>,[15 35 100 22]);
-3104 handles.EndpointsManual = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3105     <span class="string">'Parent'</span>,handles.EndpointsPanel, <span class="keyword">...</span>
-3106     <span class="string">'String'</span>,<span class="string">'Set Manually'</span>, <span class="keyword">...</span>
-3107     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3108     <span class="string">'Position'</span>,[15 10 100 22]);
-3109 
-3110 handles.StylePanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
-3111     <span class="string">'Title'</span>, <span class="string">'Plot Style'</span>, <span class="keyword">...</span>
-3112     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3113     <span class="string">'Position'</span>,[w-w/3 dy (w-3*dx)/3 h-dx-dy+10]);
-3114 handles.StylePresentation = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3115     <span class="string">'Parent'</span>,handles.StylePanel, <span class="keyword">...</span>
-3116     <span class="string">'String'</span>,<span class="string">'Presentation'</span>, <span class="keyword">...</span>
-3117     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3118     <span class="string">'Position'</span>,[15 35 100 22]);
-3119 handles.StylePrint = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3120     <span class="string">'Parent'</span>,handles.StylePanel, <span class="keyword">...</span>
-3121     <span class="string">'String'</span>,<span class="string">'Print'</span>, <span class="keyword">...</span>
-3122     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3123     <span class="string">'Position'</span>,[15 10 100 22]);
-3124 
-3125 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3126     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3127     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
-3128     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3129     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
-3130 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3131     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3132     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
-3133     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3134     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
-3135 
-3136 <span class="comment">% Update the UI controls:</span>
-3137 <span class="comment">% -----------------------</span>
-3138 <span class="keyword">if</span> dialog_params.english_units
-3139     set(handles.UnitsMetric, <span class="string">'Value'</span>,0)
-3140     set(handles.UnitsEnglish,<span class="string">'Value'</span>,1)
-3141 <span class="keyword">else</span>
-3142     set(handles.UnitsMetric, <span class="string">'Value'</span>,1)
-3143     set(handles.UnitsEnglish,<span class="string">'Value'</span>,0)
-3144 <span class="keyword">end</span>
-3145 <span class="keyword">if</span> dialog_params.set_cross_section_endpoints
-3146     set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,0)
-3147     set(handles.EndpointsManual,   <span class="string">'Value'</span>,1)
-3148 <span class="keyword">else</span>
-3149     set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,1)
-3150     set(handles.EndpointsManual,   <span class="string">'Value'</span>,0)
-3151 <span class="keyword">end</span>
-3152 <span class="keyword">if</span> dialog_params.presentation
-3153     set(handles.StylePresentation, <span class="string">'Value'</span>,1)
-3154     set(handles.StylePrint,        <span class="string">'Value'</span>,0)
-3155 <span class="keyword">else</span>
-3156     set(handles.StylePresentation, <span class="string">'Value'</span>,0)
-3157     set(handles.StylePrint,        <span class="string">'Value'</span>,1)
-3158 <span class="keyword">end</span>
-3159 
-3160 <span class="comment">% Set the callbacks:</span>
-3161 <span class="comment">% ------------------</span>
-3162 set(handles.Figure,            <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
-3163 set(handles.UnitsMetric,       <span class="string">'Callback'</span>,       {@<a href="#_sub91" class="code" title="subfunction dialogUnits(hObject,eventdata,handles,the_units)">dialogUnits</a>,    handles,<span class="string">'metric'</span>})
-3164 set(handles.UnitsEnglish,      <span class="string">'Callback'</span>,       {@<a href="#_sub91" class="code" title="subfunction dialogUnits(hObject,eventdata,handles,the_units)">dialogUnits</a>,    handles,<span class="string">'english'</span>})
-3165 set(handles.EndpointsAutomatic,<span class="string">'Callback'</span>,       {@<a href="#_sub92" class="code" title="subfunction dialogEnpoints(hObject,eventdata,handles,the_endpoints)">dialogEnpoints</a>, handles,<span class="string">'auto'</span>})
-3166 set(handles.EndpointsManual,   <span class="string">'Callback'</span>,       {@<a href="#_sub92" class="code" title="subfunction dialogEnpoints(hObject,eventdata,handles,the_endpoints)">dialogEnpoints</a>, handles,<span class="string">'manual'</span>})
-3167 set(handles.StylePresentation, <span class="string">'Callback'</span>,       {@<a href="#_sub93" class="code" title="subfunction dialogPlotStyle(hObject,eventdata,handles,the_style)">dialogPlotStyle</a>,handles,<span class="string">'presentation'</span>})
-3168 set(handles.StylePrint,        <span class="string">'Callback'</span>,       {@<a href="#_sub93" class="code" title="subfunction dialogPlotStyle(hObject,eventdata,handles,the_style)">dialogPlotStyle</a>,handles,<span class="string">'print'</span>})
-3169 set(handles.OK,                <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,       handles.OK})
-3170 set(handles.Cancel,            <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,   handles})
-3171 
-3172 <span class="comment">% Position the dialog and make it visible:</span>
-3173 <span class="comment">% ----------------------------------------</span>
-3174 fpos = get(hf,<span class="string">'Position'</span>);
-3175 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
-3176 movegui(handles.Figure,dpos)
-3177 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
+3103     <span class="string">'Position'</span>,[15 10 100 22]);
+3104 
+3105 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3106     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3107     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
+3108     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3109     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
+3110 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3111     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3112     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
+3113     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3114     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
+3115 
+3116 <span class="comment">% Update the UI controls:</span>
+3117 <span class="comment">% -----------------------</span>
+3118 <span class="keyword">if</span> dialog_params.english_units
+3119     set(handles.UnitsMetric, <span class="string">'Value'</span>,0)
+3120     set(handles.UnitsEnglish,<span class="string">'Value'</span>,1)
+3121 <span class="keyword">else</span>
+3122     set(handles.UnitsMetric, <span class="string">'Value'</span>,1)
+3123     set(handles.UnitsEnglish,<span class="string">'Value'</span>,0)
+3124 <span class="keyword">end</span>
+3125 <span class="keyword">if</span> dialog_params.set_cross_section_endpoints
+3126     set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,0)
+3127     set(handles.EndpointsManual,   <span class="string">'Value'</span>,1)
+3128 <span class="keyword">else</span>
+3129     set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,1)
+3130     set(handles.EndpointsManual,   <span class="string">'Value'</span>,0)
+3131 <span class="keyword">end</span>
+3132 <span class="keyword">if</span> dialog_params.presentation
+3133     set(handles.StylePresentation, <span class="string">'Value'</span>,1)
+3134     set(handles.StylePrint,        <span class="string">'Value'</span>,0)
+3135 <span class="keyword">else</span>
+3136     set(handles.StylePresentation, <span class="string">'Value'</span>,0)
+3137     set(handles.StylePrint,        <span class="string">'Value'</span>,1)
+3138 <span class="keyword">end</span>
+3139 
+3140 <span class="comment">% Set the callbacks:</span>
+3141 <span class="comment">% ------------------</span>
+3142 set(handles.Figure,            <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
+3143 set(handles.UnitsMetric,       <span class="string">'Callback'</span>,       {@<a href="#_sub91" class="code" title="subfunction dialogUnits(hObject,eventdata,handles,the_units)">dialogUnits</a>,    handles,<span class="string">'metric'</span>})
+3144 set(handles.UnitsEnglish,      <span class="string">'Callback'</span>,       {@<a href="#_sub91" class="code" title="subfunction dialogUnits(hObject,eventdata,handles,the_units)">dialogUnits</a>,    handles,<span class="string">'english'</span>})
+3145 set(handles.EndpointsAutomatic,<span class="string">'Callback'</span>,       {@<a href="#_sub92" class="code" title="subfunction dialogEnpoints(hObject,eventdata,handles,the_endpoints)">dialogEnpoints</a>, handles,<span class="string">'auto'</span>})
+3146 set(handles.EndpointsManual,   <span class="string">'Callback'</span>,       {@<a href="#_sub92" class="code" title="subfunction dialogEnpoints(hObject,eventdata,handles,the_endpoints)">dialogEnpoints</a>, handles,<span class="string">'manual'</span>})
+3147 set(handles.StylePresentation, <span class="string">'Callback'</span>,       {@<a href="#_sub93" class="code" title="subfunction dialogPlotStyle(hObject,eventdata,handles,the_style)">dialogPlotStyle</a>,handles,<span class="string">'presentation'</span>})
+3148 set(handles.StylePrint,        <span class="string">'Callback'</span>,       {@<a href="#_sub93" class="code" title="subfunction dialogPlotStyle(hObject,eventdata,handles,the_style)">dialogPlotStyle</a>,handles,<span class="string">'print'</span>})
+3149 set(handles.OK,                <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,       handles.OK})
+3150 set(handles.Cancel,            <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,   handles})
+3151 
+3152 <span class="comment">% Position the dialog and make it visible:</span>
+3153 <span class="comment">% ----------------------------------------</span>
+3154 fpos = get(hf,<span class="string">'Position'</span>);
+3155 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
+3156 movegui(handles.Figure,dpos)
+3157 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
+3158 
+3159 <span class="comment">% Hold the dialog open:</span>
+3160 <span class="comment">% ---------------------</span>
+3161 waitfor(handles.OK)
+3162 
+3163 <span class="comment">% Return the outputs and close the dialog:</span>
+3164 <span class="comment">% ----------------------------------------</span>
+3165 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3166 english_units = dialog_params.english_units;
+3167 set_cross_section_endpoints = dialog_params.set_cross_section_endpoints;
+3168 plot_presentation_style =  dialog_params.presentation;
+3169 plot_print_style =  dialog_params.print;
+3170 
+3171 delete(handles.Figure)
+3172 
+3173 <span class="comment">% [EOF] plotParametersDialog</span>
+3174 
+3175 
+3176 <span class="comment">% --------------------------------------------------------------------</span>
+3177 <a name="_sub91" href="#_subfunctions" class="code">function dialogUnits(hObject,eventdata,handles,the_units)</a>
 3178 
-3179 <span class="comment">% Hold the dialog open:</span>
-3180 <span class="comment">% ---------------------</span>
-3181 waitfor(handles.OK)
-3182 
-3183 <span class="comment">% Return the outputs and close the dialog:</span>
-3184 <span class="comment">% ----------------------------------------</span>
-3185 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3186 english_units = dialog_params.english_units;
-3187 set_cross_section_endpoints = dialog_params.set_cross_section_endpoints;
-3188 plot_presentation_style =  dialog_params.presentation;
-3189 plot_print_style =  dialog_params.print;
-3190 
-3191 delete(handles.Figure)
-3192 
-3193 <span class="comment">% [EOF] plotParametersDialog</span>
+3179 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3180 <span class="keyword">switch</span> the_units
+3181     <span class="keyword">case</span> <span class="string">'metric'</span>
+3182         dialog_params.english_units = false;
+3183         
+3184         set(handles.UnitsMetric, <span class="string">'Value'</span>,1)
+3185         set(handles.UnitsEnglish,<span class="string">'Value'</span>,0)
+3186     <span class="keyword">case</span> <span class="string">'english'</span>
+3187         dialog_params.english_units = true;
+3188         
+3189         set(handles.UnitsMetric, <span class="string">'Value'</span>,0)
+3190         set(handles.UnitsEnglish,<span class="string">'Value'</span>,1)
+3191     <span class="keyword">otherwise</span>
+3192 <span class="keyword">end</span>
+3193 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
 3194 
-3195 
-3196 <span class="comment">% --------------------------------------------------------------------</span>
-3197 <a name="_sub91" href="#_subfunctions" class="code">function dialogUnits(hObject,eventdata,handles,the_units)</a>
-3198 
-3199 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3200 <span class="keyword">switch</span> the_units
-3201     <span class="keyword">case</span> <span class="string">'metric'</span>
-3202         dialog_params.english_units = false;
-3203         
-3204         set(handles.UnitsMetric, <span class="string">'Value'</span>,1)
-3205         set(handles.UnitsEnglish,<span class="string">'Value'</span>,0)
-3206     <span class="keyword">case</span> <span class="string">'english'</span>
-3207         dialog_params.english_units = true;
-3208         
-3209         set(handles.UnitsMetric, <span class="string">'Value'</span>,0)
-3210         set(handles.UnitsEnglish,<span class="string">'Value'</span>,1)
-3211     <span class="keyword">otherwise</span>
-3212 <span class="keyword">end</span>
-3213 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3214 
-3215 <span class="comment">% [EOF] dialogUnits</span>
-3216 
-3217 <span class="comment">% --------------------------------------------------------------------</span>
-3218 <a name="_sub92" href="#_subfunctions" class="code">function dialogEnpoints(hObject,eventdata,handles,the_endpoints)</a>
+3195 <span class="comment">% [EOF] dialogUnits</span>
+3196 
+3197 <span class="comment">% --------------------------------------------------------------------</span>
+3198 <a name="_sub92" href="#_subfunctions" class="code">function dialogEnpoints(hObject,eventdata,handles,the_endpoints)</a>
+3199 
+3200 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3201 <span class="keyword">switch</span> the_endpoints
+3202     <span class="keyword">case</span> <span class="string">'auto'</span>
+3203         dialog_params.set_cross_section_endpoints = false;
+3204         
+3205         set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,1)
+3206         set(handles.EndpointsManual,   <span class="string">'Value'</span>,0)
+3207     <span class="keyword">case</span> <span class="string">'manual'</span>
+3208         dialog_params.set_cross_section_endpoints = true;
+3209         
+3210         set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,0)
+3211         set(handles.EndpointsManual,   <span class="string">'Value'</span>,1)
+3212     <span class="keyword">otherwise</span>
+3213 <span class="keyword">end</span>
+3214 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3215 
+3216 <span class="comment">% [EOF] dialogEnpoints</span>
+3217 
+3218 <a name="_sub93" href="#_subfunctions" class="code">function dialogPlotStyle(hObject,eventdata,handles,the_style)</a>
 3219 
 3220 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3221 <span class="keyword">switch</span> the_endpoints
-3222     <span class="keyword">case</span> <span class="string">'auto'</span>
-3223         dialog_params.set_cross_section_endpoints = false;
-3224         
-3225         set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,1)
-3226         set(handles.EndpointsManual,   <span class="string">'Value'</span>,0)
-3227     <span class="keyword">case</span> <span class="string">'manual'</span>
-3228         dialog_params.set_cross_section_endpoints = true;
-3229         
-3230         set(handles.EndpointsAutomatic,<span class="string">'Value'</span>,0)
-3231         set(handles.EndpointsManual,   <span class="string">'Value'</span>,1)
-3232     <span class="keyword">otherwise</span>
-3233 <span class="keyword">end</span>
-3234 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3235 
-3236 <span class="comment">% [EOF] dialogEnpoints</span>
+3221 <span class="keyword">switch</span> the_style
+3222     <span class="keyword">case</span> <span class="string">'presentation'</span>
+3223         dialog_params.presentation  = true;
+3224         dialog_params.print         = false;
+3225         
+3226         set(handles.StylePresentation,<span class="string">'Value'</span>,1)
+3227         set(handles.StylePrint,       <span class="string">'Value'</span>,0)
+3228     <span class="keyword">case</span> <span class="string">'print'</span>
+3229         dialog_params.presentation  = false;
+3230         dialog_params.print         = true;
+3231         
+3232         set(handles.StylePresentation,<span class="string">'Value'</span>,0)
+3233         set(handles.StylePrint,       <span class="string">'Value'</span>,1)
+3234     <span class="keyword">otherwise</span>
+3235 <span class="keyword">end</span>
+3236 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
 3237 
-3238 <a name="_sub93" href="#_subfunctions" class="code">function dialogPlotStyle(hObject,eventdata,handles,the_style)</a>
+3238 <span class="comment">% [EOF] dialogEnpoints</span>
 3239 
-3240 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3241 <span class="keyword">switch</span> the_style
-3242     <span class="keyword">case</span> <span class="string">'presentation'</span>
-3243         dialog_params.presentation  = true;
-3244         dialog_params.print         = false;
-3245         
-3246         set(handles.StylePresentation,<span class="string">'Value'</span>,1)
-3247         set(handles.StylePrint,       <span class="string">'Value'</span>,0)
-3248     <span class="keyword">case</span> <span class="string">'print'</span>
-3249         dialog_params.presentation  = false;
-3250         dialog_params.print         = true;
-3251         
-3252         set(handles.StylePresentation,<span class="string">'Value'</span>,0)
-3253         set(handles.StylePrint,       <span class="string">'Value'</span>,1)
-3254     <span class="keyword">otherwise</span>
-3255 <span class="keyword">end</span>
-3256 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3257 
-3258 <span class="comment">% [EOF] dialogEnpoints</span>
-3259 
-3260 <span class="comment">% --------------------------------------------------------------------</span>
-3261 <a name="_sub94" href="#_subfunctions" class="code">function dialogOK(hObject,eventdata,h_OK)</a>
+3240 <span class="comment">% --------------------------------------------------------------------</span>
+3241 <a name="_sub94" href="#_subfunctions" class="code">function dialogOK(hObject,eventdata,h_OK)</a>
+3242 
+3243 delete(h_OK)
+3244 
+3245 <span class="comment">% [EOF] dialogOK</span>
+3246 
+3247 <span class="comment">% --------------------------------------------------------------------</span>
+3248 <a name="_sub95" href="#_subfunctions" class="code">function dialogCancel(hObject,eventdata,handles)</a>
+3249 <span class="comment">% Return the original inputs</span>
+3250 dialog_params = getappdata(handles.Figure,<span class="string">'original_dialog_params'</span>);
+3251 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3252 delete(handles.OK)
+3253 
+3254 <span class="comment">% [EOF] dialogCancel</span>
+3255 
+3256 <span class="comment">% --------------------------------------------------------------------</span>
+3257 <a name="_sub96" href="#_subfunctions" class="code">function dialogCloseReq(hObject,eventdata,h_OK)</a>
+3258 
+3259 delete(h_OK)
+3260 
+3261 <span class="comment">% [EOF] dialogCloseReq</span>
 3262 
-3263 delete(h_OK)
-3264 
-3265 <span class="comment">% [EOF] dialogOK</span>
-3266 
-3267 <span class="comment">% --------------------------------------------------------------------</span>
-3268 <a name="_sub95" href="#_subfunctions" class="code">function dialogCancel(hObject,eventdata,handles)</a>
-3269 <span class="comment">% Return the original inputs</span>
-3270 dialog_params = getappdata(handles.Figure,<span class="string">'original_dialog_params'</span>);
-3271 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3272 delete(handles.OK)
-3273 
-3274 <span class="comment">% [EOF] dialogCancel</span>
-3275 
-3276 <span class="comment">% --------------------------------------------------------------------</span>
-3277 <a name="_sub96" href="#_subfunctions" class="code">function dialogCloseReq(hObject,eventdata,h_OK)</a>
-3278 
-3279 delete(h_OK)
-3280 
-3281 <span class="comment">% [EOF] dialogCloseReq</span>
-3282 
-3283 <a name="_sub97" href="#_subfunctions" class="code">function [beam_angle,magnetic_variation,wse,output_auxilliary_data] = exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxilliary_data,hf)</a>
-3284 w = 230;
-3285 h = 200;
-3286 dx = 10;
-3287 dy = 35;
-3288 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
-3289 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Export Settings'</span>, <span class="keyword">...</span>
-3290     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
-3291     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3292     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
-3293     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
-3294     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
-3295     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
-3296     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3297     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
-3298     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3299     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
-3300 dialog_params.beam_angle             = beam_angle;
-3301 dialog_params.magnetic_variation     = magnetic_variation;
-3302 dialog_params.wse                    = wse;
-3303 dialog_params.output_auxilliary_data = output_auxilliary_data;
-3304 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3305 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
-3306 
-3307 <span class="comment">% Build the graphics:</span>
-3308 <span class="comment">% -------------------</span>
-3309 ph = 150;
-3310 handles.BathymetryPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
-3311     <span class="string">'Title'</span>, <span class="string">'Bathymetry'</span>, <span class="keyword">...</span>
-3312     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3313     <span class="string">'Position'</span>,[dx dy (w-2*dx) h-dx-dy+10]);
-3314 handles.BeamAngleText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
-3315     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3316     <span class="string">'String'</span>,<span class="string">'Beam Angle (deg)'</span>, <span class="keyword">...</span>
-3317     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
-3318     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
-3319     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3320     <span class="string">'Position'</span>,[dx+5 h-ph+60-4 100 22]);
-3321 handles.BeamAngle = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
-3322     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3323     <span class="keyword">...</span><span class="comment">'String','Beam Angle (deg)', ...</span>
-3324     <span class="string">'String'</span>,beam_angle,<span class="keyword">...</span>
-3325     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
-3326     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3327     <span class="string">'Position'</span>,[w-dx-80 h-ph+60 50 22]);
-3328 handles.MagneticVariationText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
-3329     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3330     <span class="string">'String'</span>,<span class="string">'Magnetic Variation'</span>, <span class="keyword">...</span>
-3331     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
-3332     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
-3333     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3334     <span class="string">'Position'</span>,[dx+5 h-ph+30-4 100 22]);
-3335 handles.MagneticVariation = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
-3336     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3337     <span class="keyword">...</span><span class="comment">'String','Magnetic Variation', ...</span>
-3338     <span class="string">'String'</span>,magnetic_variation,<span class="keyword">...</span>
-3339     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
-3340     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3341     <span class="string">'Position'</span>,[w-dx-80 h-ph+30 50 22]);
-3342 handles.WSEText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
-3343     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3344     <span class="string">'String'</span>,<span class="string">'WSE (m)'</span>, <span class="keyword">...</span>
-3345     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
-3346     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
-3347     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3348     <span class="string">'Position'</span>,[dx+5 h-ph-4 100 22]);
-3349 handles.WSE = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
-3350     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3351     <span class="keyword">...</span><span class="comment">'String','Magnetic Variation', ...</span>
-3352     <span class="string">'String'</span>,wse,<span class="keyword">...</span>
-3353     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
-3354     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3355     <span class="string">'Position'</span>,[w-dx-80 h-ph 50 22]);
-3356 handles.OutputAuxilliaryData = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
-3357     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
-3358     <span class="string">'String'</span>,<span class="string">'Output Auxilliary Data'</span>, <span class="keyword">...</span>
-3359     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3360     <span class="string">'Position'</span>,[dx+5 20 w-2*dx-30 22]);
-3361 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3362     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3363     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
-3364     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3365     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
-3366 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3367     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3368     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
-3369     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3370     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
-3371 
-3372 <span class="comment">% Update the UI controls:</span>
-3373 <span class="comment">% -----------------------</span>
-3374 set(handles.BeamAngle,                <span class="string">'String'</span>,dialog_params.beam_angle)
-3375 set(handles.MagneticVariation,        <span class="string">'String'</span>,dialog_params.magnetic_variation)
-3376 set(handles.WSE,                      <span class="string">'String'</span>,dialog_params.wse)
-3377 set(handles.OutputAuxilliaryData,     <span class="string">'Value'</span>,dialog_params.output_auxilliary_data)
-3378 
-3379 <span class="comment">% Set the callbacks:</span>
-3380 <span class="comment">% ------------------</span>
-3381 set(handles.Figure,                      <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
-3382 set(handles.BeamAngle,                   <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
-3383 set(handles.MagneticVariation,           <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
-3384 set(handles.WSE,                         <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
-3385 set(handles.OutputAuxilliaryData,        <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
-3386 set(handles.OK,                          <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,      handles.OK})
-3387 set(handles.Cancel,                      <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,  handles})
-3388 
-3389 <span class="comment">% Position the dialog and make it visible:</span>
-3390 <span class="comment">% ----------------------------------------</span>
-3391 fpos = get(hf,<span class="string">'Position'</span>);
-3392 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
-3393 movegui(handles.Figure,dpos)
-3394 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
-3395 
-3396 <span class="comment">% Hold the dialog open:</span>
-3397 <span class="comment">% ---------------------</span>
-3398 waitfor(handles.OK)
-3399 
-3400 <span class="comment">% Return the outputs and close the dialog:</span>
-3401 <span class="comment">% ----------------------------------------</span>
-3402 dialog_params           = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3403 beam_angle              = dialog_params.beam_angle;
-3404 magnetic_variation      = dialog_params.magnetic_variation;
-3405 wse                     = dialog_params.wse;
-3406 output_auxilliary_data  = dialog_params.output_auxilliary_data;
-3407 
-3408 delete(handles.Figure)
-3409 
-3410 <span class="comment">% [EOF] exportSettingsDialog</span>
-3411 
-3412 <span class="comment">% --------------------------------------------------------------------</span>
-3413 <a name="_sub98" href="#_subfunctions" class="code">function dialogExportSettings(hObject,eventdata,handles)</a>
-3414 
-3415 <span class="comment">% Grab the current data</span>
-3416 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3417 
-3418 <span class="comment">% Set it according to the dialog box values</span>
-3419 dialog_params.beam_angle                = get(handles.BeamAngle,<span class="string">'String'</span>);
-3420 dialog_params.magnetic_variation        = get(handles.MagneticVariation,<span class="string">'String'</span>);
-3421 dialog_params.wse                       = get(handles.WSE,<span class="string">'String'</span>);
-3422 dialog_params.output_auxilliary_data    = get(handles.OutputAuxilliaryData,<span class="string">'Value'</span>);
-3423 
-3424 <span class="comment">% Re-store the application data</span>
-3425 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3426 
-3427 <span class="comment">% [EOF] dialogExportSettings</span>
-3428 
-3429 <a name="_sub99" href="#_subfunctions" class="code">function [selected_figures] = openFiguresDialog(figure_names,hf)</a>
-3430 
-3431 w = 230;
-3432 h = 200;
-3433 dx = 10;
-3434 dy = 35;
-3435 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
-3436 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Select open figures to export'</span>, <span class="keyword">...</span>
-3437     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
-3438     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3439     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
-3440     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
-3441     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
-3442     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
-3443     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3444     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
-3445     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
-3446     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
-3447 dialog_params.figure_names               = figure_names;
-3448 dialog_params.selected_figures           = <span class="string">''</span>;
-3449 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3450 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
-3451 
-3452 <span class="comment">% Build the graphics:</span>
-3453 <span class="comment">% -------------------</span>
-3454 handles.ListboxPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
-3455     <span class="string">'Title'</span>, <span class="string">'Figures'</span>, <span class="keyword">...</span>
-3456     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3457     <span class="string">'Position'</span>,[dx dy (w-2*dx) h-dx-dy+10]);
-3458 handles.Figures = uicontrol(<span class="string">'Style'</span>,<span class="string">'listbox'</span>, <span class="keyword">...</span>
-3459     <span class="string">'Parent'</span>,handles.ListboxPanel, <span class="keyword">...</span>
-3460     <span class="string">'BackGroundColor'</span>,<span class="string">'white'</span>,<span class="keyword">...</span>
-3461     <span class="string">'String'</span>,figure_names, <span class="keyword">...</span>
-3462     <span class="string">'Min'</span>, 0,<span class="keyword">...</span>
-3463     <span class="string">'Max'</span>, 2,<span class="keyword">...</span>
-3464     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
-3465     <span class="string">'Position'</span>,[15 35 (w-5*dx) 100]);
-3466 
-3467 
-3468 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3469     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3470     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
-3471     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3472     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
-3473 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
-3474     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
-3475     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
-3476     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
-3477     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
-3478 
-3479 <span class="comment">% Update the UI controls:</span>
-3480 <span class="comment">% -----------------------</span>
-3481 
-3482 
-3483 <span class="comment">% Set the callbacks:</span>
-3484 <span class="comment">% ------------------</span>
-3485 set(handles.Figure,            <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
-3486 set(handles.Figures,           <span class="string">'Callback'</span>,       {@<a href="#_sub100" class="code" title="subfunction dialogSelectFigures(hObject,eventdata,handles)">dialogSelectFigures</a>    handles})
-3487 set(handles.OK,                <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,       handles.OK})
-3488 set(handles.Cancel,            <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,   handles})
+3263 <a name="_sub97" href="#_subfunctions" class="code">function [beam_angle,magnetic_variation,wse,output_auxilliary_data] = exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxilliary_data,hf)</a>
+3264 w = 230;
+3265 h = 200;
+3266 dx = 10;
+3267 dy = 35;
+3268 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
+3269 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Export Settings'</span>, <span class="keyword">...</span>
+3270     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
+3271     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3272     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
+3273     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
+3274     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3275     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3276     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3277     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
+3278     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3279     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+3280 dialog_params.beam_angle             = beam_angle;
+3281 dialog_params.magnetic_variation     = magnetic_variation;
+3282 dialog_params.wse                    = wse;
+3283 dialog_params.output_auxilliary_data = output_auxilliary_data;
+3284 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3285 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
+3286 
+3287 <span class="comment">% Build the graphics:</span>
+3288 <span class="comment">% -------------------</span>
+3289 ph = 150;
+3290 handles.BathymetryPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
+3291     <span class="string">'Title'</span>, <span class="string">'Bathymetry'</span>, <span class="keyword">...</span>
+3292     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3293     <span class="string">'Position'</span>,[dx dy (w-2*dx) h-dx-dy+10]);
+3294 handles.BeamAngleText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
+3295     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3296     <span class="string">'String'</span>,<span class="string">'Beam Angle (deg)'</span>, <span class="keyword">...</span>
+3297     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
+3298     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
+3299     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3300     <span class="string">'Position'</span>,[dx+5 h-ph+60-4 100 22]);
+3301 handles.BeamAngle = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
+3302     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3303     <span class="keyword">...</span><span class="comment">'String','Beam Angle (deg)', ...</span>
+3304     <span class="string">'String'</span>,beam_angle,<span class="keyword">...</span>
+3305     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
+3306     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3307     <span class="string">'Position'</span>,[w-dx-80 h-ph+60 50 22]);
+3308 handles.MagneticVariationText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
+3309     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3310     <span class="string">'String'</span>,<span class="string">'Magnetic Variation'</span>, <span class="keyword">...</span>
+3311     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
+3312     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
+3313     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3314     <span class="string">'Position'</span>,[dx+5 h-ph+30-4 100 22]);
+3315 handles.MagneticVariation = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
+3316     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3317     <span class="keyword">...</span><span class="comment">'String','Magnetic Variation', ...</span>
+3318     <span class="string">'String'</span>,magnetic_variation,<span class="keyword">...</span>
+3319     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
+3320     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3321     <span class="string">'Position'</span>,[w-dx-80 h-ph+30 50 22]);
+3322 handles.WSEText = uicontrol(<span class="string">'Style'</span>,<span class="string">'text'</span>, <span class="keyword">...</span>
+3323     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3324     <span class="string">'String'</span>,<span class="string">'WSE (m)'</span>, <span class="keyword">...</span>
+3325     <span class="keyword">...</span><span class="comment">'Value',beam_angle,...</span>
+3326     <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>,<span class="keyword">...</span>
+3327     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3328     <span class="string">'Position'</span>,[dx+5 h-ph-4 100 22]);
+3329 handles.WSE = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
+3330     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3331     <span class="keyword">...</span><span class="comment">'String','Magnetic Variation', ...</span>
+3332     <span class="string">'String'</span>,wse,<span class="keyword">...</span>
+3333     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
+3334     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3335     <span class="string">'Position'</span>,[w-dx-80 h-ph 50 22]);
+3336 handles.OutputAuxilliaryData = uicontrol(<span class="string">'Style'</span>,<span class="string">'checkbox'</span>, <span class="keyword">...</span>
+3337     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
+3338     <span class="string">'String'</span>,<span class="string">'Output Auxilliary Data'</span>, <span class="keyword">...</span>
+3339     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3340     <span class="string">'Position'</span>,[dx+5 20 w-2*dx-30 22]);
+3341 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3342     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3343     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
+3344     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3345     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
+3346 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3347     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3348     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
+3349     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3350     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
+3351 
+3352 <span class="comment">% Update the UI controls:</span>
+3353 <span class="comment">% -----------------------</span>
+3354 set(handles.BeamAngle,                <span class="string">'String'</span>,dialog_params.beam_angle)
+3355 set(handles.MagneticVariation,        <span class="string">'String'</span>,dialog_params.magnetic_variation)
+3356 set(handles.WSE,                      <span class="string">'String'</span>,dialog_params.wse)
+3357 set(handles.OutputAuxilliaryData,     <span class="string">'Value'</span>,dialog_params.output_auxilliary_data)
+3358 
+3359 <span class="comment">% Set the callbacks:</span>
+3360 <span class="comment">% ------------------</span>
+3361 set(handles.Figure,                      <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
+3362 set(handles.BeamAngle,                   <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
+3363 set(handles.MagneticVariation,           <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
+3364 set(handles.WSE,                         <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
+3365 set(handles.OutputAuxilliaryData,        <span class="string">'Callback'</span>,       {@<a href="#_sub98" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
+3366 set(handles.OK,                          <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,      handles.OK})
+3367 set(handles.Cancel,                      <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,  handles})
+3368 
+3369 <span class="comment">% Position the dialog and make it visible:</span>
+3370 <span class="comment">% ----------------------------------------</span>
+3371 fpos = get(hf,<span class="string">'Position'</span>);
+3372 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
+3373 movegui(handles.Figure,dpos)
+3374 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
+3375 
+3376 <span class="comment">% Hold the dialog open:</span>
+3377 <span class="comment">% ---------------------</span>
+3378 waitfor(handles.OK)
+3379 
+3380 <span class="comment">% Return the outputs and close the dialog:</span>
+3381 <span class="comment">% ----------------------------------------</span>
+3382 dialog_params           = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3383 beam_angle              = dialog_params.beam_angle;
+3384 magnetic_variation      = dialog_params.magnetic_variation;
+3385 wse                     = dialog_params.wse;
+3386 output_auxilliary_data  = dialog_params.output_auxilliary_data;
+3387 
+3388 delete(handles.Figure)
+3389 
+3390 <span class="comment">% [EOF] exportSettingsDialog</span>
+3391 
+3392 <span class="comment">% --------------------------------------------------------------------</span>
+3393 <a name="_sub98" href="#_subfunctions" class="code">function dialogExportSettings(hObject,eventdata,handles)</a>
+3394 
+3395 <span class="comment">% Grab the current data</span>
+3396 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3397 
+3398 <span class="comment">% Set it according to the dialog box values</span>
+3399 dialog_params.beam_angle                = get(handles.BeamAngle,<span class="string">'String'</span>);
+3400 dialog_params.magnetic_variation        = get(handles.MagneticVariation,<span class="string">'String'</span>);
+3401 dialog_params.wse                       = get(handles.WSE,<span class="string">'String'</span>);
+3402 dialog_params.output_auxilliary_data    = get(handles.OutputAuxilliaryData,<span class="string">'Value'</span>);
+3403 
+3404 <span class="comment">% Re-store the application data</span>
+3405 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3406 
+3407 <span class="comment">% [EOF] dialogExportSettings</span>
+3408 
+3409 <a name="_sub99" href="#_subfunctions" class="code">function [selected_figures] = openFiguresDialog(figure_names,hf)</a>
+3410 
+3411 w = 230;
+3412 h = 200;
+3413 dx = 10;
+3414 dy = 35;
+3415 the_color = get(0,<span class="string">'factoryUipanelBackgroundColor'</span>);
+3416 handles.Figure = figure(<span class="string">'Name'</span>, <span class="string">'Select open figures to export'</span>, <span class="keyword">...</span>
+3417     <span class="string">'Color'</span>,the_color, <span class="keyword">...</span>
+3418     <span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3419     <span class="string">'HandleVisibility'</span>,<span class="string">'callback'</span>, <span class="keyword">...</span>
+3420     <span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>, <span class="keyword">...</span>
+3421     <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3422     <span class="string">'ToolBar'</span>,<span class="string">'none'</span>, <span class="keyword">...</span>
+3423     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3424     <span class="string">'Position'</span>,[0 0 w h], <span class="keyword">...</span>
+3425     <span class="string">'Resize'</span>,<span class="string">'off'</span>, <span class="keyword">...</span>
+3426     <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+3427 dialog_params.figure_names               = figure_names;
+3428 dialog_params.selected_figures           = <span class="string">''</span>;
+3429 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3430 setappdata(handles.Figure,<span class="string">'original_dialog_params'</span>,dialog_params)
+3431 
+3432 <span class="comment">% Build the graphics:</span>
+3433 <span class="comment">% -------------------</span>
+3434 handles.ListboxPanel = uipanel(<span class="string">'Parent'</span>,handles.Figure, <span class="keyword">...</span>
+3435     <span class="string">'Title'</span>, <span class="string">'Figures'</span>, <span class="keyword">...</span>
+3436     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3437     <span class="string">'Position'</span>,[dx dy (w-2*dx) h-dx-dy+10]);
+3438 handles.Figures = uicontrol(<span class="string">'Style'</span>,<span class="string">'listbox'</span>, <span class="keyword">...</span>
+3439     <span class="string">'Parent'</span>,handles.ListboxPanel, <span class="keyword">...</span>
+3440     <span class="string">'BackGroundColor'</span>,<span class="string">'white'</span>,<span class="keyword">...</span>
+3441     <span class="string">'String'</span>,figure_names, <span class="keyword">...</span>
+3442     <span class="string">'Min'</span>, 0,<span class="keyword">...</span>
+3443     <span class="string">'Max'</span>, 2,<span class="keyword">...</span>
+3444     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
+3445     <span class="string">'Position'</span>,[15 35 (w-5*dx) 100]);
+3446 
+3447 
+3448 handles.OK = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3449     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3450     <span class="string">'String'</span>,  <span class="string">'OK'</span>, <span class="keyword">...</span>
+3451     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3452     <span class="string">'Position'</span>,[w/2-80-dx/4 6 80 22]);
+3453 handles.Cancel = uicontrol(<span class="string">'Style'</span>,   <span class="string">'pushbutton'</span>, <span class="keyword">...</span>
+3454     <span class="string">'Parent'</span>,  handles.Figure, <span class="keyword">...</span>
+3455     <span class="string">'String'</span>,  <span class="string">'Cancel'</span>, <span class="keyword">...</span>
+3456     <span class="string">'Units'</span>,   <span class="string">'pixels'</span>, <span class="keyword">...</span>
+3457     <span class="string">'Position'</span>,[w/2+dx/4 6 80 22]);
+3458 
+3459 <span class="comment">% Update the UI controls:</span>
+3460 <span class="comment">% -----------------------</span>
+3461 
+3462 
+3463 <span class="comment">% Set the callbacks:</span>
+3464 <span class="comment">% ------------------</span>
+3465 set(handles.Figure,            <span class="string">'CloseRequestFcn'</span>,{@<a href="#_sub96" class="code" title="subfunction dialogCloseReq(hObject,eventdata,h_OK)">dialogCloseReq</a>,handles.OK})
+3466 set(handles.Figures,           <span class="string">'Callback'</span>,       {@<a href="#_sub100" class="code" title="subfunction dialogSelectFigures(hObject,eventdata,handles)">dialogSelectFigures</a>    handles})
+3467 set(handles.OK,                <span class="string">'Callback'</span>,       {@<a href="#_sub94" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,       handles.OK})
+3468 set(handles.Cancel,            <span class="string">'Callback'</span>,       {@<a href="#_sub95" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,   handles})
+3469 
+3470 <span class="comment">% Position the dialog and make it visible:</span>
+3471 <span class="comment">% ----------------------------------------</span>
+3472 fpos = get(hf,<span class="string">'Position'</span>);
+3473 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
+3474 movegui(handles.Figure,dpos)
+3475 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
+3476 
+3477 <span class="comment">% Hold the dialog open:</span>
+3478 <span class="comment">% ---------------------</span>
+3479 waitfor(handles.OK)
+3480 
+3481 <span class="comment">% Return the outputs and close the dialog:</span>
+3482 <span class="comment">% ----------------------------------------</span>
+3483 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3484 selected_figures = dialog_params.selected_figures;
+3485 
+3486 delete(handles.Figure)
+3487 
+3488 <span class="comment">% [EOF] openFiguresDialog</span>
 3489 
-3490 <span class="comment">% Position the dialog and make it visible:</span>
-3491 <span class="comment">% ----------------------------------------</span>
-3492 fpos = get(hf,<span class="string">'Position'</span>);
-3493 dpos = [(fpos(1) + fpos(3)/2 -w/2) (fpos(2) + fpos(4)/2)];
-3494 movegui(handles.Figure,dpos)
-3495 set(handles.Figure,<span class="string">'Visible'</span>,<span class="string">'on'</span>)
-3496 
-3497 <span class="comment">% Hold the dialog open:</span>
-3498 <span class="comment">% ---------------------</span>
-3499 waitfor(handles.OK)
-3500 
-3501 <span class="comment">% Return the outputs and close the dialog:</span>
-3502 <span class="comment">% ----------------------------------------</span>
-3503 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3504 selected_figures = dialog_params.selected_figures;
-3505 
-3506 delete(handles.Figure)
-3507 
-3508 <span class="comment">% [EOF] openFiguresDialog</span>
-3509 
-3510 <span class="comment">% --------------------------------------------------------------------</span>
-3511 <a name="_sub100" href="#_subfunctions" class="code">function dialogSelectFigures(hObject,eventdata,handles)</a>
-3512 
-3513 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
-3514 
-3515 idx_selected = get(handles.Figures,<span class="string">'Value'</span>);
-3516 fig_names    = get(handles.Figures,<span class="string">'String'</span>);
-3517 selected     = fig_names(idx_selected);
-3518 dialog_params.selected_figures = selected;
-3519 
-3520 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
-3521 
-3522 
-3523 
-3524 <span class="comment">% --------------------------------------------------------------------</span>
-3525 <a name="_sub101" href="#_subfunctions" class="code">function icons = getIcons</a>
+3490 <span class="comment">% --------------------------------------------------------------------</span>
+3491 <a name="_sub100" href="#_subfunctions" class="code">function dialogSelectFigures(hObject,eventdata,handles)</a>
+3492 
+3493 dialog_params = getappdata(handles.Figure,<span class="string">'dialog_params'</span>);
+3494 
+3495 idx_selected = get(handles.Figures,<span class="string">'Value'</span>);
+3496 fig_names    = get(handles.Figures,<span class="string">'String'</span>);
+3497 selected     = fig_names(idx_selected);
+3498 dialog_params.selected_figures = selected;
+3499 
+3500 setappdata(handles.Figure,<span class="string">'dialog_params'</span>,dialog_params)
+3501 
+3502 
+3503 
+3504 <span class="comment">% --------------------------------------------------------------------</span>
+3505 <a name="_sub101" href="#_subfunctions" class="code">function icons = getIcons</a>
+3506 
+3507 <span class="comment">% Load data</span>
+3508 idx = 1;
+3509 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3510     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+3511     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   129   120   135   188   NaN   NaN   NaN
+3512     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN    96   189   NaN   NaN   130   NaN    95   NaN
+3513     NaN   NaN   206   206   206   206   NaN   NaN   NaN   NaN   NaN   NaN   NaN    84    79   NaN
+3514     NaN   206   255   255   255   255   198   197   NaN   NaN   NaN   NaN    83    79    76   NaN
+3515     198   255   255   255   255   255   255   198   198   198   198   198   198   212   212   NaN
+3516     198   255   255   255   255   255   255   255   255   255   255   255   198   157   197   NaN
+3517     198   255   226   198   198   198   198   198   198   198   198   198   198   198   177   NaN
+3518     198   255   198   218   255   255   255   255   255   255   255   255   255   255   161   NaN
+3519     198   253   198   247   255   255   255   255   255   255   255   255   255   251   155   NaN
+3520     198   226   201   255   255   255   255   255   255   255   255   255   231   206   165   NaN
+3521     198   207   215   255   255   255   255   255   255   255   255   255   239   198   159   NaN
+3522     198   198   240   255   255   255   255   255   255   255   255   255   222   157   159   NaN
+3523     198   199   255   255   255   255   255   255   255   255   255   255   191   165   159   NaN
+3524     NaN   165   165   165   165   165   165   165   165   165   165   165   165   159   159   NaN
+3525     NaN   NaN   159   159   159   159   159   159   159   159   159   159   159   159   NaN   NaN]/255;
 3526 
-3527 <span class="comment">% Load data</span>
-3528 idx = 1;
-3529 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3530     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
-3531     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   129   120   135   188   NaN   NaN   NaN
-3532     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN    96   189   NaN   NaN   130   NaN    95   NaN
-3533     NaN   NaN   206   206   206   206   NaN   NaN   NaN   NaN   NaN   NaN   NaN    84    79   NaN
-3534     NaN   206   255   255   255   255   198   197   NaN   NaN   NaN   NaN    83    79    76   NaN
-3535     198   255   255   255   255   255   255   198   198   198   198   198   198   212   212   NaN
-3536     198   255   255   255   255   255   255   255   255   255   255   255   198   157   197   NaN
-3537     198   255   226   198   198   198   198   198   198   198   198   198   198   198   177   NaN
-3538     198   255   198   218   255   255   255   255   255   255   255   255   255   255   161   NaN
-3539     198   253   198   247   255   255   255   255   255   255   255   255   255   251   155   NaN
-3540     198   226   201   255   255   255   255   255   255   255   255   255   231   206   165   NaN
-3541     198   207   215   255   255   255   255   255   255   255   255   255   239   198   159   NaN
-3542     198   198   240   255   255   255   255   255   255   255   255   255   222   157   159   NaN
-3543     198   199   255   255   255   255   255   255   255   255   255   255   191   165   159   NaN
-3544     NaN   165   165   165   165   165   165   165   165   165   165   165   165   159   159   NaN
-3545     NaN   NaN   159   159   159   159   159   159   159   159   159   159   159   159   NaN   NaN]/255;
-3546 
-3547 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3548     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
-3549     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   145   137   149   195   NaN   NaN   NaN
-3550     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   116   196   NaN   NaN   145   NaN   116   NaN
-3551     NaN   NaN   162   162   162   162   NaN   NaN   NaN   NaN   NaN   NaN   NaN   107   105   NaN
-3552     NaN   162   255   255   255   255   154   197   NaN   NaN   NaN   NaN   106   104   103   NaN
-3553     154   255   255   255   255   255   255   154   154   154   154   154   154   208   208   NaN
-3554     154   243   243   243   243   243   243   255   255   255   255   255   154   123   197   NaN
-3555     154   235   193   154   154   154   154   154   154   154   154   154   154   154   137   NaN
-3556     154   215   154   191   255   255   251   255   255   255   255   255   231   255   126   NaN
-3557     154   213   154   240   255   255   255   255   255   255   255   255   199   249   123   NaN
-3558     154   179   160   255   247   247   247   247   247   247   247   247   190   188   115   NaN
-3559     154   162   184   255   235   235   235   235   235   235   235   231   186   154   169   NaN
-3560     154   154   228   255   227   227   227   227   227   227   227   223   178   123   169   NaN
-3561     154   156   255   215   215   215   215   215   215   215   215   215   153   115   169   NaN
-3562     NaN   115   115   115   115   115   115   115   115   115   115   115   115   169   169   NaN
-3563     NaN   NaN   169   169   169   169   169   169   169   169   169   169   169   169   NaN   NaN]/255;
-3564 
-3565 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3566     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
-3567     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   166   161   170   202   NaN   NaN   NaN
-3568     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   149   205   NaN   NaN   166   NaN   148   NaN
-3569     NaN   NaN    34    34    34    34   NaN   NaN   NaN   NaN   NaN   NaN   NaN   141   144   NaN
-3570     NaN    34   255   255   255   255    25   197   NaN   NaN   NaN   NaN   142   145   147   NaN
-3571     25   255   156   156   156   156   255    25    25    25    25    25    25   200   200   NaN
-3572     25   156   140   140   140   140   140   255   255   255   255   255    25    26   197   NaN
-3573     25   132    80    25    25    25    25    25    25    25    25    25    25    25    25   NaN
-3574     25   132    25   108   255   255   247   255   255   255   255   255   132   255    25   NaN
-3575     25   112    25   137   156   156   156   156   156   156   156   156    91   150    25   NaN
-3576     25    67    33   165   148   148   148   148   148   148   148   148    83    92    13   NaN
-3577     25    38    64   156   132   132   132   132   132   132   132   132    67    25   176   NaN
-3578     25    26   122   156   124   124   124   124   124   124   124   124    67    26   176   NaN
-3579     25    28   156   108   108   108   108   108   108   108   108   108    41    13   176   NaN
-3580     NaN    13    13    13    13    13    13    13    13    13    13    13    13   176   176   NaN
-3581     NaN   NaN   176   176   176   176   176   176   176   176   176   176   176   176   NaN   NaN]/255;
+3527 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3528     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+3529     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   145   137   149   195   NaN   NaN   NaN
+3530     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   116   196   NaN   NaN   145   NaN   116   NaN
+3531     NaN   NaN   162   162   162   162   NaN   NaN   NaN   NaN   NaN   NaN   NaN   107   105   NaN
+3532     NaN   162   255   255   255   255   154   197   NaN   NaN   NaN   NaN   106   104   103   NaN
+3533     154   255   255   255   255   255   255   154   154   154   154   154   154   208   208   NaN
+3534     154   243   243   243   243   243   243   255   255   255   255   255   154   123   197   NaN
+3535     154   235   193   154   154   154   154   154   154   154   154   154   154   154   137   NaN
+3536     154   215   154   191   255   255   251   255   255   255   255   255   231   255   126   NaN
+3537     154   213   154   240   255   255   255   255   255   255   255   255   199   249   123   NaN
+3538     154   179   160   255   247   247   247   247   247   247   247   247   190   188   115   NaN
+3539     154   162   184   255   235   235   235   235   235   235   235   231   186   154   169   NaN
+3540     154   154   228   255   227   227   227   227   227   227   227   223   178   123   169   NaN
+3541     154   156   255   215   215   215   215   215   215   215   215   215   153   115   169   NaN
+3542     NaN   115   115   115   115   115   115   115   115   115   115   115   115   169   169   NaN
+3543     NaN   NaN   169   169   169   169   169   169   169   169   169   169   169   169   NaN   NaN]/255;
+3544 
+3545 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3546     [NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN
+3547     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   166   161   170   202   NaN   NaN   NaN
+3548     NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   149   205   NaN   NaN   166   NaN   148   NaN
+3549     NaN   NaN    34    34    34    34   NaN   NaN   NaN   NaN   NaN   NaN   NaN   141   144   NaN
+3550     NaN    34   255   255   255   255    25   197   NaN   NaN   NaN   NaN   142   145   147   NaN
+3551     25   255   156   156   156   156   255    25    25    25    25    25    25   200   200   NaN
+3552     25   156   140   140   140   140   140   255   255   255   255   255    25    26   197   NaN
+3553     25   132    80    25    25    25    25    25    25    25    25    25    25    25    25   NaN
+3554     25   132    25   108   255   255   247   255   255   255   255   255   132   255    25   NaN
+3555     25   112    25   137   156   156   156   156   156   156   156   156    91   150    25   NaN
+3556     25    67    33   165   148   148   148   148   148   148   148   148    83    92    13   NaN
+3557     25    38    64   156   132   132   132   132   132   132   132   132    67    25   176   NaN
+3558     25    26   122   156   124   124   124   124   124   124   124   124    67    26   176   NaN
+3559     25    28   156   108   108   108   108   108   108   108   108   108    41    13   176   NaN
+3560     NaN    13    13    13    13    13    13    13    13    13    13    13    13   176   176   NaN
+3561     NaN   NaN   176   176   176   176   176   176   176   176   176   176   176   176   NaN   NaN]/255;
+3562 
+3563 <span class="comment">% Save data</span>
+3564 idx = idx+1;
+3565 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3566     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+3567     NaN    0.6902    0.6902    0.6902    0.6902    0.6902    0.6274    0.6274    0.5647    0.5647    0.5647    0.5019    0.5019    0.4392    0.2510       NaN
+3568     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.3137    0.3765    0.2510    0.4670
+3569     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.2510    0.1882    0.2510    0.4670
+3570     NaN    0.6274    0.7529    0.5019    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.1882    0.5019    0.2510    0.4670
+3571     NaN    0.6274    0.7529    0.4392    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.1882    0.4392    0.2510    0.4670
+3572     NaN    0.6274    0.7529    0.4392    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.7529    0.1255    0.3765    0.2510    0.4670
+3573     NaN    0.5647    0.7529    0.3765    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.7529    0.7529    0.0627    0.3765    0.2510    0.4670
+3574     NaN    0.5647    0.7529    0.6902    0.3765    0.3137    0.3137    0.2510    0.1882    0.1882    0.1255    0.0627    0.3765    0.3137    0.2510    0.4670
+3575     NaN    0.5019    0.6902    0.6902    0.6274    0.5647    0.5019    0.5019    0.5019    0.4392    0.4392    0.3765    0.3137    0.3137    0.2510    0.4670
+3576     NaN    0.5019    0.6902    0.6274    0.5647    0.3137    0.3137    0.3137    0.3137    0.3137    0.3765    0.3137    0.3137    0.2510    0.2510    0.4670
+3577     NaN    0.4392    0.6274    0.5647    0.5019    0.3137       NaN    0.1882    0.8157    0.8157    0.3765    0.2510    0.2510    0.2510    0.2510    0.4670
+3578     NaN    0.4392    0.6274    0.5019    0.5019    0.3137    0.1882    0.4392    0.8784    0.8784    0.4392    0.1882    0.2510    0.1882    0.2510    0.4670
+3579     NaN    0.4392    0.5647    0.5019    0.1255    0.1255    0.6902    0.6902    0.7529    0.7529    0.3137    0.1882    0.1882    0.1882    0.2510    0.4670
+3580     NaN    0.7333    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.4670
+3581     NaN       NaN    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670];
 3582 
-3583 <span class="comment">% Save data</span>
-3584 idx = idx+1;
-3585 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3586     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
-3587     NaN    0.6902    0.6902    0.6902    0.6902    0.6902    0.6274    0.6274    0.5647    0.5647    0.5647    0.5019    0.5019    0.4392    0.2510       NaN
-3588     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.3137    0.3765    0.2510    0.4670
-3589     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.2510    0.1882    0.2510    0.4670
-3590     NaN    0.6274    0.7529    0.5019    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.1882    0.5019    0.2510    0.4670
-3591     NaN    0.6274    0.7529    0.4392    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.1882    0.4392    0.2510    0.4670
-3592     NaN    0.6274    0.7529    0.4392    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.7529    0.1255    0.3765    0.2510    0.4670
-3593     NaN    0.5647    0.7529    0.3765    1.0000    1.0000    0.9412    0.9412    0.8784    0.8157    0.7529    0.7529    0.0627    0.3765    0.2510    0.4670
-3594     NaN    0.5647    0.7529    0.6902    0.3765    0.3137    0.3137    0.2510    0.1882    0.1882    0.1255    0.0627    0.3765    0.3137    0.2510    0.4670
-3595     NaN    0.5019    0.6902    0.6902    0.6274    0.5647    0.5019    0.5019    0.5019    0.4392    0.4392    0.3765    0.3137    0.3137    0.2510    0.4670
-3596     NaN    0.5019    0.6902    0.6274    0.5647    0.3137    0.3137    0.3137    0.3137    0.3137    0.3765    0.3137    0.3137    0.2510    0.2510    0.4670
-3597     NaN    0.4392    0.6274    0.5647    0.5019    0.3137       NaN    0.1882    0.8157    0.8157    0.3765    0.2510    0.2510    0.2510    0.2510    0.4670
-3598     NaN    0.4392    0.6274    0.5019    0.5019    0.3137    0.1882    0.4392    0.8784    0.8784    0.4392    0.1882    0.2510    0.1882    0.2510    0.4670
-3599     NaN    0.4392    0.5647    0.5019    0.1255    0.1255    0.6902    0.6902    0.7529    0.7529    0.3137    0.1882    0.1882    0.1882    0.2510    0.4670
-3600     NaN    0.7333    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.2510    0.4670
-3601     NaN       NaN    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670    0.4670];
-3602 
-3603 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3604     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
-3605     NaN    0.7216    0.7216    0.6902    0.6902    0.6588    0.6274    0.5961    0.5647    0.5647    0.5333    0.5019    0.4706    0.4706    0.2196       NaN
-3606     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.3451    0.3451    0.2196    0.5378
-3607     NaN    0.6902    0.7529    0.5333    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.3137    0.1882    0.2196    0.5378
-3608     NaN    0.6588    0.7529    0.5019    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.3137    0.4706    0.2196    0.5378
-3609     NaN    0.6274    0.7529    0.4706    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.2824    0.4392    0.2196    0.5378
-3610     NaN    0.5961    0.7529    0.4392    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.8157    0.2510    0.4078    0.2196    0.5378
-3611     NaN    0.5647    0.7529    0.4078    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.8157    0.7843    0.2196    0.3765    0.2196    0.5378
-3612     NaN    0.5333    0.7216    0.7216    0.3765    0.3765    0.3451    0.3137    0.3137    0.2824    0.2510    0.2196    0.3765    0.3451    0.2196    0.5378
-3613     NaN    0.5019    0.6902    0.6902    0.6274    0.5647    0.5333    0.5019    0.4706    0.4392    0.4078    0.3765    0.3451    0.3137    0.2196    0.5378
-3614     NaN    0.4706    0.6588    0.6274    0.5647    0.3451    0.3451    0.3451    0.3451    0.3765    0.4078    0.3451    0.3137    0.2824    0.2196    0.5378
-3615     NaN    0.4706    0.6274    0.5647    0.5333    0.3451       NaN    0.2510    0.8470    0.8784    0.4706    0.2824    0.2824    0.2510    0.2196    0.5378
-3616     NaN    0.4392    0.5961    0.5333    0.5019    0.3451    0.2510    0.4706    0.8784    0.9098    0.5019    0.2510    0.2510    0.2510    0.2196    0.5378
-3617     NaN    0.4078    0.5647    0.5019    0.2824    0.1882    0.7216    0.7216    0.7529    0.7843    0.3137    0.2510    0.2510    0.2196    0.2196    0.5378
-3618     NaN    0.7176    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.5378
-3619     NaN       NaN    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378];
-3620 
-3621 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3622     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
-3623     NaN    0.9412    0.9412    0.9412    0.9412    0.9412    0.9412    0.8784    0.8784    0.8784    0.8784    0.8784    0.8157    0.8157    0.4392       NaN
-3624     NaN    0.9412    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.7529    0.6902    0.4392    0.5997
-3625     NaN    0.9412    1.0000    0.9412    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.7529    0.3765    0.4392    0.5997
-3626     NaN    0.9412    1.0000    0.8784    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.6902    0.8784    0.4392    0.5997
-3627     NaN    0.9412    1.0000    0.8784    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.6902    0.8157    0.4392    0.5997
-3628     NaN    0.8784    1.0000    0.8157    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.8784    0.6274    0.8157    0.4392    0.5997
-3629     NaN    0.8784    1.0000    0.8157    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.8784    0.8784    0.6274    0.7529    0.4392    0.5997
-3630     NaN    0.8784    1.0000    1.0000    0.8157    0.7529    0.7529    0.7529    0.6902    0.6902    0.6274    0.6274    0.7529    0.7529    0.4392    0.5997
-3631     NaN    0.8784    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8784    0.8157    0.8157    0.7529    0.7529    0.6902    0.4392    0.5997
-3632     NaN    0.8157    1.0000    1.0000    0.9412    0.4392    0.4392    0.4392    0.4392    0.4392    0.5019    0.7529    0.6902    0.6902    0.4392    0.5997
-3633     NaN    0.8157    1.0000    0.9412    0.9412    0.4392       NaN    0.2510    0.9412    0.9412    0.5019    0.6902    0.6902    0.6274    0.4392    0.5997
-3634     NaN    0.8157    1.0000    0.9412    0.8784    0.4392    0.2510    0.5647    0.9412    0.9412    0.5647    0.6274    0.6274    0.6274    0.4392    0.5997
-3635     NaN    0.8157    0.9412    0.8784    0.6902    0.2510    0.7529    0.7529    0.8157    0.8157    0.3137    0.6274    0.6274    0.6274    0.4392    0.5997
-3636     NaN    0.8275    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.5997
-3637     NaN       NaN    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997];
+3583 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3584     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+3585     NaN    0.7216    0.7216    0.6902    0.6902    0.6588    0.6274    0.5961    0.5647    0.5647    0.5333    0.5019    0.4706    0.4706    0.2196       NaN
+3586     NaN    0.6902    0.7529    0.5647    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.3451    0.3451    0.2196    0.5378
+3587     NaN    0.6902    0.7529    0.5333    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.3137    0.1882    0.2196    0.5378
+3588     NaN    0.6588    0.7529    0.5019    1.0000    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.3137    0.4706    0.2196    0.5378
+3589     NaN    0.6274    0.7529    0.4706    1.0000    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.2824    0.4392    0.2196    0.5378
+3590     NaN    0.5961    0.7529    0.4392    1.0000    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.8157    0.2510    0.4078    0.2196    0.5378
+3591     NaN    0.5647    0.7529    0.4078    1.0000    1.0000    0.9725    0.9412    0.9098    0.8470    0.8157    0.7843    0.2196    0.3765    0.2196    0.5378
+3592     NaN    0.5333    0.7216    0.7216    0.3765    0.3765    0.3451    0.3137    0.3137    0.2824    0.2510    0.2196    0.3765    0.3451    0.2196    0.5378
+3593     NaN    0.5019    0.6902    0.6902    0.6274    0.5647    0.5333    0.5019    0.4706    0.4392    0.4078    0.3765    0.3451    0.3137    0.2196    0.5378
+3594     NaN    0.4706    0.6588    0.6274    0.5647    0.3451    0.3451    0.3451    0.3451    0.3765    0.4078    0.3451    0.3137    0.2824    0.2196    0.5378
+3595     NaN    0.4706    0.6274    0.5647    0.5333    0.3451       NaN    0.2510    0.8470    0.8784    0.4706    0.2824    0.2824    0.2510    0.2196    0.5378
+3596     NaN    0.4392    0.5961    0.5333    0.5019    0.3451    0.2510    0.4706    0.8784    0.9098    0.5019    0.2510    0.2510    0.2510    0.2196    0.5378
+3597     NaN    0.4078    0.5647    0.5019    0.2824    0.1882    0.7216    0.7216    0.7529    0.7843    0.3137    0.2510    0.2510    0.2196    0.2196    0.5378
+3598     NaN    0.7176    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.2196    0.5378
+3599     NaN       NaN    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378    0.5378];
+3600 
+3601 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3602     [NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+3603     NaN    0.9412    0.9412    0.9412    0.9412    0.9412    0.9412    0.8784    0.8784    0.8784    0.8784    0.8784    0.8157    0.8157    0.4392       NaN
+3604     NaN    0.9412    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.7529    0.6902    0.4392    0.5997
+3605     NaN    0.9412    1.0000    0.9412    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.7529    0.3765    0.4392    0.5997
+3606     NaN    0.9412    1.0000    0.8784    1.0000    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.6902    0.8784    0.4392    0.5997
+3607     NaN    0.9412    1.0000    0.8784    1.0000    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.6902    0.8157    0.4392    0.5997
+3608     NaN    0.8784    1.0000    0.8157    1.0000    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.8784    0.6274    0.8157    0.4392    0.5997
+3609     NaN    0.8784    1.0000    0.8157    1.0000    1.0000    1.0000    0.9412    0.9412    0.9412    0.8784    0.8784    0.6274    0.7529    0.4392    0.5997
+3610     NaN    0.8784    1.0000    1.0000    0.8157    0.7529    0.7529    0.7529    0.6902    0.6902    0.6274    0.6274    0.7529    0.7529    0.4392    0.5997
+3611     NaN    0.8784    1.0000    1.0000    1.0000    0.9412    0.9412    0.8784    0.8784    0.8157    0.8157    0.7529    0.7529    0.6902    0.4392    0.5997
+3612     NaN    0.8157    1.0000    1.0000    0.9412    0.4392    0.4392    0.4392    0.4392    0.4392    0.5019    0.7529    0.6902    0.6902    0.4392    0.5997
+3613     NaN    0.8157    1.0000    0.9412    0.9412    0.4392       NaN    0.2510    0.9412    0.9412    0.5019    0.6902    0.6902    0.6274    0.4392    0.5997
+3614     NaN    0.8157    1.0000    0.9412    0.8784    0.4392    0.2510    0.5647    0.9412    0.9412    0.5647    0.6274    0.6274    0.6274    0.4392    0.5997
+3615     NaN    0.8157    0.9412    0.8784    0.6902    0.2510    0.7529    0.7529    0.8157    0.8157    0.3137    0.6274    0.6274    0.6274    0.4392    0.5997
+3616     NaN    0.8275    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.4392    0.5997
+3617     NaN       NaN    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997    0.5997];
+3618 
+3619 <span class="comment">% Plotting parameters</span>
+3620 idx = idx+1;
+3621 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3622     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   255
+3623     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3624     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
+3625     0   255   203    79   213   255   255   255   255   255   254   160   109   247     0   165
+3626     0   254    71   224    79   255   255   255   255   255   211   101   165   123     0   165
+3627     0   191   123   255   123   203   255   255   255   255   101   224   254    79     0   165
+3628     0   101   239   255   224   109   255   255   255   247    79   254   254   123    36   165
+3629     0   123   254   255   255    79   247   255   255   165   165   255   255   224     0   165
+3630     0   255   255   255   254   160   173   255   255    87   239   255   255   255     0   165
+3631     0   255   255   255   255   224   101   255   239    87   255   255   255   255     0   165
+3632     0   255   255   255   255   255   101   224   123   191   255   255   255   255     0   165
+3633     0   255   255   255   255   254   224    54   101   255   255   255   255   255     0   165
+3634     0   255   255   255   255   255   255   247   255   255   255   255   255   255     0   165
+3635     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
+3636     0     0     0     1     0     0     0     0     0     0     0     0     0     0     0   165
+3637     255   165   165   165   172   165   165   165   165   165   165   165   165   165   165   165]/255;
 3638 
-3639 <span class="comment">% Plotting parameters</span>
-3640 idx = idx+1;
-3641 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3642     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   255
-3643     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3644     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
-3645     0   255   203    79   213   255   255   255   255   255   254   160   109   247     0   165
-3646     0   254    71   224    79   255   255   255   255   255   211   101   165   123     0   165
-3647     0   191   123   255   123   203   255   255   255   255   101   224   254    79     0   165
-3648     0   101   239   255   224   109   255   255   255   247    79   254   254   123    36   165
-3649     0   123   254   255   255    79   247   255   255   165   165   255   255   224     0   165
-3650     0   255   255   255   254   160   173   255   255    87   239   255   255   255     0   165
-3651     0   255   255   255   255   224   101   255   239    87   255   255   255   255     0   165
-3652     0   255   255   255   255   255   101   224   123   191   255   255   255   255     0   165
-3653     0   255   255   255   255   254   224    54   101   255   255   255   255   255     0   165
-3654     0   255   255   255   255   255   255   247   255   255   255   255   255   255     0   165
-3655     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
-3656     0     0     0     1     0     0     0     0     0     0     0     0     0     0     0   165
-3657     255   165   165   165   172   165   165   165   165   165   165   165   165   165   165   165]/255;
-3658 
-3659 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3660     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
-3661     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0     0
-3662     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
-3663     0   255   203    79   213   255   255   255   255   255   254   160   109   247     0   165
-3664     0   254    71   224    79   255   255   255   255   255   211   101   165   123     0   165
-3665     0   191   123   255   123   203   255   255   255   255   101   224   254    79     0   165
-3666     0   101   239   255   224   109   255   255   255   247    79   254   254   123     0   165
-3667     0   123   254   255   255    79   247   255   255   165   165   255   255   224     0   165
-3668     0   255   255   255   254   160   173   255   255    87   239   255   255   255     0   165
-3669     0   255   255   255   255   224   101   255   239    87   255   255   255   255     0   165
-3670     0   255   255   255   255   255   101   224   123   191   255   255   255   255     0   165
-3671     0   255   255   255   255   254   224    54   101   255   255   255   255   255     0   165
-3672     0   255   255   255   255   255   255   247   255   255   255   255   255   255     0   165
-3673     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
-3674     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   165
-3675     0   165   165   165   153   165   165   165   165   165   165   165   165   165   165   165]/255;
-3676 
-3677 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3678     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   255
-3679     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3680     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3681     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3682     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3683     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3684     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3685     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3686     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3687     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3688     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3689     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3690     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3691     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
-3692     0    24    39     0     0     0     0     0     0     0     0     0     0     0     0   145
-3693     255   145   145   145   134   145   145   145   145   145   145   145   145   145   145   145]/255;
+3639 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3640     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+3641     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0     0
+3642     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
+3643     0   255   203    79   213   255   255   255   255   255   254   160   109   247     0   165
+3644     0   254    71   224    79   255   255   255   255   255   211   101   165   123     0   165
+3645     0   191   123   255   123   203   255   255   255   255   101   224   254    79     0   165
+3646     0   101   239   255   224   109   255   255   255   247    79   254   254   123     0   165
+3647     0   123   254   255   255    79   247   255   255   165   165   255   255   224     0   165
+3648     0   255   255   255   254   160   173   255   255    87   239   255   255   255     0   165
+3649     0   255   255   255   255   224   101   255   239    87   255   255   255   255     0   165
+3650     0   255   255   255   255   255   101   224   123   191   255   255   255   255     0   165
+3651     0   255   255   255   255   254   224    54   101   255   255   255   255   255     0   165
+3652     0   255   255   255   255   255   255   247   255   255   255   255   255   255     0   165
+3653     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   165
+3654     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   165
+3655     0   165   165   165   153   165   165   165   165   165   165   165   165   165   165   165]/255;
+3656 
+3657 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3658     [  0     0     0     0     0     0     0     0     0     0     0     0     0     0     0   255
+3659     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3660     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3661     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3662     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3663     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3664     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3665     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3666     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3667     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3668     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3669     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3670     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3671     0   255   255   255   255   255   255   255   255   255   255   255   255   255     0   145
+3672     0    24    39     0     0     0     0     0     0     0     0     0     0     0     0   145
+3673     255   145   145   145   134   145   145   145   145   145   145   145   145   145   145   145]/255;
+3674 
+3675 <span class="comment">% Processing parameters</span>
+3676 idx = idx+1;
+3677 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3678     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
+3679     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
+3680     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3681     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3682     255     0   255   255   107   255   255   107   255   255   107   255   107   255     0   255
+3683     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3684     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3685     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3686     255     0   255   255   107   255   107   255   107   255   255   107   255   255     0   255
+3687     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3688     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3689     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3690     255     0   255   107   255   107   255   107   255   255   107   255   107   255     0   255
+3691     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
+3692     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3693     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
 3694 
-3695 <span class="comment">% Processing parameters</span>
-3696 idx = idx+1;
-3697 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3698     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
-3699     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
-3700     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3701     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3702     255     0   255   255   107   255   255   107   255   255   107   255   107   255     0   255
-3703     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3704     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3705     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3706     255     0   255   255   107   255   107   255   107   255   255   107   255   255     0   255
-3707     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3708     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3709     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3710     255     0   255   107   255   107   255   107   255   255   107   255   107   255     0   255
-3711     255     0   255   255   107   255   255   107   255   255   255   107   255   255     0   255
-3712     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3713     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
-3714 
-3715 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3716     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
-3717     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
-3718     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3695 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3696     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
+3697     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
+3698     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3699     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3700     255     0   255   255    99   255   255    99   255   255    99   255    99   255     0   255
+3701     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3702     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3703     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3704     255     0   255   255    99   255    99   255    99   255   255    99   255   255     0   255
+3705     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3706     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3707     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3708     255     0   255    99   255    99   255    99   255   255    99   255    99   255     0   255
+3709     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3710     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3711     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
+3712 
+3713 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3714     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
+3715     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
+3716     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3717     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
+3718     255     0   255   255    99   255   255    99   255   255    99   255    99   255     0   255
 3719     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3720     255     0   255   255    99   255   255    99   255   255    99   255    99   255     0   255
+3720     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
 3721     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3722     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3722     255     0   255   255    99   255    99   255    99   255   255    99   255   255     0   255
 3723     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3724     255     0   255   255    99   255    99   255    99   255   255    99   255   255     0   255
+3724     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
 3725     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3726     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3726     255     0   255    99   255    99   255    99   255   255    99   255    99   255     0   255
 3727     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3728     255     0   255    99   255    99   255    99   255   255    99   255    99   255     0   255
-3729     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3730     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3731     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
-3732 
-3733 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3734     [255   255   255   255   255   255   255   255   255   255   255   255   255   255   255   255
-3735     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255
-3736     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3737     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3738     255     0   255   255    99   255   255    99   255   255    99   255    99   255     0   255
-3739     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3740     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3741     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3742     255     0   255   255    99   255    99   255    99   255   255    99   255   255     0   255
-3743     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3744     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3745     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3746     255     0   255    99   255    99   255    99   255   255    99   255    99   255     0   255
-3747     255     0   255   255    99   255   255    99   255   255   255    99   255   255     0   255
-3748     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
-3749     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
-3750 
-3751 <span class="comment">% Export bathymetry dialog</span>
-3752 idx = idx+1;
-3753 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3754     [226    226    226    226    226    226    226    197    220    226    226    226    226    226    226    226
-3755     226    226    226    226    226    227    241    144    158    241    228    228    229    228    229    226
-3756     226    243    243    243    237    237    246    164    119    242    232    225    226    218    243    206
-3757     179    152    153    166    148    148    177    179    63    185    141    146    154    151    179    189
-3758     167    4    134    175    151    164    161    198    122    255    212    233    215    199    140    185
-3759     134    50    209    241    255    255    133    118    15    20    28    94    4    0    0    89
-3760     136    0    0    0    0    0    0    0    0    0    0    0    0    21    56    140
-3761     208    255    226    233    255    242    215    232    251    237    226    233    207    222    156    139
-3762     172    159    152    153    166    145    178    147    169    164    161    163    154    153    128    135
-3763     160    164    148    139    171    150    165    154    165    185    166    173    190    190    148    162
-3764     214    233    211    203    217    212    217    238    202    236    213    222    230    224    184    184
-3765     219    206    174    190    219    204    201    218    183    224    219    222    217    202    176    182
-3766     210    182    183    214    225    220    203    229    175    217    220    220    222    212    184    185
-3767     197    175    207    224    223    220    205    231    170    221    220    220    222    217    191    187
-3768     186    193    223    224    220    201    203    228    171    224    218    220    222    215    190    187
-3769     189    211    220    216    204    201    214    213    187    213    216    220    220    212    193    189
-3770     ]/255;
-3771 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3772     [233    233    233    233    233    233    233    204    227    233    233    233    233    233    233    233
-3773     233    233    233    233    233    234    247    152    167    247    235    234    235    234    236    233
-3774     233    242    242    240    236    237    247    170    131    243    234    231    234    224    245    212
-3775     208    193    199    209    196    196    211    197    100    211    194    196    200    199    202    196
-3776     205    19    179    199    183    197    182    179    162    255    217    246    234    231    191    199
-3777     167    47    229    240    255    252    139    154    87    86    99    139    79    46    23    121
-3778     175    30    47    29    28    19    5    41    33    39    54    55    65    83    81    185
-3779     236    255    249    253    255    251    240    255    235    255    247    252    233    245    204    190
-3780     208    200    195    196    204    192    214    202    144    215    201    201    195    195    177    186
-3781     200    201    189    183    206    192    204    210    111    231    209    214    222    223    199    209
-3782     245    255    251    247    254    254    252    255    156    255    254    255    255    254    235    232
-3783     249    244    227    237    247    244    242    255    132    239    254    250    247    244    228    231
-3784     245    231    231    246    253    249    243    255    119    223    255    251    250    245    229    232
-3785     239    227    244    251    251    248    244    255    110    217    255    250    251    246    233    233
-3786     233    237    250    252    249    242    246    255    115    209    255    250    251    246    232    232
-3787     234    245    249    247    242    242    246    231    154    192    246    249    249    245    234    233
-3788     ]/255;
-3789 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3790     [233    233    233    233    233    233    233    204    227    233    233    233    233    233    233    233
-3791     233    233    233    233    233    234    247    152    167    247    235    234    235    234    236    233
-3792     233    242    242    240    236    237    247    170    131    243    234    231    234    224    245    212
-3793     208    193    199    209    196    196    211    197    100    211    194    196    200    199    202    196
-3794     205    19    179    199    183    197    182    179    162    255    217    246    234    231    191    199
-3795     167    47    229    240    255    252    139    154    87    86    99    139    79    46    23    121
-3796     175    30    47    29    28    19    5    41    33    39    54    55    65    83    81    185
-3797     236    255    249    253    255    251    240    255    235    255    247    252    233    245    204    190
-3798     208    200    195    196    204    192    214    202    144    215    201    201    195    195    177    186
-3799     200    201    189    183    206    192    204    210    111    231    209    214    222    223    199    209
-3800     245    255    251    247    254    254    252    255    156    255    254    255    255    254    235    232
-3801     249    244    227    237    247    244    242    255    132    239    254    250    247    244    228    231
-3802     245    231    231    246    253    249    243    255    119    223    255    251    250    245    229    232
-3803     239    227    244    251    251    248    244    255    110    217    255    250    251    246    233    233
-3804     233    237    250    252    249    242    246    255    115    209    255    250    251    246    232    232
-3805     234    245    249    247    242    242    246    231    154    192    246    249    249    245    234    233
-3806     ]/255;
+3728     255     0   255   255   255   255   255   255   255   255   255   255   255   255     0   255
+3729     255     0     0     0   255   255   255   255   255   255   255   255     0     0     0   255]/255;
+3730 
+3731 <span class="comment">% Export bathymetry dialog</span>
+3732 idx = idx+1;
+3733 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3734     [226    226    226    226    226    226    226    197    220    226    226    226    226    226    226    226
+3735     226    226    226    226    226    227    241    144    158    241    228    228    229    228    229    226
+3736     226    243    243    243    237    237    246    164    119    242    232    225    226    218    243    206
+3737     179    152    153    166    148    148    177    179    63    185    141    146    154    151    179    189
+3738     167    4    134    175    151    164    161    198    122    255    212    233    215    199    140    185
+3739     134    50    209    241    255    255    133    118    15    20    28    94    4    0    0    89
+3740     136    0    0    0    0    0    0    0    0    0    0    0    0    21    56    140
+3741     208    255    226    233    255    242    215    232    251    237    226    233    207    222    156    139
+3742     172    159    152    153    166    145    178    147    169    164    161    163    154    153    128    135
+3743     160    164    148    139    171    150    165    154    165    185    166    173    190    190    148    162
+3744     214    233    211    203    217    212    217    238    202    236    213    222    230    224    184    184
+3745     219    206    174    190    219    204    201    218    183    224    219    222    217    202    176    182
+3746     210    182    183    214    225    220    203    229    175    217    220    220    222    212    184    185
+3747     197    175    207    224    223    220    205    231    170    221    220    220    222    217    191    187
+3748     186    193    223    224    220    201    203    228    171    224    218    220    222    215    190    187
+3749     189    211    220    216    204    201    214    213    187    213    216    220    220    212    193    189
+3750     ]/255;
+3751 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3752     [233    233    233    233    233    233    233    204    227    233    233    233    233    233    233    233
+3753     233    233    233    233    233    234    247    152    167    247    235    234    235    234    236    233
+3754     233    242    242    240    236    237    247    170    131    243    234    231    234    224    245    212
+3755     208    193    199    209    196    196    211    197    100    211    194    196    200    199    202    196
+3756     205    19    179    199    183    197    182    179    162    255    217    246    234    231    191    199
+3757     167    47    229    240    255    252    139    154    87    86    99    139    79    46    23    121
+3758     175    30    47    29    28    19    5    41    33    39    54    55    65    83    81    185
+3759     236    255    249    253    255    251    240    255    235    255    247    252    233    245    204    190
+3760     208    200    195    196    204    192    214    202    144    215    201    201    195    195    177    186
+3761     200    201    189    183    206    192    204    210    111    231    209    214    222    223    199    209
+3762     245    255    251    247    254    254    252    255    156    255    254    255    255    254    235    232
+3763     249    244    227    237    247    244    242    255    132    239    254    250    247    244    228    231
+3764     245    231    231    246    253    249    243    255    119    223    255    251    250    245    229    232
+3765     239    227    244    251    251    248    244    255    110    217    255    250    251    246    233    233
+3766     233    237    250    252    249    242    246    255    115    209    255    250    251    246    232    232
+3767     234    245    249    247    242    242    246    231    154    192    246    249    249    245    234    233
+3768     ]/255;
+3769 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3770     [233    233    233    233    233    233    233    204    227    233    233    233    233    233    233    233
+3771     233    233    233    233    233    234    247    152    167    247    235    234    235    234    236    233
+3772     233    242    242    240    236    237    247    170    131    243    234    231    234    224    245    212
+3773     208    193    199    209    196    196    211    197    100    211    194    196    200    199    202    196
+3774     205    19    179    199    183    197    182    179    162    255    217    246    234    231    191    199
+3775     167    47    229    240    255    252    139    154    87    86    99    139    79    46    23    121
+3776     175    30    47    29    28    19    5    41    33    39    54    55    65    83    81    185
+3777     236    255    249    253    255    251    240    255    235    255    247    252    233    245    204    190
+3778     208    200    195    196    204    192    214    202    144    215    201    201    195    195    177    186
+3779     200    201    189    183    206    192    204    210    111    231    209    214    222    223    199    209
+3780     245    255    251    247    254    254    252    255    156    255    254    255    255    254    235    232
+3781     249    244    227    237    247    244    242    255    132    239    254    250    247    244    228    231
+3782     245    231    231    246    253    249    243    255    119    223    255    251    250    245    229    232
+3783     239    227    244    251    251    248    244    255    110    217    255    250    251    246    233    233
+3784     233    237    250    252    249    242    246    255    115    209    255    250    251    246    232    232
+3785     234    245    249    247    242    242    246    231    154    192    246    249    249    245    234    233
+3786     ]/255;
+3787 
+3788 <span class="comment">% Export Figures Dialog</span>
+3789 idx = idx + 1;
+3790 icons(idx).data(:,:,1) = <span class="keyword">...</span>
+3791     [NaN    NaN    10    23    23    23    23    23    23    23    21    3    NaN    NaN    NaN    NaN
+3792     NaN    NaN    67    255    255    255    255    255    255    255    201    141    NaN    NaN    NaN    NaN
+3793     NaN    NaN    43    255    241    240    241    246    252    255    186    220    151    NaN    NaN    NaN
+3794     NaN    NaN    42    255    238    237    237    236    238    254    210    178    214    38    NaN    NaN
+3795     NaN    NaN    43    255    241    241    241    241    240    244    252    255    255    79    NaN    NaN
+3796     NaN    NaN    47    255    232    232    225    224    224    223    220    238    255    69    NaN    NaN
+3797     NaN    NaN    55    233    114    225    230    223    221    221    215    237    255    67    NaN    NaN
+3798     4    NaN    37    181    168    126    193    214    205    200    203    242    255    67    NaN    NaN
+3799     41    164    134    153    144    139    131    209    238    223    242    240    255    67    NaN    NaN
+3800     41    118    91    91    122    125    120    106    170    241    245    241    255    67    NaN    NaN
+3801     41    113    91    89    97    108    99    89    117    205    190    230    255    67    NaN    NaN
+3802     41    124    94    88    78    74    81    179    255    252    244    241    255    67    NaN    NaN
+3803     13    34    76    187    88    92    222    255    255    250    250    250    255    73    NaN    NaN
+3804     NaN    NaN    69    236    121    227    255    243    238    238    238    238    255    82    NaN    NaN
+3805     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
+3806 
 3807 
-3808 <span class="comment">% Export Figures Dialog</span>
-3809 idx = idx + 1;
-3810 icons(idx).data(:,:,1) = <span class="keyword">...</span>
-3811     [NaN    NaN    10    23    23    23    23    23    23    23    21    3    NaN    NaN    NaN    NaN
-3812     NaN    NaN    67    255    255    255    255    255    255    255    201    141    NaN    NaN    NaN    NaN
-3813     NaN    NaN    43    255    241    240    241    246    252    255    186    220    151    NaN    NaN    NaN
-3814     NaN    NaN    42    255    238    237    237    236    238    254    210    178    214    38    NaN    NaN
-3815     NaN    NaN    43    255    241    241    241    241    240    244    252    255    255    79    NaN    NaN
-3816     NaN    NaN    47    255    232    232    225    224    224    223    220    238    255    69    NaN    NaN
-3817     NaN    NaN    55    233    114    225    230    223    221    221    215    237    255    67    NaN    NaN
-3818     4    NaN    37    181    168    126    193    214    205    200    203    242    255    67    NaN    NaN
-3819     41    164    134    153    144    139    131    209    238    223    242    240    255    67    NaN    NaN
-3820     41    118    91    91    122    125    120    106    170    241    245    241    255    67    NaN    NaN
-3821     41    113    91    89    97    108    99    89    117    205    190    230    255    67    NaN    NaN
-3822     41    124    94    88    78    74    81    179    255    252    244    241    255    67    NaN    NaN
-3823     13    34    76    187    88    92    222    255    255    250    250    250    255    73    NaN    NaN
-3824     NaN    NaN    69    236    121    227    255    243    238    238    238    238    255    82    NaN    NaN
-3825     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
-3826 
-3827 
-3828 icons(idx).data(:,:,2) = <span class="keyword">...</span>
-3829     [NaN    NaN    10    24    24    24    24    24    24    24    22    4    NaN    NaN    NaN    NaN
-3830     NaN    NaN    69    255    255    255    255    255    255    255    204    144    NaN    NaN    NaN    NaN
-3831     NaN    NaN    45    255    241    240    241    246    252    255    189    222    155    NaN    NaN    NaN
-3832     NaN    NaN    43    255    238    237    237    236    238    254    210    179    215    39    NaN    NaN
-3833     NaN    NaN    44    255    241    241    241    241    240    244    252    255    255    80    NaN    NaN
-3834     NaN    NaN    49    255    231    230    225    224    224    223    220    238    255    70    NaN    NaN
-3835     NaN    NaN    56    227    136    214    227    223    221    221    215    237    255    68    NaN    NaN
-3836     4    NaN    19    157    243    154    181    210    204    200    203    242    255    67    NaN    NaN
-3837     51    255    231    225    219    217    172    197    232    222    242    240    255    67    NaN    NaN
-3838     52    227    184    183    195    201    204    172    169    239    245    241    255    67    NaN    NaN
-3839     51    218    177    177    180    187    187    177    130    202    190    230    255    67    NaN    NaN
-3840     51    237    195    183    172    170    152    175    255    251    244    241    255    67    NaN    NaN
-3841     15    38    72    173    183    149    211    255    255    250    250    250    255    73    NaN    NaN
-3842     NaN    NaN    65    226    174    214    252    242    238    238    238    238    255    84    NaN    NaN
-3843     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
-3844 
+3808 icons(idx).data(:,:,2) = <span class="keyword">...</span>
+3809     [NaN    NaN    10    24    24    24    24    24    24    24    22    4    NaN    NaN    NaN    NaN
+3810     NaN    NaN    69    255    255    255    255    255    255    255    204    144    NaN    NaN    NaN    NaN
+3811     NaN    NaN    45    255    241    240    241    246    252    255    189    222    155    NaN    NaN    NaN
+3812     NaN    NaN    43    255    238    237    237    236    238    254    210    179    215    39    NaN    NaN
+3813     NaN    NaN    44    255    241    241    241    241    240    244    252    255    255    80    NaN    NaN
+3814     NaN    NaN    49    255    231    230    225    224    224    223    220    238    255    70    NaN    NaN
+3815     NaN    NaN    56    227    136    214    227    223    221    221    215    237    255    68    NaN    NaN
+3816     4    NaN    19    157    243    154    181    210    204    200    203    242    255    67    NaN    NaN
+3817     51    255    231    225    219    217    172    197    232    222    242    240    255    67    NaN    NaN
+3818     52    227    184    183    195    201    204    172    169    239    245    241    255    67    NaN    NaN
+3819     51    218    177    177    180    187    187    177    130    202    190    230    255    67    NaN    NaN
+3820     51    237    195    183    172    170    152    175    255    251    244    241    255    67    NaN    NaN
+3821     15    38    72    173    183    149    211    255    255    250    250    250    255    73    NaN    NaN
+3822     NaN    NaN    65    226    174    214    252    242    238    238    238    238    255    84    NaN    NaN
+3823     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
+3824 
+3825 
+3826 icons(idx).data(:,:,3) = <span class="keyword">...</span>
+3827     [NaN    NaN    9    23    23    23    23    23    23    23    21    3    NaN    NaN    NaN    NaN
+3828     NaN    NaN    66    255    255    255    255    255    255    255    196    139    NaN    NaN    NaN    NaN
+3829     NaN    NaN    42    255    239    238    238    244    252    255    186    216    148    NaN    NaN    NaN
+3830     NaN    NaN    41    255    236    235    235    234    237    251    210    176    212    36    NaN    NaN
+3831     NaN    NaN    42    255    239    239    239    239    238    241    252    255    255    78    NaN    NaN
+3832     NaN    NaN    46    255    233    232    224    223    223    223    219    235    255    67    NaN    NaN
+3833     NaN    NaN    53    240    101    232    230    221    219    218    213    235    255    65    NaN    NaN
+3834     5    NaN    60    212    94    107    205    215    203    198    201    240    255    66    NaN    NaN
+3835     34    56    40    80    70    62    94    222    241    221    240    238    255    66    NaN    NaN
+3836     35    10    2    0    51    55    36    46    176    240    243    239    255    66    NaN    NaN
+3837     35    11    9    7    16    34    12    6    110    204    188    228    255    66    NaN    NaN
+3838     35    14    0    0    0    0    14    187    255    251    242    239    255    66    NaN    NaN
+3839     12    37    84    206    0    41    234    255    255    248    248    248    255    72    NaN    NaN
+3840     NaN    NaN    69    249    79    239    255    240    236    236    236    236    255    80    NaN    NaN
+3841     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
+3842 
+3843 
+3844 <span class="comment">% [EOF] getIcons</span>
 3845 
-3846 icons(idx).data(:,:,3) = <span class="keyword">...</span>
-3847     [NaN    NaN    9    23    23    23    23    23    23    23    21    3    NaN    NaN    NaN    NaN
-3848     NaN    NaN    66    255    255    255    255    255    255    255    196    139    NaN    NaN    NaN    NaN
-3849     NaN    NaN    42    255    239    238    238    244    252    255    186    216    148    NaN    NaN    NaN
-3850     NaN    NaN    41    255    236    235    235    234    237    251    210    176    212    36    NaN    NaN
-3851     NaN    NaN    42    255    239    239    239    239    238    241    252    255    255    78    NaN    NaN
-3852     NaN    NaN    46    255    233    232    224    223    223    223    219    235    255    67    NaN    NaN
-3853     NaN    NaN    53    240    101    232    230    221    219    218    213    235    255    65    NaN    NaN
-3854     5    NaN    60    212    94    107    205    215    203    198    201    240    255    66    NaN    NaN
-3855     34    56    40    80    70    62    94    222    241    221    240    238    255    66    NaN    NaN
-3856     35    10    2    0    51    55    36    46    176    240    243    239    255    66    NaN    NaN
-3857     35    11    9    7    16    34    12    6    110    204    188    228    255    66    NaN    NaN
-3858     35    14    0    0    0    0    14    187    255    251    242    239    255    66    NaN    NaN
-3859     12    37    84    206    0    41    234    255    255    248    248    248    255    72    NaN    NaN
-3860     NaN    NaN    69    249    79    239    255    240    236    236    236    236    255    80    NaN    NaN
-3861     NaN    NaN    NaN    0    0    0    0    0    0    0    0    0    0    0    NaN    NaN]/255;
-3862 
-3863 
-3864 <span class="comment">% [EOF] getIcons</span>
-3865 
-3866 <a name="_sub102" href="#_subfunctions" class="code">function guiparams = createGUIparams</a>
-3867 <span class="comment">% Creates the guiparams structure with specified defaults.</span>
-3868 
-3869 <span class="comment">% Organized by GUI panels</span>
-3870 <span class="comment">%%%%%%%%%%%%%%%%%%%</span>
-3871 <span class="comment">% SHIPTRACKS PLOT %</span>
-3872 <span class="comment">%%%%%%%%%%%%%%%%%%%</span>
-3873 guiparams.horizontal_grid_node_spacing       = 1.0;
-3874 
-3875 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
-3876 <span class="comment">% CROSS SECTION PLOT %</span>
-3877 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
-3878 guiparams.contours                           = <span class="string">''</span>; <span class="comment">% Set below</span>
-3879 guiparams.contour                            = <span class="string">''</span>; <span class="comment">% Set below</span>
-3880 guiparams.idx_contour                        = 1;
-3881 guiparams.vertical_exaggeration              = 10;
-3882 guiparams.vector_scale_cross_section         = 0.2;
-3883 guiparams.horizontal_vector_spacing          = 1;
-3884 guiparams.vertical_vector_spacing            = 1;
-3885 guiparams.horizontal_smoothing_window        = 1;
-3886 guiparams.vertical_smoothing_window          = 1;
-3887 guiparams.plot_secondary_flow_vectors        = true;
-3888 guiparams.secondary_flows                    = <span class="string">''</span>; <span class="comment">% Set below</span>
-3889 guiparams.secondary_flow_vector_variable     = <span class="string">''</span>; <span class="comment">% Set below</span>
-3890 guiparams.idx_secondary_flow_vector_variable = 1;
-3891 guiparams.include_vertical_velocity          = true;
+3846 <a name="_sub102" href="#_subfunctions" class="code">function guiparams = createGUIparams</a>
+3847 <span class="comment">% Creates the guiparams structure with specified defaults.</span>
+3848 
+3849 <span class="comment">% Organized by GUI panels</span>
+3850 <span class="comment">%%%%%%%%%%%%%%%%%%%</span>
+3851 <span class="comment">% SHIPTRACKS PLOT %</span>
+3852 <span class="comment">%%%%%%%%%%%%%%%%%%%</span>
+3853 guiparams.horizontal_grid_node_spacing       = 1.0;
+3854 
+3855 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+3856 <span class="comment">% CROSS SECTION PLOT %</span>
+3857 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+3858 guiparams.contours                           = <span class="string">''</span>; <span class="comment">% Set below</span>
+3859 guiparams.contour                            = <span class="string">''</span>; <span class="comment">% Set below</span>
+3860 guiparams.idx_contour                        = 1;
+3861 guiparams.vertical_exaggeration              = 10;
+3862 guiparams.vector_scale_cross_section         = 0.2;
+3863 guiparams.horizontal_vector_spacing          = 1;
+3864 guiparams.vertical_vector_spacing            = 1;
+3865 guiparams.horizontal_smoothing_window        = 1;
+3866 guiparams.vertical_smoothing_window          = 1;
+3867 guiparams.plot_secondary_flow_vectors        = true;
+3868 guiparams.secondary_flows                    = <span class="string">''</span>; <span class="comment">% Set below</span>
+3869 guiparams.secondary_flow_vector_variable     = <span class="string">''</span>; <span class="comment">% Set below</span>
+3870 guiparams.idx_secondary_flow_vector_variable = 1;
+3871 guiparams.include_vertical_velocity          = true;
+3872 
+3873 <span class="comment">%%%%%%%%%%%%%%%%%%</span>
+3874 <span class="comment">% PLAN VIEW PLOT %</span>
+3875 <span class="comment">%%%%%%%%%%%%%%%%%%</span>
+3876 guiparams.depth_range_min                    = 0;
+3877 guiparams.depth_range_max                    = inf;
+3878 guiparams.vector_scale_plan_view             = 1;
+3879 guiparams.vector_spacing_plan_view           = 1;
+3880 guiparams.smoothing_window_size              = 1;
+3881 guiparams.map_depth_averaged_velocities      = true;
+3882 guiparams.display_shoreline                  = false;
+3883 guiparams.add_background                     = false;
+3884 
+3885 <span class="comment">%%%%%%%%%%%%%%%</span>
+3886 <span class="comment">% DATA EXPORT %</span>
+3887 <span class="comment">%%%%%%%%%%%%%%%</span>
+3888 guiparams.beam_angle                         = 20.0;
+3889 guiparams.magnetic_variation                 = 0.0;
+3890 guiparams.wse                                = 0.0;
+3891 guiparams.output_auxiliary_data              = false;
 3892 
-3893 <span class="comment">%%%%%%%%%%%%%%%%%%</span>
-3894 <span class="comment">% PLAN VIEW PLOT %</span>
-3895 <span class="comment">%%%%%%%%%%%%%%%%%%</span>
-3896 guiparams.depth_range_min                    = 0;
-3897 guiparams.depth_range_max                    = inf;
-3898 guiparams.vector_scale_plan_view             = 1;
-3899 guiparams.vector_spacing_plan_view           = 1;
-3900 guiparams.smoothing_window_size              = 1;
-3901 guiparams.map_depth_averaged_velocities      = true;
-3902 guiparams.display_shoreline                  = false;
-3903 guiparams.add_background                     = false;
-3904 
-3905 <span class="comment">%%%%%%%%%%%%%%%</span>
-3906 <span class="comment">% DATA EXPORT %</span>
-3907 <span class="comment">%%%%%%%%%%%%%%%</span>
-3908 guiparams.beam_angle                         = 20.0;
-3909 guiparams.magnetic_variation                 = 0.0;
-3910 guiparams.wse                                = 0.0;
-3911 guiparams.output_auxiliary_data              = false;
-3912 
-3913 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
-3914 <span class="comment">% Contour variables %</span>
-3915 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
-3916 idx = 1;
-3917 guiparams.contours(idx).string   = <span class="string">'Streamwise Velocity (u)'</span>;
-3918 guiparams.contours(idx).variable = <span class="string">'streamwise'</span>;
-3919 idx = idx + 1;
-3920 guiparams.contours(idx).string   = <span class="string">'Transverse Velocity (v)'</span>;
-3921 guiparams.contours(idx).variable = <span class="string">'transverse'</span>;
-3922 idx = idx + 1;
-3923 guiparams.contours(idx).string   = <span class="string">'Vertical Velocity (w)'</span>;
-3924 guiparams.contours(idx).variable = <span class="string">'vertical'</span>;
-3925 idx = idx + 1;
-3926 guiparams.contours(idx).string   = <span class="string">'Velocity Magnitude'</span>;
-3927 guiparams.contours(idx).variable = <span class="string">'mag'</span>;
-3928 idx = idx + 1;
-3929 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (zsd)'</span>;
-3930 guiparams.contours(idx).variable = <span class="string">'primary_zsd'</span>;
-3931 idx = idx + 1;
-3932 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (zsd)'</span>;
-3933 guiparams.contours(idx).variable = <span class="string">'secondary_zsd'</span>;
-3934 idx = idx + 1;
-3935 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (Roz)'</span>;
-3936 guiparams.contours(idx).variable = <span class="string">'primary_roz'</span>;
-3937 idx = idx + 1;
-3938 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (Roz)'</span>;
-3939 guiparams.contours(idx).variable = <span class="string">'secondary_roz'</span>;
-3940 idx = idx + 1;
-3941 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Downstream Comp.)'</span>;
-3942 guiparams.contours(idx).variable = <span class="string">'primary_roz_x'</span>;
-3943 idx = idx + 1;
-3944 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Cross-Stream Comp.)'</span>;
-3945 guiparams.contours(idx).variable = <span class="string">'primary_roz_y'</span>;
-3946 idx = idx + 1;
-3947 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Downstream Comp.)'</span>;
-3948 guiparams.contours(idx).variable = <span class="string">'secondary_roz_x'</span>;
-3949 idx = idx + 1;
-3950 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Cross-Stream Comp.)'</span>;
-3951 guiparams.contours(idx).variable = <span class="string">'secondary_roz_y'</span>;
-3952 idx = idx + 1;
-3953 guiparams.contours(idx).string   = <span class="string">'Backscatter'</span>;
-3954 guiparams.contours(idx).variable = <span class="string">'backscatter'</span>;
-3955 idx = idx + 1;
-3956 guiparams.contours(idx).string   = <span class="string">'Flow Direction (deg.)'</span>;
-3957 guiparams.contours(idx).variable = <span class="string">'flowangle'</span>;
-3958 
-3959 guiparams.contour = guiparams.contours(guiparams.idx_contour).variable;
-3960 
-3961 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-3962 <span class="comment">% Secondary Flow Vector Variables %</span>
-3963 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-3964 idx = 1;
-3965 guiparams.secondary_flows(idx).string   = <span class="string">'Transverse'</span>;
-3966 guiparams.secondary_flows(idx).variable = <span class="string">'transverse'</span>;
-3967 idx = idx + 1;
-3968 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (zsd)'</span>;
-3969 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_zsd'</span>;
-3970 idx = idx + 1;
-3971 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz)'</span>;
-3972 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz'</span>;
-3973 idx = idx + 1;
-3974 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz, Cross-Stream Comp)'</span>;
-3975 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz_y'</span>;
-3976 idx = idx + 1;
-3977 guiparams.secondary_flows(idx).string   = <span class="string">'Primary (Roz, Cross-Stream Comp)'</span>;
-3978 guiparams.secondary_flows(idx).variable  = <span class="string">'primary_roz_y'</span>;
-3979 
-3980 guiparams.secondary_flow_vector_variable = <span class="keyword">...</span>
-3981     guiparams.secondary_flows(guiparams.idx_secondary_flow_vector_variable).variable;
-3982 
-3983 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-3984 <span class="comment">% INTERNAL SETTINGS &amp; DEFAULTS %</span>
-3985 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-3986 <span class="comment">% Menu bar options</span>
-3987 guiparams.presentation                       = true;
-3988 guiparams.print                              = false;
-3989 guiparams.set_cross_section_endpoints        = false;
-3990 guiparams.unit_discharge_correction          = false;
-3991 guiparams.english_units                      = false;
-3992 guiparams.vertical_offset                    = 0;
-3993 <span class="comment">% guiparams.plot_ship_tracks                   = false;</span>
-3994 <span class="comment">% guiparams.plot_planview                      = false;</span>
-3995 <span class="comment">% guiparams.plot_cross_section                 = false;</span>
-3996 
-3997 <span class="comment">% File location defaults</span>
-3998 guiparams.ascii_path                        = pwd;
-3999 guiparams.ascii_file                        = <span class="string">''</span>;
-4000 guiparams.mat_path                          = pwd;
-4001 guiparams.mat_file                          = <span class="string">''</span>;
-4002 guiparams.tecplot_path                      = pwd;
-4003 guiparams.tecplot_file                      = <span class="string">''</span>;
-4004 guiparams.kmz_path                          = pwd;
-4005 guiparams.kmz_file                          = <span class="string">''</span>;
-4006 guiparams.multibeambathymetry_path          = pwd;
-4007 guiparams.multibeambathymetry_file          = <span class="string">''</span>;
-4008 guiparams.log_path                          = pwd;
-4009 guiparams.log_file                          = <span class="string">''</span>;
-4010 <span class="comment">% Avoids problems of not finding the MCR root when running as a standalone</span>
-4011 <span class="comment">% application</span>
-4012 <span class="keyword">if</span> isdeployed 
-4013     guiparams.has_mapping_toolbox           = true;
-4014 <span class="keyword">else</span>
-4015     guiparams.has_mapping_toolbox               = <span class="keyword">...</span>
-4016         ~isempty(dir(fullfile(matlabroot,<span class="string">'toolbox'</span>,<span class="string">'map'</span>)));
-4017 <span class="keyword">end</span>
+3893 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+3894 <span class="comment">% Contour variables %</span>
+3895 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+3896 idx = 1;
+3897 guiparams.contours(idx).string   = <span class="string">'Streamwise Velocity (u)'</span>;
+3898 guiparams.contours(idx).variable = <span class="string">'streamwise'</span>;
+3899 idx = idx + 1;
+3900 guiparams.contours(idx).string   = <span class="string">'Transverse Velocity (v)'</span>;
+3901 guiparams.contours(idx).variable = <span class="string">'transverse'</span>;
+3902 idx = idx + 1;
+3903 guiparams.contours(idx).string   = <span class="string">'Vertical Velocity (w)'</span>;
+3904 guiparams.contours(idx).variable = <span class="string">'vertical'</span>;
+3905 idx = idx + 1;
+3906 guiparams.contours(idx).string   = <span class="string">'Velocity Magnitude'</span>;
+3907 guiparams.contours(idx).variable = <span class="string">'mag'</span>;
+3908 idx = idx + 1;
+3909 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (zsd)'</span>;
+3910 guiparams.contours(idx).variable = <span class="string">'primary_zsd'</span>;
+3911 idx = idx + 1;
+3912 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (zsd)'</span>;
+3913 guiparams.contours(idx).variable = <span class="string">'secondary_zsd'</span>;
+3914 idx = idx + 1;
+3915 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (Roz)'</span>;
+3916 guiparams.contours(idx).variable = <span class="string">'primary_roz'</span>;
+3917 idx = idx + 1;
+3918 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (Roz)'</span>;
+3919 guiparams.contours(idx).variable = <span class="string">'secondary_roz'</span>;
+3920 idx = idx + 1;
+3921 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Downstream Comp.)'</span>;
+3922 guiparams.contours(idx).variable = <span class="string">'primary_roz_x'</span>;
+3923 idx = idx + 1;
+3924 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Cross-Stream Comp.)'</span>;
+3925 guiparams.contours(idx).variable = <span class="string">'primary_roz_y'</span>;
+3926 idx = idx + 1;
+3927 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Downstream Comp.)'</span>;
+3928 guiparams.contours(idx).variable = <span class="string">'secondary_roz_x'</span>;
+3929 idx = idx + 1;
+3930 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Cross-Stream Comp.)'</span>;
+3931 guiparams.contours(idx).variable = <span class="string">'secondary_roz_y'</span>;
+3932 idx = idx + 1;
+3933 guiparams.contours(idx).string   = <span class="string">'Backscatter'</span>;
+3934 guiparams.contours(idx).variable = <span class="string">'backscatter'</span>;
+3935 idx = idx + 1;
+3936 guiparams.contours(idx).string   = <span class="string">'Flow Direction (deg.)'</span>;
+3937 guiparams.contours(idx).variable = <span class="string">'flowangle'</span>;
+3938 
+3939 guiparams.contour = guiparams.contours(guiparams.idx_contour).variable;
+3940 
+3941 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+3942 <span class="comment">% Secondary Flow Vector Variables %</span>
+3943 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+3944 idx = 1;
+3945 guiparams.secondary_flows(idx).string   = <span class="string">'Transverse'</span>;
+3946 guiparams.secondary_flows(idx).variable = <span class="string">'transverse'</span>;
+3947 idx = idx + 1;
+3948 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (zsd)'</span>;
+3949 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_zsd'</span>;
+3950 idx = idx + 1;
+3951 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz)'</span>;
+3952 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz'</span>;
+3953 idx = idx + 1;
+3954 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz, Cross-Stream Comp)'</span>;
+3955 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz_y'</span>;
+3956 idx = idx + 1;
+3957 guiparams.secondary_flows(idx).string   = <span class="string">'Primary (Roz, Cross-Stream Comp)'</span>;
+3958 guiparams.secondary_flows(idx).variable  = <span class="string">'primary_roz_y'</span>;
+3959 
+3960 guiparams.secondary_flow_vector_variable = <span class="keyword">...</span>
+3961     guiparams.secondary_flows(guiparams.idx_secondary_flow_vector_variable).variable;
+3962 
+3963 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+3964 <span class="comment">% INTERNAL SETTINGS &amp; DEFAULTS %</span>
+3965 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+3966 <span class="comment">% Menu bar options</span>
+3967 guiparams.presentation                       = true;
+3968 guiparams.print                              = false;
+3969 guiparams.set_cross_section_endpoints        = false;
+3970 guiparams.unit_discharge_correction          = false;
+3971 guiparams.english_units                      = false;
+3972 guiparams.vertical_offset                    = 0;
+3973 <span class="comment">% guiparams.plot_ship_tracks                   = false;</span>
+3974 <span class="comment">% guiparams.plot_planview                      = false;</span>
+3975 <span class="comment">% guiparams.plot_cross_section                 = false;</span>
+3976 
+3977 <span class="comment">% File location defaults</span>
+3978 guiparams.ascii_path                        = pwd;
+3979 guiparams.ascii_file                        = <span class="string">''</span>;
+3980 guiparams.mat_path                          = pwd;
+3981 guiparams.mat_file                          = <span class="string">''</span>;
+3982 guiparams.tecplot_path                      = pwd;
+3983 guiparams.tecplot_file                      = <span class="string">''</span>;
+3984 guiparams.kmz_path                          = pwd;
+3985 guiparams.kmz_file                          = <span class="string">''</span>;
+3986 guiparams.multibeambathymetry_path          = pwd;
+3987 guiparams.multibeambathymetry_file          = <span class="string">''</span>;
+3988 guiparams.log_path                          = pwd;
+3989 guiparams.log_file                          = <span class="string">''</span>;
+3990 <span class="comment">% Avoids problems of not finding the MCR root when running as a standalone</span>
+3991 <span class="comment">% application</span>
+3992 <span class="keyword">if</span> isdeployed 
+3993     guiparams.has_mapping_toolbox           = true;
+3994 <span class="keyword">else</span>
+3995     guiparams.has_mapping_toolbox               = <span class="keyword">...</span>
+3996         ~isempty(dir(fullfile(matlabroot,<span class="string">'toolbox'</span>,<span class="string">'map'</span>)));
+3997 <span class="keyword">end</span>
+3998 
+3999 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4000 <span class="comment">% IN MEMORY DATA STORAGE %</span>
+4001 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4002 guiparams.z                      = [];
+4003 guiparams.A                      = [];
+4004 guiparams.V                      = [];
+4005 guiparams.Map                    = [];
+4006 guiparams.savefile               = [];
+4007 guiparams.iric_anv_planview_data = [];
+4008 <span class="comment">% guiparams.zmin = []; % Don't need to store these?</span>
+4009 <span class="comment">% guiparams.zmax = [];</span>
+4010 <span class="comment">% guiprefs = getappdata(handles.figure1,'guiprefs');</span>
+4011 guiparams.data_folder = <span class="string">''</span>;
+4012 guiparams.data_files  = {<span class="string">''</span>};
+4013 
+4014 <span class="comment">% [EOF] createGUIparams</span>
+4015 
+4016 <span class="comment">% [EOF] VMT</span>
+4017 
 4018 
-4019 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4020 <span class="comment">% IN MEMORY DATA STORAGE %</span>
-4021 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4022 guiparams.z                      = [];
-4023 guiparams.A                      = [];
-4024 guiparams.V                      = [];
-4025 guiparams.Map                    = [];
-4026 guiparams.savefile               = [];
-4027 guiparams.iric_anv_planview_data = [];
-4028 <span class="comment">% guiparams.zmin = []; % Don't need to store these?</span>
-4029 <span class="comment">% guiparams.zmax = [];</span>
-4030 <span class="comment">% guiprefs = getappdata(handles.figure1,'guiprefs');</span>
-4031 guiparams.data_folder = <span class="string">''</span>;
-4032 guiparams.data_files  = {<span class="string">''</span>};
-4033 
-4034 <span class="comment">% [EOF] createGUIparams</span>
-4035 
-4036 <span class="comment">% [EOF] VMT</span>
-4037 
-4038 
-4039 
-4040 
-4041 
-4042 
-4043</pre></div>
-<hr><address>Generated on Mon 20-May-2013 10:41:05 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+4019 
+4020 
+4021 
+4022 
+4023</pre></div>
+<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
