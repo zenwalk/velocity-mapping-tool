@@ -126,7 +126,7 @@ This function is called by:
 0062 <span class="comment">% ----------------------------------------</span>
 0063 filesep = <span class="string">'\'</span>; <span class="comment">% windows</span>
 0064 utilspath = [pwd filesep <span class="string">'utils'</span>];
-0065 docspath  = [pwd filesep <span class="string">'docs'</span>];
+0065 docspath  = [pwd filesep <span class="string">'doc'</span>];
 0066 toolspath = [pwd filesep <span class="string">'tools'</span>];
 0067 addpath(utilspath,docspath,toolspath)
 0068 
@@ -371,7 +371,7 @@ This function is called by:
 0307 
 0308 <span class="comment">%overlay DOQQ</span>
 0309 msgbox(<span class="string">'Adding Background'</span>,<span class="string">'VMT Status'</span>,<span class="string">'help'</span>,<span class="string">'replace'</span>);
-0310 VMT_OverlayDOQQ
+0310 log_text = VMT_OverlayDOQQ(pwd);
 0311 msgbox(<span class="string">'Replotting Complete'</span>,<span class="string">'VMT Status'</span>,<span class="string">'help'</span>,<span class="string">'replace'</span>);
 0312 
 0313 
@@ -442,6 +442,6 @@ This function is called by:
 0378 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
 0379     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
 0380 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Mon 20-May-2013 10:41:05 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

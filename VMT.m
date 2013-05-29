@@ -86,7 +86,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.0';
+guiparams.vmt_version = 'v4.01';
 
 % Draw the VMT Background
 % -----------------
@@ -737,8 +737,8 @@ set(handles.menuPresentationFormat,'Checked','on')
 hf = findobj('type','figure');
 valid_names = {'Plan View Map'; 'Mean Cross Section Contour'};
 
-% Defaults for Print Stlye Figure
-% -------------------------------
+% Defaults for Presentation Stlye Figure
+% --------------------------------------
 BkgdColor   = 'black';
 AxColor     = 'white';
 FigColor    = 'black'; % [0.3 0.3 0.3]
@@ -2857,9 +2857,6 @@ switch enable_state
             handles.menuOpenASCII
             handles.menuOpenMAT
             ],'Enable','on')
-%         set([handles.menuSave
-%             handles.menuParameters
-%             ],'Enable','off')
         
         set([handles.toolbarLoadData
             ],'Enable','on')
@@ -2869,18 +2866,6 @@ switch enable_state
             handles.toolbarPlottingParameters
             handles.toolbarProcessingParameters
             ],'Enable','off')
-        
-        %         set([handles.SaveMATFile
-        %              handles.SaveTecplotFile
-        %              handles.SaveGoogleEarthFile
-        %              ],'Enable','off')
-        
-        %         set([handles.ExportMultibeamBathymetry
-        %              handles.BeamAngle
-        %              handles.MagneticVariation
-        %              handles.WSE
-        %              handles.OutputAuxiliaryData
-        %              ],'Enable','off')
         
         set([handles.DepthRangeMin
             handles.DepthRangeMax
@@ -2894,7 +2879,6 @@ switch enable_state
             ],'Enable','off')
         
         set([handles.HorizontalGridNodeSpacing
-            ...handles.SetCrossSectionEndpoints
             handles.PlotShiptracks
             ],'Enable','off')
         
@@ -2916,7 +2900,6 @@ switch enable_state
             handles.menuOpen
             handles.menuOpenASCII
             handles.menuOpenMAT
-            ...handles.menuSave
             handles.menuSaveMAT
             handles.menuSaveTecplot
             handles.menuSaveKMZFile
@@ -2955,7 +2938,6 @@ switch enable_state
         end
         
         set([handles.HorizontalGridNodeSpacing
-            ...handles.SetCrossSectionEndpoints
             handles.PlotShiptracks
             ],'Enable','on')
         
@@ -2981,8 +2963,7 @@ switch enable_state
             handles.menuMetric
             handles.menuEnglish
             ],'Enable','on')
-        set([handles.menuSave
-            handles.menuSaveMAT
+        set([handles.menuSaveMAT
             handles.menuBathymetryExportSettings
             handles.menuExportMultibeamBathymetry
             handles.menuKMZExport
@@ -3013,7 +2994,6 @@ switch enable_state
         end
         
         set([handles.HorizontalGridNodeSpacing
-            ...handles.SetCrossSectionEndpoints
             handles.PlotShiptracks
             ],'Enable','off')
         
