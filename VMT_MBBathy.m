@@ -130,10 +130,23 @@ try
         end
         %dlmwrite([savefile(1:end-4) '_mbxyz.csv'],outmat,'precision',15);
     end
-    
 catch err
-    erstg = {'An unexpected error occurred during processing. Execution stopped.'};
-    errordlg(erstg,'VMT Status','replace');
-    rethrow(err)
-    return
+     if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end    
 end

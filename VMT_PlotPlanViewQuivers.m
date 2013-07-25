@@ -58,24 +58,34 @@ end
 % Turn off the menu bar, and keep only specified tools
 disableMenuBar(fig_planview_handle)
 
-
+% Parse optional arguements
+minrng       = [];
+maxrng       = [];
+usecolormap  = [];
+cptfullfile  = [];
 if ~isempty(varargin)
-    mapmult = true;
+    if iscell(varargin{1})
+        mapmult = true;
+        zf = length(varargin{1});
+    else
+        mapmult = false;
+        zf = 1;
+    end
     zPathName = varargin{2};
     zFileName = varargin{1};
-    zf = length(zFileName);
+    
+    
+    % Parse VMT_GraphicsControl arguements
+    if size(varargin,2) > 2 % min and max specified at least
+        minrng       = varargin{3};
+        maxrng       = varargin{4};
+        usecolormap  = varargin{5};
+        cptfullfile  = varargin{6};
+    end
 else
     mapmult = false;
     zf = 1;
 end
-
-% if isempty(z) & isempty(A) & isempty(V) & isempty(Map)
-%     mapmult = 1;
-%     [zPathName,zFileName,zf] = VMT_SelectFiles;  %Have the user select the preprocessed input files
-% else
-%     mapmult = 0;
-%     zf = 1;  %Plot only a single cross section
-% end
 
 for n=1:zf
     if mapmult
@@ -188,33 +198,56 @@ figure(fig_planview_handle); hold on
 % if pdoqq
 %     VMT_OverlayDOQQ
 % end
-if pshore
-    if ~isempty(Map) 
-        VMT_PlotShoreline(Map)
-    end
-end
+% if pshore
+%     if ~isempty(Map) 
+%         VMT_PlotShoreline(Map)
+%     end
+% end
 %quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,vr,1);
 if plot_english
-    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,ascale);  %*0.03281 to go from cm/s to ft/s
+    %quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,ascale);  %*0.03281 to go from cm/s to ft/s
+    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,ascale,...
+        minrng,...
+        maxrng,...
+        usecolormap,...
+        cptfullfile);
     colorbar%('FontSize',16,'XColor','w','YColor','w');
     if sum(~isnan(vr)) == 0
         errordlg('No Data in Specified Depth Range','Plotting Error');
     end
     log_text = {sprintf('   DAV range: %6.3f to %6.3f ft/s', nanmin(vr)*0.03281,nanmax(vr)*0.03281)};
-    caxis([nanmin(vr*0.03281) nanmax(vr*0.03281)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
+    %caxis([nanmin(vr*0.03281) nanmax(vr*0.03281)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
+    % Reset the color bar axis from 0 to 64 to span the velocity mag range
+    if ~isempty(minrng)
+        caxis([minrng maxrng])  
+    else
+        caxis([nanmin(vr*0.03281) nanmax(vr*0.03281)])
+    end
     if ~isempty(drng)
         title({'Depth-Averaged Velocities (ft/s)'; ['Averaged over depths ' num2str(drng(1)*3.281) 'ft to ' num2str(drng(2)*3.281) 'ft']})%,'Color','w');
     else
         title('Depth-Averaged Velocities (ft/s)')%,'Color','w');
     end
 else  %plot in metric units
-    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale);
+    %quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale);
+    quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale,...
+        minrng,...
+        maxrng,...
+        usecolormap,...
+        cptfullfile);
     colorbar%('FontSize',16,'XColor','w','YColor','w');
     if sum(~isnan(vr)) == 0
         errordlg('No Data in Specified Depth Range','Plotting Error');
     end
     log_text = {sprintf('   DAV range: %6.3f to %6.3f m/s', nanmin(vr),nanmax(vr))};
-    caxis([nanmin(vr) nanmax(vr)])  %resets the color bar axis from 0 to 64 to span the velocity mag range
+    
+    % Reset the color bar axis from 0 to 64 to span the velocity mag range
+    if ~isempty(minrng)
+        caxis([minrng maxrng])  
+    else
+        caxis([nanmin(vr) nanmax(vr)])
+    end
+    
     if ~isempty(drng)
         title({'Depth-Averaged Velocities (cm/s)'; ['Averaged over depths ' num2str(drng(1)) 'm to ' num2str(drng(2)) 'm']})%,'Color','w');
     else

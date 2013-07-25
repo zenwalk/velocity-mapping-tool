@@ -1,4 +1,4 @@
-function [z,A,V,log_text] = VMT_PlotXSContQuiver(z,A,V,var,sf,exag,qspchorz,qspcvert,secvecvar,vvelcomp,plot_english)
+function [z,A,V,log_text] = VMT_PlotXSContQuiver(z,A,V,var,sf,exag,qspchorz,qspcvert,secvecvar,vvelcomp,plot_english,varargin)
 % This function plots the the contour plot (mean XS) for the variable 'var'
 % and then plots quivers with secondary flow (vertical and transverse
 % components) on top of the contour plot.  IF data is not supplied, user
@@ -20,6 +20,18 @@ end
 AS = 1;  %Turns on and off autoscaling (0 = off, 1 = on)
 if AS == 0
     MANrefvel = 25; %Reference velocity in cm/s (manual setting)
+end
+
+%% Parse any extra args
+%  This is used by VMT_GraphicsControl
+if any(size(varargin)>0)
+    reference_velocity = varargin{1};
+    distance           = varargin{2};
+    depth              = varargin{3};
+else
+    reference_velocity = [];
+    distance           = [];
+    depth              = [];
 end
 
 %% Plot the contour plot
@@ -116,11 +128,18 @@ switch secvecvar
 end
 toquiv(:,4) = reshape(-sf./exag.*vertcomp(bi,et),rw*cl,1);  %Add negative sign to account for flipped vertical axes  
 toquiv(:,5) = reshape(vr,rw*cl,1);
+
 %Ref arrow
-x1 = 0.06*max(max(V.mcsDist));
-x2 = 0.95*max(max(V.mcsBed));
-if AS == 0
-    refvel = MANrefvel; %manual scaling
+if isempty(distance)
+    x1 = 0.06*max(max(V.mcsDist));
+    x2 = 0.95*max(max(V.mcsBed));
+    if AS == 0
+        refvel = MANrefvel; %manual scaling
+    end
+else
+    x1 = distance;
+    x2 = depth;
+    refvel = reference_velocity;
 end
 x3=sf.*refvel; %Set to rounded max secondary velocity (absolute value added 3/29/12 PRJ) (autoscaling)
 x4=0;
@@ -160,6 +179,10 @@ if plot_english %english units
             title_handle = title({['Vertical Velocity ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'mag'}
             title_handle = title({['Velocity Magnitude (Streamwise and Transverse) ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'east'}
+            title_handle = title({'East Velocity';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'north'}
+            title_handle = title({'North Velocity';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'primary_zsd'}
             title_handle = title({['Primary Velocity (Zero Secondary Discharge Definition) ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'secondary_zsd'}
@@ -184,7 +207,7 @@ if plot_english %english units
 
     ylabel_handle = ylabel('Depth (ft)');
     xlabel_handle = xlabel('Distance (ft)');
-    ref_vector_text_handle = text(0.06*max(max(V.mcsDist*3.281)), 0.90*max(max(V.mcsBed*3.281)),[num2str(refvel*0.03281,3) ' ft/s'],'FontSize',12,'Color','w');
+    ref_vector_text_handle = text(x1*3.281, x2*3.281+.5,[num2str(refvel*0.03281,3) ' ft/s'],'FontSize',12,'Color','w');
 else %metric units
     hh = quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,toquiv(:,5),exag);
     %plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on
@@ -205,6 +228,10 @@ else %metric units
             title_handle = title({'Vertical Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'mag'}
             title_handle = title({'Velocity Magnitude (Streamwise and Transverse) (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'east'}
+            title_handle = title({'East Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'north'}
+            title_handle = title({'North Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'primary_zsd'}
             title_handle = title({'Primary Velocity (Zero Secondary Discharge Definition) (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'secondary_zsd'}
@@ -235,7 +262,7 @@ else %metric units
 
     ylabel_handle = ylabel('Depth (m)');
     xlabel_handle = xlabel('Distance (m)');
-    ref_vector_text_handle = text(0.06*max(max(V.mcsDist)), 0.90*max(max(V.mcsBed)),[num2str(refvel) ' cm/s'],'FontSize',12,'Color','w');
+    ref_vector_text_handle = text(x1, x2+.16,[num2str(refvel) ' cm/s'],'FontSize',12,'Color','w');
 end
 
 % Tag the elements in the figure

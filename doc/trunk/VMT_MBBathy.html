@@ -185,13 +185,26 @@ This function is called by:
 0130         <span class="keyword">end</span>
 0131         <span class="comment">%dlmwrite([savefile(1:end-4) '_mbxyz.csv'],outmat,'precision',15);</span>
 0132     <span class="keyword">end</span>
-0133     
-0134 <span class="keyword">catch</span> err
-0135     erstg = {<span class="string">'An unexpected error occurred during processing. Execution stopped.'</span>};
-0136     errordlg(erstg,<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
-0137     rethrow(err)
-0138     <span class="keyword">return</span>
-0139 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0133 <span class="keyword">catch</span> err
+0134      <span class="keyword">if</span> isdeployed
+0135         errLogFileName = fullfile(pwd,<span class="keyword">...</span>
+0136             [<span class="string">'errorLog'</span> datestr(now,<span class="string">'yyyymmddHHMMSS'</span>) <span class="string">'.txt'</span>]);
+0137         msgbox({[<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier];<span class="keyword">...</span>
+0138             [<span class="string">'Error details are being written to the following file: '</span>];<span class="keyword">...</span>
+0139             errLogFileName},<span class="keyword">...</span>
+0140             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0141             <span class="string">'error'</span>);
+0142         fid = fopen(errLogFileName,<span class="string">'W'</span>);
+0143         fwrite(fid,err.getReport(<span class="string">'extended'</span>,<span class="string">'hyperlinks'</span>,<span class="string">'off'</span>));
+0144         fclose(fid);
+0145         rethrow(err)
+0146     <span class="keyword">else</span>
+0147         msgbox([<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier],<span class="keyword">...</span>
+0148             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0149             <span class="string">'error'</span>);
+0150         rethrow(err);
+0151     <span class="keyword">end</span>    
+0152 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

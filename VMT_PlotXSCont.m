@@ -117,6 +117,18 @@ switch var
         zmax=ceil(nanmax(nanmax(V.mcsMagSmooth)));
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
+    case{'east'} %Plots the east velocity
+        wtp=['V.mcsEastSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsEastSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsEastSmooth)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
+    case{'north'} %Plots the north velocity
+        wtp=['V.mcsNorthSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsNorthSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsNorthSmooth)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
     case{'primary_zsd'}  %Plots the primary velocity with zero secondary discharge definition
         if flipxs
             wtp=['-V.vpSmooth'];
@@ -287,6 +299,10 @@ switch var
         title_handle = title(['Vertical Velocity ' unitlabel]);
     case{'mag'}
         title_handle = title(['Velocity Magnitude (Streamwise and Transverse) ' unitlabel]);
+    case{'east'}
+        title_handle = title(['East Velocity ' unitlabel]);
+    case{'north'}
+        title_handle = title(['North Velocity ' unitlabel]);
     case{'primary_zsd'}
         title_handle = title(['Primary Velocity (Zero Secondary Discharge Definition) ' unitlabel]);
     case{'secondary_zsd'}

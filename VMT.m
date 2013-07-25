@@ -41,10 +41,33 @@ if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
 
+% If ERROR, write a txt file with the error dump info
+try
 if nargout
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
     gui_mainfcn(gui_State, varargin{:});
+end
+
+catch err
+    if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end
 end
 % End initialization code - DO NOT EDIT
 
@@ -86,7 +109,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.01';
+guiparams.vmt_version = 'v4.02';
 
 % Draw the VMT Background
 % -----------------
@@ -117,6 +140,10 @@ pos = get(handles.figure1,'Position');
 % pos(3) = 545;
 set(handles.figure1,'Position',pos)
 set(handles.figure1,'Resize','on')
+
+% Allow access to the VMT Main GUI info by other sub-GUIs by pushing it to
+% the root
+setappdata(0  , 'hVMTgui'    , gcf);
 
 % UIWAIT makes VMT wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -467,6 +494,215 @@ setappdata(handles.figure1,'guiprefs',guiprefs)
 store_prefs(handles.figure1,'iric')
 
 % [EOF] menuSaveANVFile_Callback
+
+% --------------------------------------------------------------------
+function menuSaveExcel_Callback(hObject, eventdata, handles)
+% Get the Application Data:
+% -------------------------
+guiparams   = getappdata(handles.figure1,'guiparams');
+guiprefs    = getappdata(handles.figure1,'guiprefs');
+excel_path  = guiprefs.excel_path;
+excel_file  = guiprefs.excel_file;
+
+% Push messages to Log Window:
+% ----------------------------
+log_text = {'Exporting Excel File (reprocessing dataset; this will create new plots)'};
+statusLogging(handles.LogWindow, log_text)
+
+% If there are multiple MAT files loaded, go ahead and export just the DAV
+% data.
+if iscell(guiparams.mat_file)
+    % Force VMT to reprocess before outputing Excel
+    planviewPlotCallback(hObject, eventdata, handles)
+    % Refresh the Application Data:
+    guiparams   = getappdata(handles.figure1,'guiparams');
+    z           = guiparams.z;
+    A           = guiparams.A;
+    V           = guiparams.V;
+    Map         = guiparams.Map;
+    wse         = guiparams.wse;
+    PVdata      = guiparams.iric_anv_planview_data;
+    log_text = {'Writing data to Excel file...';...
+        'Multiple transected loaded. Will export Planview Data Only!'};
+    [excel_file,excel_path] = uiputfile('*.xlsx','Save *.xlsx file',...
+        fullfile(excel_path,excel_file));
+    
+    if ischar(excel_path) % The user did not hit "Cancel"
+        outfile = fullfile(excel_path,excel_file);
+        %log_text = vertcat(log_text,{outfile});
+        
+    else
+        % Return default excel_path and excel_file
+        excel_path = guiprefs.excel_path;
+        excel_file = guiprefs.excel_file;
+        outfile = fullfile(excel_path,excel_file);
+        %log_text = vertcat(log_text,{outfile});
+    end
+    
+    % Delete the old file if it exists
+    if exist(outfile, 'file') == 2
+        log_text = vertcat(log_text,{'Warning: The file';...
+            ['   ' outfile];...
+            'already exists. Overwriting file...'});
+        delete(outfile)
+    end
+    
+    % Save DAV data to an Excel File
+    hwait = waitbar(0,'Exporting Excel File...');
+    vmin = num2str(guiparams.depth_range_min);
+    vmax = num2str(guiparams.depth_range_max);
+    pvheaders = {...
+        'UTM_East' 'UTM_North' 'Elev_m'...
+        ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
+        ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
+    pvdata = num2cell(PVdata.outmat');
+    pvout = vertcat(pvheaders,pvdata);
+    xlswrite(outfile,pvout,'Planview');
+    waitbar(4/5,hwait)
+    
+    % Push messages to Log Window:
+    % ----------------------------
+    statusLogging(handles.LogWindow, log_text)
+else
+    
+    % Force VMT to reprocess before outputing Excel
+    planviewPlotCallback(hObject, eventdata, handles)
+    crosssectionPlotCallback(hObject, eventdata, handles)
+    % Refresh the Application Data:
+    guiparams   = getappdata(handles.figure1,'guiparams');
+    z           = guiparams.z;
+    A           = guiparams.A;
+    V           = guiparams.V;
+    Map         = guiparams.Map;
+    wse         = guiparams.wse;
+    PVdata      = guiparams.iric_anv_planview_data;
+    
+    
+    log_text = {'Writing data to Excel file...'};
+    [excel_file,excel_path] = uiputfile('*.xlsx','Save *.xlsx file',...
+        fullfile(excel_path,excel_file));
+    
+    if ischar(excel_path) % The user did not hit "Cancel"
+        outfile = fullfile(excel_path,excel_file);
+        %log_text = vertcat(log_text,{outfile});
+        
+        % Delete the old file if it exists
+        if exist(outfile, 'file') == 2
+            log_text = vertcat(log_text,{'Warning: The file';...
+                ['   ' outfile];...
+                'already exists. Overwriting file...'});
+            delete(outfile)
+        end
+        
+        % Push messages to Log Window:
+        % ----------------------------
+        statusLogging(handles.LogWindow, log_text)
+        
+        % Save MCS Summary to an Excel File
+        hwait = waitbar(0,'Exporting Excel File...');
+        xlswrite(outfile,{'Files:'},'VMTSummary','H4'); waitbar(1/5,hwait)
+        sout = guiparams.data_files';
+        xlswrite(outfile,sout,'VMTSummary','I4'); waitbar(2/5,hwait)
+        sout = {...
+            'VMT: Summary of Mean Cross Section' '' '' '' '' '';...
+            'VMT ' guiparams.vmt_version '' '' '' '';...
+            'Date Processed: ' datestr(now) '' '' '' '';...
+            '' '' '' '' '' '';...
+            'Mean Cross Section (MCS) Properties' '' '' '' '' '';...
+            'Horz. Grid Node Spacing (m):' '' '' '' '' guiparams.horizontal_grid_node_spacing;...
+            'Vert. Grid Node Spacing (m):' '' '' '' '' single(guiparams.A(1).Sup.binSize_cm)/100;...
+            'Endpoints:' '' '' '' 'UTM_East'	'UTM_North';...
+            'Left Bank'	'' '' ''	V.xLeftBank V.yLeftBank;...
+            'Right Bank'	'' '' ''	V.xRightBank V.yRightBank;...
+            'Total Length in meters' '' '' '' '' V.dl;...
+            '' '' '' '' '' '';...
+            'Mean Flow Direction (deg)' '' '' '' '' V.mfd;...
+            'in geographic coordinates' '' '' '' '' '';...
+            '' '' '' '' '' '';...
+            'Slope'	'' '' '' '' V.m;...
+            'Intercept'	'' '' '' '' V.b;...
+            'Theta (deg)'	'' '' '' '' V.theta};
+        xlswrite(outfile,sout,'VMTSummary','A1'); waitbar(3/5,hwait)
+        
+        % Save DAV data to an Excel File
+        vmin = num2str(guiparams.depth_range_min);
+        vmax = num2str(guiparams.depth_range_max);
+        pvheaders = {...
+            'UTM_East' 'UTM_North' 'Elev_m'...
+            ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
+            ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
+        pvdata = num2cell(PVdata.outmat');
+        pvout = vertcat(pvheaders,pvdata);
+        xlswrite(outfile,pvout,'Planview');
+        waitbar(4/5,hwait)
+        
+        % Save MCS data to an Excel File
+        mcsheaders = {...
+            'UTM_East' ...
+            'UTM_North'...
+            'Distance from Left Bank, in meters'...
+            'Elevation, in meters'...
+            'Bed Elevation, in meters'...
+            'East Velocity, in cm/s'...
+            'North Velocity, in cm/s'...
+            'Vertical Velocity, in cm/s'...
+            'Velocity Magnitude, in cm/s'...
+            'Velocity Direction, in degrees (geographic coordinates)'...
+            'Streamwise Velocity, in cm/s'...
+            'Transverse Velocity, in cm/s'...
+            'Primary Velocity (zsd), in cm/s'...
+            'Secondary Velocity (zsd), in cm/s'...
+            'Primary Velocity (roz), in cm/s'...
+            'Secondary Velocity (roz), in cm/s'};
+        
+        mcsdata = [...
+            V.mcsX(:)...
+            V.mcsY(:)...
+            V.mcsDist(:)...
+            (wse - V.mcsDepth(:))...
+            repmat((wse - V.mcsBed(:)),size(V.mcsX,1),1)...
+            V.mcsEast(:)...
+            V.mcsNorth(:)...
+            V.mcsVert(:)...
+            V.mcsMag(:)...
+            V.mcsDir(:)...
+            V.u(:)...
+            V.v(:)...
+            V.vp(:)...
+            V.vs(:)...
+            V.Roz.up(:)...
+            V.Roz.us(:)];
+        mcsdata(isnan(mcsdata)) = -9999;
+        
+        mcsout = vertcat(mcsheaders,num2cell(mcsdata));
+        xlswrite(outfile,mcsout,'MeanCrossSection');
+        waitbar(1,hwait)
+        delete(hwait)
+        
+    else
+        % Return default excel_path and excel_file
+        excel_path = guiprefs.excel_path;
+        excel_file = guiprefs.excel_file;
+        outfile = fullfile(excel_path,excel_file);
+        log_text = {'User aborted Excel export...'};
+    end
+    
+    
+    
+end
+
+% Push messages to Log Window:
+% ----------------------------
+statusLogging(handles.LogWindow, log_text)
+
+% Store the persistent preferences:
+% ---------------------------------
+guiprefs.excel_file = excel_file;
+guiprefs.excel_path = excel_path;
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'excel')
+
+% [EOF] menuSaveExcel_Callback
 
 % --------------------------------------------------------------------
 function menuParameters_Callback(hObject, eventdata, handles)
@@ -874,8 +1110,24 @@ function menuUsersGuide_Callback(hObject, eventdata, handles)
 try
     web('http://code.google.com/p/velocity-mapping-tool/wiki/UserGuide?tm=6')
 catch err %#ok<NASGU>
-    h = errordlg('No internet connectivity. Try again later.',...
-        'Online User Guide unavailable'); %#ok<NASGU>
+	if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end
 end
 % [EOF] menuASCII2KML_Callback
 
@@ -893,11 +1145,24 @@ try
     system(['start ' webaddress]);
 %     [stat,h,url] = web(webaddress) % Produced with m2html (FEX)
 catch err 
-    error('VMT:guiInterface',...
-        horzcat('Unable to open function library. \n',...
-        'Attempted to find function library at the URL:\n',...
-        '   %s'), webaddress)
-    return
+    if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end
 end
 
 % [EOF] menuFunctionLibrary_Callback
@@ -914,8 +1179,24 @@ try
     current_vmt_version = urlread('http://hydroacoustics.usgs.gov/movingboat/VMT/VMT_version.txt');
     %     current_vmt_version = urlread('http://hydroacoustics.usgs.gov/movingboat/VMT/VMT_version.txt');
 catch err %#ok<NASGU>
-    h = msgbox('No internet connection. Try again later.','Check for updates'); %#ok<NASGU>
-    return
+    if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end
 end
 
 if strcmpi(guiparams.vmt_version,current_vmt_version)
@@ -1012,35 +1293,37 @@ if ischar(pathname) % The user did not hit "Cancel"
     [~,~,savefile,A,z] = ...
         VMT_ReadFiles(guiparams.data_folder,guiparams.data_files);
     guiparams.savefile = savefile;
+    guiparams.A        = A;
+    guiparams.z        = z;
     setappdata(handles.figure1,'guiparams',guiparams)
-    
-    % Preprocess the data:
-    % --------------------
-    A = VMT_PreProcess(z,A);
-    
-    % Push messages to Log Window:
-    % ----------------------------
-    log_text = {...
-        '   Preprocessing complete.';...
-        '   Begin Data Processing...'};
-    statusLogging(handles.LogWindow, log_text)
-    
-    A(1).hgns = guiparams.horizontal_grid_node_spacing;
-    A(1).wse  = guiparams.wse;  %Set the WSE to entered value
-    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
-        guiparams.set_cross_section_endpoints,...
-        guiparams.unit_discharge_correction);
-    
-    % Push messages to Log Window:
-    % ----------------------------
-    statusLogging(handles.LogWindow, processing_log_text)
-    
-    % Store the data:
-    % ---------------
-    guiparams.z = z;
-    guiparams.A = A;
-    guiparams.V = V;
-    setappdata(handles.figure1,'guiparams',guiparams)
+%     
+%     % Preprocess the data:
+%     % --------------------
+%     A = VMT_PreProcess(z,A);
+%     
+%     % Push messages to Log Window:
+%     % ----------------------------
+%     log_text = {...
+%         '   Preprocessing complete.';...
+%         '   Begin Data Processing...'};
+%     statusLogging(handles.LogWindow, log_text)
+%     
+%     A(1).hgns = guiparams.horizontal_grid_node_spacing;
+%     A(1).wse  = guiparams.wse;  %Set the WSE to entered value
+%     [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+%         guiparams.set_cross_section_endpoints,...
+%         guiparams.unit_discharge_correction);
+%     
+%     % Push messages to Log Window:
+%     % ----------------------------
+%     statusLogging(handles.LogWindow, processing_log_text)
+%     
+%     % Store the data:
+%     % ---------------
+%     guiparams.z = z;
+%     guiparams.A = A;
+%     guiparams.V = V;
+%     setappdata(handles.figure1,'guiparams',guiparams)
     
       
     % Update the GUI:
@@ -1206,6 +1489,17 @@ V = guiparams.V; %#ok<NASGU>
 % Map = guiparams.Map;
 setends = guiparams.set_cross_section_endpoints;
 
+% Preprocess the data:
+% --------------------
+A = VMT_PreProcess(z,A);
+
+% Push messages to Log Window:
+% ----------------------------
+log_text = {...
+    '   Preprocessing complete.';...
+    '   Begin Data Processing...'};
+statusLogging(handles.LogWindow, log_text)
+
 % Process the transects:
 % ----------------------
 A(1).hgns = guiparams.horizontal_grid_node_spacing;
@@ -1213,10 +1507,30 @@ A(1).wse  = guiparams.wse;  %Set the WSE to entered value
 [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
     guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
 
+% Compute the smoothed variables
+% ------------------------------
+% This is required so that the V struc is complete at any point during
+% runtime.
+V = VMT_SmoothVar(V, ...
+    ...guiparams.contour, ...
+    guiparams.horizontal_smoothing_window, ...
+    guiparams.vertical_smoothing_window);
+
+% Push messages to Log Window:
+% ----------------------------
+statusLogging(handles.LogWindow, processing_log_text)
+
+% Store the data:
+% ---------------
+guiparams.z = z;
+guiparams.A = A;
+guiparams.V = V;
+setappdata(handles.figure1,'guiparams',guiparams)
+
 % Push messages to Log Window:
 % ----------------------------
 log_text = {'Plotting Shiptracks (reprocessing)'};
-statusLogging(handles.LogWindow, vertcat(log_text,processing_log_text))
+statusLogging(handles.LogWindow, log_text)
 
 % Create or replot the Shiptracks
 % -------------------------------
@@ -1240,6 +1554,7 @@ function planviewPlotCallback(hObject, eventdata, handles)
 % Get the Application data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 if iscell(guiparams.mat_file) % Multiple MAT files loaded
     % Push messages to Log Window:
@@ -1280,8 +1595,19 @@ if iscell(guiparams.mat_file) % Multiple MAT files loaded
     % Plot a Shoreline Map:
     % ---------------------
     if guiparams.display_shoreline
-        Map = VMT_LoadMap('txt','UTM');
-        %figure(2); clf
+        [guiprefs.shoreline_file,guiprefs.shoreline_path] = uigetfile(...
+            {'*.txt;*.csv','All Text Files'; '*.*','All Files'},...
+            'Select Map Text File',...
+            fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file));
+        if ischar(guiprefs.shoreline_file) % User did not hit cancel
+            mapdata = dlmread(fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file));
+            Map.UTMe   = mapdata(:,1);
+            Map.UTMn   = mapdata(:,2);
+            Map.infile = fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file);
+            %Map.UTMzone = zone;
+        else
+            Map = [];
+        end
         VMT_PlotShoreline(Map)
         log_text = {...
             '   Loading map file.';...
@@ -1315,6 +1641,15 @@ else
     [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
         guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
     
+    % Compute the smoothed variables
+    % ------------------------------
+    % This is required so that the V struc is complete at any point during
+    % runtime. 
+    V = VMT_SmoothVar(V, ...
+        ...guiparams.contour, ...
+        guiparams.horizontal_smoothing_window, ...
+        guiparams.vertical_smoothing_window);
+    
     % Push messages to Log Window:
     % ----------------------------
     statusLogging(handles.LogWindow, processing_log_text)
@@ -1334,7 +1669,7 @@ else
     % --------------
     %msgbox('Plotting Plan View','VMT Status','help','replace');
     depth_range = [guiparams.depth_range_min guiparams.depth_range_max];
-    % if ~guiparams.map_depth_averaged_velocities
+    
     
     [PVdata,~,log_text] = VMT_PlotPlanViewQuivers(z,A,V,Map, ...
         depth_range, ...
@@ -1342,14 +1677,27 @@ else
         guiparams.vector_spacing_plan_view, ...
         guiparams.smoothing_window_size, ...
         guiparams.display_shoreline, ...
-        guiparams.english_units); % PLOT2
+        guiparams.english_units, ...
+        guiparams.mat_file, ...
+        guiparams.mat_path); % PLOT2
     statusLogging(handles.LogWindow, log_text)
     
     % Plot a Shoreline Map:
     % ---------------------
     if guiparams.display_shoreline
-        Map = VMT_LoadMap('txt','UTM');
-        %figure(2); clf
+        [guiprefs.shoreline_file,guiprefs.shoreline_path] = uigetfile(...
+            {'*.txt;*.csv','All Text Files'; '*.*','All Files'},...
+            'Select Map Text File',...
+            fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file));
+        if ischar(guiprefs.shoreline_file) % User did not hit cancel
+            mapdata = dlmread(fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file));
+            Map.UTMe   = mapdata(:,1);
+            Map.UTMn   = mapdata(:,2);
+            Map.infile = fullfile(guiprefs.shoreline_path,guiprefs.shoreline_file);
+            %Map.UTMzone = zone;
+        else
+            Map = [];
+        end
         VMT_PlotShoreline(Map)
         log_text = {...
             '   Loading map file.';...
@@ -1363,14 +1711,24 @@ else
 end
 
 if guiparams.add_background
-    log_text = VMT_OverlayDOQQ(guiparams.data_folder);
+    [guiprefs,log_text] = VMT_OverlayDOQQ(guiprefs);
     statusLogging(handles.LogWindow, log_text)
 end
 
-% Save the PVdata to persistent guiparams
-% ---------------------------------------
+% Update guiparams
+% ----------------
+guiparams.z   = z;
+guiparams.A   = A;
+guiparams.V   = V;
+guiparams.Map = Map;
 guiparams.iric_anv_planview_data = PVdata;
 setappdata(handles.figure1,'guiparams',guiparams);
+
+% Update preferences
+% ------------------
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'shoreline')
+store_prefs(handles.figure1,'aerial')
 
 % Force plot to be formated properly
 % ----------------------------------
@@ -1379,6 +1737,10 @@ if guiparams.presentation
 else
     menuStylePrint_Callback(hObject, eventdata, handles)
 end
+
+% Start the Graphics Control Gui
+% ------------------------------
+VMT_GraphicsControl
 
 % [EOF] planviewPlotCallback
 
@@ -1439,10 +1801,10 @@ statusLogging(handles.LogWindow, log_text)
 
 if guiparams.plot_secondary_flow_vectors
     %msgbox('Plotting Cross Section','VMT Status','help','replace')
-    V = VMT_SmoothVar(V, ...
-        ...guiparams.contour, ...
-        guiparams.horizontal_smoothing_window, ...
-        guiparams.vertical_smoothing_window);
+%     V = VMT_SmoothVar(V, ...
+%         ...guiparams.contour, ...
+%         guiparams.horizontal_smoothing_window, ...
+%         guiparams.vertical_smoothing_window);
     V = VMT_SmoothVar(V, ...
         ...guiparams.secondary_flow_vector_variable, ...
         guiparams.horizontal_smoothing_window, ...
@@ -1480,6 +1842,15 @@ if guiparams.presentation
 else
     menuStylePrint_Callback(hObject, eventdata, handles)
 end
+
+% Re-store the Application data:
+% ------------------------------
+guiparams.V = V;
+setappdata(handles.figure1,'guiparams',guiparams)
+
+% Start the Graphics Control Gui
+% ------------------------------
+VMT_GraphicsControl
 
 % Push messages to Log Window:
 % ----------------------------
@@ -1989,24 +2360,6 @@ end
 
 
 % --------------------------------------------------------------------
-function MapDepthAveragedVelocities_Callback(hObject, eventdata, handles)
-
-% Get the Application data:
-% -------------------------
-guiparams = getappdata(handles.figure1,'guiparams');
-
-% Modify the Application data:
-% ----------------------------
-guiparams.map_depth_averaged_velocities = logical(get(hObject,'Value')); % boolean
-
-% Re-store the Application data:
-% ------------------------------
-setappdata(handles.figure1,'guiparams',guiparams)
-
-% [EOF] MapDepthAveragedVelocities_Callback
-
-
-% --------------------------------------------------------------------
 function DisplayShoreline_Callback(hObject, eventdata, handles)
 
 % Get the Application data:
@@ -2429,6 +2782,13 @@ handles.toolbarSaveFigures = ...
     'CData',        icons(6).data, ...
     'TooltipString','Export Figures');
 
+% Save Excel File
+% icon = ones(16,16,3);
+handles.toolbarSaveExcel = ...
+    uipushtool('Parent',       ht, ...
+    'CData',        icons(7).data, ...
+    'TooltipString','Export Excel File');
+
 
 % Plotting parameters
 % [icon,map] = imread('C:\Users\pfricker\Desktop\icons\PlotGeneralElement.gif');
@@ -2470,6 +2830,7 @@ set(handles.toolbarLoadData,            'ClickedCallback',{@loadDataCallback,han
 set(handles.toolbarSaveMatFile,         'ClickedCallback',{@saveDataCallback,handles})
 set(handles.toolbarSaveBathymetry,      'ClickedCallback',{@ExportMultibeamBathymetry_Callback,handles})
 set(handles.toolbarSaveFigures,         'ClickedCallback',{@menuExportFigures_Callback,handles})
+set(handles.toolbarSaveExcel,           'ClickedCallback',{@menuSaveExcel_Callback,handles})
 set(handles.toolbarPlottingParameters,  'ClickedCallback',{@plottingParametersCallback,handles})
 set(handles.toolbarProcessingParameters,'ClickedCallback',{@processingParametersCallback,handles})
 % set(handles.shiptracksPlot,      'ClickedCallback',{@shiptracksPlotCallback,handles})
@@ -2491,7 +2852,10 @@ function load_prefs(hfigure)
 % 'kmz'                  Path and filename of last KMZ file
 % 'multibeambathymetry'  Path and filename of last Multibeam Bathymetry file
 % 'log'                  Path and filename of last Log file 
-% 'iric'                 Path and filename of last iRic ANV file 
+% 'iric'                 Path and filename of last iRic ANV file
+% 'excel'                Path and filename of last Excel file
+% 'aerial'               Path and filename of last Aerial file
+% 'shoreline'            Path and filename of last Shoreline file
 
 % Originals
 % prefs = {'ascii2gispath' 'ascii2kmlpath' 'asciipath'   'doqqpath' ...
@@ -2665,6 +3029,88 @@ else % Initialize Log
     setpref('VMT','iric',iric)
 end
 
+% excel
+if ispref('VMT','excel')
+    excel = getpref('VMT','excel');
+    if exist(excel.path,'dir')
+        guiprefs.excel_path = excel.path;
+    else
+        guiprefs.excel_path = pwd;
+    end
+    if exist(fullfile(excel.path,excel.file),'file')
+        guiprefs.excel_file = excel.file;
+    else
+        guiprefs.excel_file = '';
+    end
+else % Initialize pref
+    guiprefs.excel_path = pwd;
+    guiprefs.excel_file = '';
+    
+    excel.path = pwd;
+    excel.file = '';
+    setpref('VMT','excel',excel)
+end
+
+% aerial
+if ispref('VMT','aerial')
+    aerial = getpref('VMT','aerial');
+    if exist(aerial.path,'dir')
+        guiprefs.aerial_path = aerial.path;
+    else
+        guiprefs.aerial_path = pwd;
+    end
+    does_exist = false(1,length(aerial.file));
+    if iscell(aerial.file)
+    for k = 1:numel(aerial.file) % Check each file one-by-one
+        does_exist(k) = exist(fullfile(aerial.path,aerial.file{k}),'file');
+    end
+    else
+        does_exist = exist(fullfile(aerial.path,aerial.file),'file');
+    end
+    if any(does_exist)
+        guiprefs.aerial_file = aerial.file;
+    else
+        guiprefs.aerial_file = {''};
+    end
+else % Initialize aerial
+    guiprefs.aerial_path = pwd;
+    guiprefs.aerial_file = {''};
+    
+    aerial.path = pwd;
+    aerial.file = {''};
+    setpref('VMT','aerial',aerial)
+end
+
+% shoreline
+if ispref('VMT','shoreline')
+    shoreline = getpref('VMT','shoreline');
+    if exist(shoreline.path,'dir')
+        guiprefs.shoreline_path = shoreline.path;
+    else
+        guiprefs.shoreline_path = pwd;
+    end
+    
+    if iscell(shoreline.file)
+        if exist(fullfile(shoreline.path,shoreline.file{1}),'file')
+            guiprefs.shoreline_file = shoreline.file;
+        else
+            guiprefs.shoreline_file = '';
+        end
+    else
+        if exist(fullfile(shoreline.path,shoreline.file),'file')
+            guiprefs.shoreline_file = shoreline.file;
+        else
+            guiprefs.shoreline_file = '';
+        end
+    end
+else % Initialize shoreline
+    guiprefs.shoreline_path = pwd;
+    guiprefs.shoreline_file = '';
+    
+    shoreline.path = pwd;
+    shoreline.file = '';
+    setpref('VMT','shoreline',shoreline)
+end
 % guiprefs.presentation = true;
 % guiprefs.print        = false;
 
@@ -2692,12 +3138,16 @@ function store_prefs(hfigure,pref)
 % preferences data.
 
 % Preferences:
-% 'ascii'               Path and filenames of current ASCII files
-% 'mat'                 Path and filename of current MAT file
-% 'tecplot'             Path and filename of last Tecplot file
-% 'kmz'                 Path and filename of last KMZ file
-% 'multibeambathymetry' Path and filename of last Multibeam Bathymetry file
-% 'log'                 Path and filename of last Log file 
+% 'ascii'                Path and filenames of current ASCII files
+% 'mat'                  Path and filename of current MAT file
+% 'tecplot'              Path and filename of last Tecplot file
+% 'kmz'                  Path and filename of last KMZ file
+% 'multibeambathymetry'  Path and filename of last Multibeam Bathymetry file
+% 'log'                  Path and filename of last Log file 
+% 'iric'                 Path and filename of last iRic ANV file
+% 'excel'                Path and filename of last Excel file
+% 'aerial'               Path and filename of last Aerial file
+% 'shoreline'            Path and filename of last Shoreline file
 
 guiprefs = getappdata(hfigure,'guiprefs');
 
@@ -2726,6 +3176,22 @@ switch pref
         log.path = guiprefs.log_path;
         log.file = guiprefs.log_file;
         setpref('VMT','log',log)
+    case 'iric'
+        iric.path = guiprefs.iric_path;
+        iric.file = guiprefs.iric_file;
+        setpref('VMT','iric',iric)
+    case 'excel'
+        excel.path = guiprefs.excel_path;
+        excel.file = guiprefs.excel_file;
+        setpref('VMT','excel',excel)
+    case 'aerial'
+        aerial.path = guiprefs.aerial_path;
+        aerial.file = guiprefs.aerial_file;
+        setpref('VMT','aerial',aerial)
+    case 'shoreline'
+        shoreline.path = guiprefs.shoreline_path;
+        shoreline.file = guiprefs.shoreline_file;
+        setpref('VMT','shoreline',shoreline)
     otherwise
 end
 
@@ -2812,7 +3278,6 @@ set(handles.DepthRangeMax,              'String',guiparams.depth_range_max)
 set(handles.VectorScalePlanView,        'String',guiparams.vector_scale_plan_view)
 set(handles.VectorSpacingPlanview,      'String',guiparams.vector_spacing_plan_view)
 set(handles.SmoothingWindowSize,        'String',guiparams.smoothing_window_size)
-set(handles.MapDepthAveragedVelocities, 'Value', guiparams.map_depth_averaged_velocities)
 set(handles.DisplayShoreline,           'Value', guiparams.display_shoreline)
 set(handles.AddBackground,              'Value', guiparams.add_background)
 
@@ -2863,6 +3328,7 @@ switch enable_state
         set([handles.toolbarSaveMatFile
             handles.toolbarSaveBathymetry
             handles.toolbarSaveFigures
+            handles.toolbarSaveExcel
             handles.toolbarPlottingParameters
             handles.toolbarProcessingParameters
             ],'Enable','off')
@@ -2872,7 +3338,6 @@ switch enable_state
             handles.VectorScalePlanView
             handles.VectorSpacingPlanview
             handles.SmoothingWindowSize
-            handles.MapDepthAveragedVelocities
             handles.DisplayShoreline
             handles.AddBackground
             handles.PlotPlanView
@@ -2915,6 +3380,7 @@ switch enable_state
         set([handles.toolbarLoadData
             handles.toolbarSaveMatFile
             handles.toolbarSaveBathymetry
+            handles.toolbarSaveExcel
             handles.toolbarSaveFigures
             handles.toolbarPlottingParameters
             ],'Enable','on')
@@ -2927,7 +3393,6 @@ switch enable_state
             handles.VectorScalePlanView
             handles.VectorSpacingPlanview
             handles.SmoothingWindowSize
-            handles.MapDepthAveragedVelocities
             handles.DisplayShoreline
             handles.PlotPlanView
             ],'Enable','on')
@@ -2972,6 +3437,7 @@ switch enable_state
         set([handles.toolbarLoadData
             handles.toolbarSaveFigures
             handles.toolbarPlottingParameters
+            handles.toolbarSaveExcel
             ],'Enable','on')
         set([handles.toolbarProcessingParameters
             handles.toolbarSaveMatFile
@@ -2983,7 +3449,6 @@ switch enable_state
             handles.VectorScalePlanView
             handles.VectorSpacingPlanview
             handles.SmoothingWindowSize
-            handles.MapDepthAveragedVelocities
             handles.DisplayShoreline
             handles.PlotPlanView
             ],'Enable','on')
@@ -3011,9 +3476,6 @@ switch enable_state
             ],'Enable','off')
     otherwise
 end
-
-% Temporary
-set(handles.MapDepthAveragedVelocities,'Value',0,'Enable','off')
 
 % [EOF] set_enable
 
@@ -3382,7 +3844,7 @@ waitfor(handles.OK)
 dialog_params           = getappdata(handles.Figure,'dialog_params');
 beam_angle              = dialog_params.beam_angle;
 magnetic_variation      = dialog_params.magnetic_variation;
-wse                     = dialog_params.wse;
+wse                     = str2num(dialog_params.wse);
 output_auxilliary_data  = dialog_params.output_auxilliary_data;
 
 delete(handles.Figure)
@@ -3840,6 +4302,61 @@ icons(idx).data(:,:,3) = ...
     NaN	NaN	69	249	79	239	255	240	236	236	236	236	255	80	NaN	NaN
     NaN	NaN	NaN	0	0	0	0	0	0	0	0	0	0	0	NaN	NaN]/255;
 
+% Export Excel File
+idx = idx + 1;
+icons(idx).data(:,:,1) = ...
+    [NaN    NaN    NaN    NaN    NaN    NaN  106  252  255  255  255  255  255  255  255  255
+   38  136  109  101   96   77   95  134  106   99   93   87   90   66  255  255
+   52  197  232  217  210  202  191  178  170  164  160  159  155   15  255  255
+   51  181  255  255  255  255  255  255  255  255  255  255  253    9  255  255
+   49  174  245  153  156  175  255  255  181  153  149  205  245    0  255  255
+   47  168  199  122  149  100  155  183   99   99   15  117  245    0  255  241
+   45  158  255  146  146  141   87   68  120   34   86  255  238    0  252  232
+   42  144  255  255  158  158  143   74   68  117  255  255  230    0  255  255
+   40  134  255  255  169   15  150  111   68   81  105  167  236    0  230  217
+   37  131  255  158   99  106   10  143  117   50   51  165  252    0  255  254
+   35  122  208    0   22   32    8   17  110   20    0   13  212    0  255  245
+   33  115  255  255  255  255  255  250  146  113  119  106  217    0  236  217
+   31  109  255  254  252  251  250  255  255  255  255  255  241    0  255  251
+   29  116  190  168  164  157  145  133  126  121  117  118  112    0  215  205
+   20   63   47   38   36   20   38   83   64   51   52   55   64   20  255  241
+    NaN    NaN    NaN    NaN    NaN    NaN   96  249  252  228  237  251  249  203  241  246]/255;
+
+icons(idx).data(:,:,2) = ...
+    [NaN    NaN    NaN    NaN    NaN    NaN  114  252  255  255  255  255  255  255  255  255
+   49  180  152  145  140  118  140  173  150  139  132  126  126  106  255  255
+   67  249  252  242  237  231  221  207  201  196  194  193  193   75  255  255
+   66  232  255  255  255  255  255  255  255  255  255  255  255   68  255  255
+   64  226  251  197  191  200  255  255  194  170  168  214  253   61  255  255
+   62  220  224  183  207  173  189  202  167  175  116  172  253   58  255  246
+   60  211  255  190  196  203  166  131  187  134  148  255  249   54  254  240
+   57  199  255  255  198  203  202  158  132  168  255  255  245   47  255  255
+   54  190  255  255  200  110  199  185  155  147  160  203  251   44  240  230
+   52  187  255  204  187  194  121  204  189  139   99  179  255   39  255  254
+   49  180  230   42   49   53   36   64  182   98   65   70  228   36  255  248
+   47  171  255  255  255  255  255  255  186  115  124  114  235   34  243  229
+   45  166  255  255  254  254  255  255  255  255  255  255  255   33  255  252
+   43  176  222  206  204  200  190  180  174  171  169  169  169   32  229  220
+   30  101   81   74   69   54   72  116   96   84   84   84   94   55  255  245
+    NaN    NaN    NaN    NaN    NaN    NaN  105  251  253  237  242  252  251  218  246  249]/255;
+
+icons(idx).data(:,:,3) = ...
+    [ NaN    NaN    NaN    NaN    NaN    NaN  125  253  255  255  255  255  255  255  255  255
+   34  118   92   84   79   56   83  111   88   79   73   69   74   45  255  255
+   46  180  228  207  203  195  182  169  159  155  149  149  145    0  255  255
+   45  163  255  255  255  255  255  255  255  255  255  255  254    0  255  255
+   42  156  248  152  155  176  255  255  181  154  147  206  245    0  255  255
+   40  150  202  117  136   87  154  181   90   84    8  120  243    0  255  252
+   38  138  255  145  137  131   81   65  106   27   86  255  238    0  255  250
+   35  122  255  255  159  152  137   75   62  121  255  255  229    0  255  255
+   33  113  255  255  171   13  145  111   67   76   84  159  234    0  255  247
+   30  109  255  160   89   97   10  136  111   36   33  159  251    0  255  255
+   28   99  211    0   12   23    2   11  101    0    0   13  209    0  255  253
+   26   92  255  255  255  255  255  250  146  111  117  104  213    0  255  245
+   23   89  255  255  255  255  255  255  255  255  255  255  241    0  255  254
+   22   93  180  156  151  141  129  114  105   98   93   93   83    0  255  239
+   15   43   26   17   15    0   25   63   45   39   38   39   44    9  255  252
+    NaN    NaN    NaN    NaN    NaN    NaN  117  253  255  249  251  255  254  239  252  254]/255;
 
 % [EOF] getIcons
 
@@ -3878,7 +4395,6 @@ guiparams.depth_range_max                    = inf;
 guiparams.vector_scale_plan_view             = 1;
 guiparams.vector_spacing_plan_view           = 1;
 guiparams.smoothing_window_size              = 1;
-guiparams.map_depth_averaged_velocities      = true;
 guiparams.display_shoreline                  = false;
 guiparams.add_background                     = false;
 
@@ -3905,6 +4421,12 @@ guiparams.contours(idx).variable = 'vertical';
 idx = idx + 1;
 guiparams.contours(idx).string   = 'Velocity Magnitude';
 guiparams.contours(idx).variable = 'mag';
+idx = idx + 1;
+guiparams.contours(idx).string   = 'East Velocity (E)';
+guiparams.contours(idx).variable = 'east';
+idx = idx + 1;
+guiparams.contours(idx).string   = 'North Velocity (N)';
+guiparams.contours(idx).variable = 'north';
 idx = idx + 1;
 guiparams.contours(idx).string   = 'Primary Velocity (zsd)';
 guiparams.contours(idx).variable = 'primary_zsd';
@@ -4014,10 +4536,3 @@ guiparams.data_files  = {''};
 % [EOF] createGUIparams
 
 % [EOF] VMT
-
-
-
-
-
-
-

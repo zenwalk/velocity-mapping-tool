@@ -106,17 +106,17 @@ function varargout = cptcmap(varargin)
 % the same place as the cptcmap.m file.  If you change this on your
 % computer, change the cptpath definition to reflect the new location.
 
-cptpath = [pwd '\utils\colormaps\'];%fullfile(fileparts(which('cptcmap')), 'cptfiles');
-if ~exist(cptpath, 'dir')
-    error('You have moved the cptfiles directory.  Please modify the cptpath variable in this code to point to the directory where your.cpt files are stored');
-end
-
-% Check for 'showall' option first
-
-if nargin == 1 & strcmp(varargin{1}, 'showall')
-    plotcmaps(cptpath);
-    return;
-end
+% cptpath = [pwd '\utils\colormaps\'];%fullfile(fileparts(which('cptcmap')), 'cptfiles');
+% if ~exist(cptpath, 'dir')
+%     error('You have moved the cptfiles directory.  Please modify the cptpath variable in this code to point to the directory where your.cpt files are stored');
+% end
+% 
+% % Check for 'showall' option first
+% 
+% if nargin == 1 & strcmp(varargin{1}, 'showall')
+%     plotcmaps(cptpath);
+%     return;
+% end
 
 % Name of file
 

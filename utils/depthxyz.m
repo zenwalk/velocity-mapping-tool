@@ -40,7 +40,7 @@ function [exyz]=depthxyz(depthRaw,draft,pitchRaw,roll,heading,beamAngle,...
     geo=[x,y,-1.*repmat(draft,size(y))+elev];    
 
     % Compute slant range of each beam
-    beamAngleR=beamAngle.*pi/180;    
+    beamAngleR=str2double(beamAngle).*pi/180;    
     range=(depthRaw-draft)./cos(beamAngleR);
     
     % Adjust heading, pitch, and roll
