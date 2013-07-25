@@ -68,11 +68,24 @@ try
     %disp('Processing Completed')
     log_text = vertcat(log_text, '   Processing Completed.');
 catch err
-    erstg = {'An unexpected error occurred during processing. Execution stopped.'};
-    errordlg(erstg,'VMT Status','replace');
-    log_text = vertcat(log_text, erstg);
-    rethrow(err)
-    return
+    if isdeployed
+        errLogFileName = fullfile(pwd,...
+            ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
+        msgbox({['An unexpected error occurred. Error code: ' err.identifier];...
+            ['Error details are being written to the following file: '];...
+            errLogFileName},...
+            'VMT Status: Unexpected Error',...
+            'error');
+        fid = fopen(errLogFileName,'W');
+        fwrite(fid,err.getReport('extended','hyperlinks','off'));
+        fclose(fid);
+        rethrow(err)
+    else
+        msgbox(['An unexpected error occurred. Error code: ' err.identifier],...
+            'VMT Status: Unexpected Error',...
+            'error');
+        rethrow(err);
+    end
 end
 
 

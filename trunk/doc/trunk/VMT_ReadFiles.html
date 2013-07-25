@@ -109,129 +109,147 @@ This function is called by:
 0056 <span class="comment">%         end</span>
 0057 
 0058     <span class="keyword">catch</span> err
-0059         erstg = {<span class="string">'                                                      '</span>,<span class="keyword">...</span>
-0060                  <span class="string">'An unknown error occurred when reading the ASCII file.'</span>,<span class="keyword">...</span>
-0061                  <span class="string">'Occasionally this occurs due to a corrupt ASCII file with'</span>,<span class="keyword">...</span>
-0062                  <span class="string">'formatting errors. Please regenerate the ASCII file and '</span>,<span class="keyword">...</span>
-0063                  <span class="string">'retry loading into VMT. An error may also occur if there '</span>,<span class="keyword">...</span>
-0064                  <span class="string">'are white spaces or special characters (e.g. *?&lt;&gt;|) in '</span>,<span class="keyword">...</span>
-0065                  <span class="string">'the filenames or paths. Ensure no such spaces or '</span>,<span class="keyword">...</span>
-0066                  <span class="string">'characters exist and try loading the files again.'</span>};
-0067         errordlg([zFileName(zi) erstg],<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
-0068         rethrow(err)
-0069         <span class="keyword">break</span>
-0070     <span class="keyword">end</span>
-0071     
-0072     <span class="comment">% Check the units to ensure they are metric</span>
-0073     
-0074     <span class="keyword">if</span> ~strcmp(A(zi).Sup.units,<span class="string">'cm'</span>)
-0075         erstg = {<span class="string">'                                                      '</span>,<span class="keyword">...</span>
-0076                  <span class="string">'Units in ASCII file are not metric.  VMT only accepts data'</span><span class="keyword">...</span>
-0077                  <span class="string">'in metric units.  Please change the units in WinRiver II'</span><span class="keyword">...</span>
-0078                  <span class="string">'and export your ASCII files again before reloading into VMT.'</span>};
-0079         errordlg([zFileName(zi) erstg],<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
-0080         error(<span class="string">'VMT:unitsChk'</span>, <span class="string">'Input not in metic units'</span>)
-0081     <span class="keyword">end</span>
-0082 
-0083 <span class="keyword">end</span>
-0084 
-0085 <span class="comment">% Get rid of the waitbar</span>
-0086 <span class="comment">% if ishandle(h_waitbar)</span>
-0087 <span class="comment">%     delete(h_waitbar)</span>
-0088 <span class="comment">% end</span>
-0089 
-0090 <span class="comment">% Save data returned by tfile to .mat with same prefix as ASCII</span>
-0091 [file_root_name,the_rest] = strtok(zFileName,<span class="string">'_'</span>);
-0092 file_numbers = strtok(the_rest,<span class="string">'_'</span>);
-0093 
-0094 save_dir = fullfile(zPathName,<span class="string">'VMTProcFiles'</span>);
-0095 [~,mess,~] = mkdir(save_dir); 
-0096 <span class="comment">% disp(mess)</span>
-0097 
-0098 savefile = [file_root_name{1} <span class="string">'_'</span> file_numbers{1} <span class="string">'_'</span> file_numbers{end} <span class="string">'.mat'</span>];
-0099 savefile = fullfile(save_dir,savefile);
+0059         
+0060         erstg = {<span class="string">'                                                      '</span>,<span class="keyword">...</span>
+0061                  <span class="string">'An unknown error occurred when reading the ASCII file.'</span>,<span class="keyword">...</span>
+0062                  <span class="string">'Occasionally this occurs due to a corrupt ASCII file with'</span>,<span class="keyword">...</span>
+0063                  <span class="string">'formatting errors. Please regenerate the ASCII file and '</span>,<span class="keyword">...</span>
+0064                  <span class="string">'retry loading into VMT. An error may also occur if there '</span>,<span class="keyword">...</span>
+0065                  <span class="string">'are white spaces or special characters (e.g. *?&lt;&gt;|) in '</span>,<span class="keyword">...</span>
+0066                  <span class="string">'the filenames or paths. Ensure no such spaces or '</span>,<span class="keyword">...</span>
+0067                  <span class="string">'characters exist and try loading the files again.'</span>};
+0068         
+0069         <span class="keyword">if</span> isdeployed
+0070         errLogFileName = fullfile(pwd,<span class="keyword">...</span>
+0071             [<span class="string">'errorLog'</span> datestr(now,<span class="string">'yyyymmddHHMMSS'</span>) <span class="string">'.txt'</span>]);
+0072         msgbox({erstg;<span class="keyword">...</span>
+0073             [<span class="string">'  Error code: '</span> err.identifier];<span class="keyword">...</span>
+0074             [<span class="string">'Error details are being written to the following file: '</span>];<span class="keyword">...</span>
+0075             errLogFileName},<span class="keyword">...</span>
+0076             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0077             <span class="string">'error'</span>);
+0078         fid = fopen(errLogFileName,<span class="string">'W'</span>);
+0079         fwrite(fid,err.getReport(<span class="string">'extended'</span>,<span class="string">'hyperlinks'</span>,<span class="string">'off'</span>));
+0080         fclose(fid);
+0081         rethrow(err)
+0082     <span class="keyword">else</span>
+0083         msgbox([<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier],<span class="keyword">...</span>
+0084             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0085             <span class="string">'error'</span>);
+0086         rethrow(err);
+0087     <span class="keyword">end</span>
+0088     <span class="keyword">end</span>
+0089     
+0090     <span class="comment">% Check the units to ensure they are metric</span>
+0091     
+0092     <span class="keyword">if</span> ~strcmp(A(zi).Sup.units,<span class="string">'cm'</span>)
+0093         erstg = {<span class="string">'                                                      '</span>,<span class="keyword">...</span>
+0094                  <span class="string">'Units in ASCII file are not metric.  VMT only accepts data'</span><span class="keyword">...</span>
+0095                  <span class="string">'in metric units.  Please change the units in WinRiver II'</span><span class="keyword">...</span>
+0096                  <span class="string">'and export your ASCII files again before reloading into VMT.'</span>};
+0097         errordlg([zFileName(zi) erstg],<span class="string">'VMT Status'</span>,<span class="string">'replace'</span>);
+0098         error(<span class="string">'VMT:unitsChk'</span>, <span class="string">'Input not in metic units'</span>)
+0099     <span class="keyword">end</span>
 0100 
-0101 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
-0102 <span class="comment">% Embedded Functions %</span>
-0103 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
-0104 
-0105 <a name="_sub1" href="#_subfunctions" class="code">function A = initStructure(z)</a>
-0106    Sup = struct(<span class="string">'absorption_dbpm'</span>,{}, <span class="keyword">...</span>
-0107                 <span class="string">'bins'</span>,{}, <span class="keyword">...</span>
-0108                 <span class="string">'binSize_cm'</span>,{}, <span class="keyword">...</span>
-0109                 <span class="string">'nBins'</span>,{}, <span class="keyword">...</span>
-0110                 <span class="string">'blank_cm'</span>,{}, <span class="keyword">...</span>
-0111                 <span class="string">'draft_cm'</span>,{}, <span class="keyword">...</span>
-0112                 <span class="string">'ensNo'</span>,{}, <span class="keyword">...</span>
-0113                 <span class="string">'nPings'</span>,{}, <span class="keyword">...</span>
-0114                 <span class="string">'noEnsInSeg'</span>,{}, <span class="keyword">...</span>
-0115                 <span class="string">'noe'</span>,{}, <span class="keyword">...</span>
-0116                 <span class="string">'note1'</span>,{}, <span class="keyword">...</span>
-0117                 <span class="string">'note2'</span>,{}, <span class="keyword">...</span>
-0118                 <span class="string">'intScaleFact_dbpcnt'</span>,{}, <span class="keyword">...</span>
-0119                 <span class="string">'intUnits'</span>,{}, <span class="keyword">...</span>
-0120                 <span class="string">'vRef'</span>,{}, <span class="keyword">...</span>
-0121                 <span class="string">'wm'</span>,{}, <span class="keyword">...</span>
-0122                 <span class="string">'units'</span>,{}, <span class="keyword">...</span>
-0123                 <span class="string">'year'</span>,{}, <span class="keyword">...</span>
-0124                 <span class="string">'month'</span>,{}, <span class="keyword">...</span>
-0125                 <span class="string">'day'</span>,{}, <span class="keyword">...</span>
-0126                 <span class="string">'hour'</span>,{}, <span class="keyword">...</span>
-0127                 <span class="string">'minute'</span>,{}, <span class="keyword">...</span>
-0128                 <span class="string">'second'</span>,{}, <span class="keyword">...</span>
-0129                 <span class="string">'sec100'</span>,{}, <span class="keyword">...</span>
-0130                 <span class="string">'timeElapsed_sec'</span>,{}, <span class="keyword">...</span>
-0131                 <span class="string">'timeDelta_sec100'</span>,{});
-0132    Wat = struct(<span class="string">'binDepth'</span>,{}, <span class="keyword">...</span>
-0133                 <span class="string">'backscatter'</span>,{}, <span class="keyword">...</span>
-0134                 <span class="string">'vDir'</span>,{}, <span class="keyword">...</span>
-0135                 <span class="string">'vMag'</span>,{}, <span class="keyword">...</span>
-0136                 <span class="string">'vEast'</span>,{}, <span class="keyword">...</span>
-0137                 <span class="string">'vError'</span>,{}, <span class="keyword">...</span>
-0138                 <span class="string">'vNorth'</span>,{}, <span class="keyword">...</span>
-0139                 <span class="string">'vVert'</span>,{}, <span class="keyword">...</span>
-0140                 <span class="string">'percentGood'</span>,{});
-0141    Nav = struct(<span class="string">'bvEast'</span>,{}, <span class="keyword">...</span>
-0142                 <span class="string">'bvError'</span>,{}, <span class="keyword">...</span>
-0143                 <span class="string">'bvNorth'</span>,{}, <span class="keyword">...</span>
-0144                 <span class="string">'bvVert'</span>,{}, <span class="keyword">...</span>
-0145                 <span class="string">'depth'</span>,{}, <span class="keyword">...</span>
-0146                 <span class="string">'dsDepth'</span>,{}, <span class="keyword">...</span>
-0147                 <span class="string">'dmg'</span>,{}, <span class="keyword">...</span>
-0148                 <span class="string">'length'</span>,{}, <span class="keyword">...</span>
-0149                 <span class="string">'totDistEast'</span>,{}, <span class="keyword">...</span>
-0150                 <span class="string">'totDistNorth'</span>,{}, <span class="keyword">...</span>
-0151                 <span class="string">'altitude'</span>,{}, <span class="keyword">...</span>
-0152                 <span class="string">'altitudeChng'</span>,{}, <span class="keyword">...</span>
-0153                 <span class="string">'gpsTotDist'</span>,{}, <span class="keyword">...</span>
-0154                 <span class="string">'gpsVariable'</span>,{}, <span class="keyword">...</span>
-0155                 <span class="string">'gpsVeast'</span>,{}, <span class="keyword">...</span>
-0156                 <span class="string">'gpsVnorth'</span>,{}, <span class="keyword">...</span>
-0157                 <span class="string">'lat_deg'</span>,{}, <span class="keyword">...</span>
-0158                 <span class="string">'long_deg'</span>,{}, <span class="keyword">...</span>
-0159                 <span class="string">'nSats'</span>,{}, <span class="keyword">...</span>
-0160                 <span class="string">'hdop'</span>,{});
-0161    Sensor = struct(<span class="string">'pitch_deg'</span>,{}, <span class="keyword">...</span>
-0162                    <span class="string">'roll_deg'</span>,{}, <span class="keyword">...</span>
-0163                    <span class="string">'heading_deg'</span>,{}, <span class="keyword">...</span>
-0164                    <span class="string">'temp_degC'</span>,{});
-0165      Q = struct(<span class="string">'endDepth'</span>,{}, <span class="keyword">...</span>
-0166                 <span class="string">'endDist'</span>,{}, <span class="keyword">...</span>
-0167                 <span class="string">'bot'</span>,{}, <span class="keyword">...</span>
-0168                 <span class="string">'end'</span>,{}, <span class="keyword">...</span>
-0169                 <span class="string">'meas'</span>,{}, <span class="keyword">...</span>
-0170                 <span class="string">'start'</span>,{}, <span class="keyword">...</span>
-0171                 <span class="string">'top'</span>,{}, <span class="keyword">...</span>
-0172                 <span class="string">'unit'</span>,{}, <span class="keyword">...</span>
-0173                 <span class="string">'startDepth'</span>,{}, <span class="keyword">...</span>
-0174                 <span class="string">'startDist'</span>,{});
-0175             A(z).Sup = Sup;
-0176             A(z).Wat = Wat;
-0177             A(z).Nav = Nav;
-0178             A(z).Sensor = Sensor;
-0179             A(z).Q = Q;
-0180             
-0181             <span class="comment">% [EOF] initStructure</span></pre></div>
-<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0101 <span class="keyword">end</span>
+0102 
+0103 <span class="comment">% Get rid of the waitbar</span>
+0104 <span class="comment">% if ishandle(h_waitbar)</span>
+0105 <span class="comment">%     delete(h_waitbar)</span>
+0106 <span class="comment">% end</span>
+0107 
+0108 <span class="comment">% Save data returned by tfile to .mat with same prefix as ASCII</span>
+0109 [file_root_name,the_rest] = strtok(zFileName,<span class="string">'_'</span>);
+0110 file_numbers = strtok(the_rest,<span class="string">'_'</span>);
+0111 
+0112 save_dir = fullfile(zPathName,<span class="string">'VMTProcFiles'</span>);
+0113 [~,mess,~] = mkdir(save_dir); 
+0114 <span class="comment">% disp(mess)</span>
+0115 
+0116 savefile = [file_root_name{1} <span class="string">'_'</span> file_numbers{1} <span class="string">'_'</span> file_numbers{end} <span class="string">'.mat'</span>];
+0117 savefile = fullfile(save_dir,savefile);
+0118 
+0119 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+0120 <span class="comment">% Embedded Functions %</span>
+0121 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+0122 
+0123 <a name="_sub1" href="#_subfunctions" class="code">function A = initStructure(z)</a>
+0124    Sup = struct(<span class="string">'absorption_dbpm'</span>,{}, <span class="keyword">...</span>
+0125                 <span class="string">'bins'</span>,{}, <span class="keyword">...</span>
+0126                 <span class="string">'binSize_cm'</span>,{}, <span class="keyword">...</span>
+0127                 <span class="string">'nBins'</span>,{}, <span class="keyword">...</span>
+0128                 <span class="string">'blank_cm'</span>,{}, <span class="keyword">...</span>
+0129                 <span class="string">'draft_cm'</span>,{}, <span class="keyword">...</span>
+0130                 <span class="string">'ensNo'</span>,{}, <span class="keyword">...</span>
+0131                 <span class="string">'nPings'</span>,{}, <span class="keyword">...</span>
+0132                 <span class="string">'noEnsInSeg'</span>,{}, <span class="keyword">...</span>
+0133                 <span class="string">'noe'</span>,{}, <span class="keyword">...</span>
+0134                 <span class="string">'note1'</span>,{}, <span class="keyword">...</span>
+0135                 <span class="string">'note2'</span>,{}, <span class="keyword">...</span>
+0136                 <span class="string">'intScaleFact_dbpcnt'</span>,{}, <span class="keyword">...</span>
+0137                 <span class="string">'intUnits'</span>,{}, <span class="keyword">...</span>
+0138                 <span class="string">'vRef'</span>,{}, <span class="keyword">...</span>
+0139                 <span class="string">'wm'</span>,{}, <span class="keyword">...</span>
+0140                 <span class="string">'units'</span>,{}, <span class="keyword">...</span>
+0141                 <span class="string">'year'</span>,{}, <span class="keyword">...</span>
+0142                 <span class="string">'month'</span>,{}, <span class="keyword">...</span>
+0143                 <span class="string">'day'</span>,{}, <span class="keyword">...</span>
+0144                 <span class="string">'hour'</span>,{}, <span class="keyword">...</span>
+0145                 <span class="string">'minute'</span>,{}, <span class="keyword">...</span>
+0146                 <span class="string">'second'</span>,{}, <span class="keyword">...</span>
+0147                 <span class="string">'sec100'</span>,{}, <span class="keyword">...</span>
+0148                 <span class="string">'timeElapsed_sec'</span>,{}, <span class="keyword">...</span>
+0149                 <span class="string">'timeDelta_sec100'</span>,{});
+0150    Wat = struct(<span class="string">'binDepth'</span>,{}, <span class="keyword">...</span>
+0151                 <span class="string">'backscatter'</span>,{}, <span class="keyword">...</span>
+0152                 <span class="string">'vDir'</span>,{}, <span class="keyword">...</span>
+0153                 <span class="string">'vMag'</span>,{}, <span class="keyword">...</span>
+0154                 <span class="string">'vEast'</span>,{}, <span class="keyword">...</span>
+0155                 <span class="string">'vError'</span>,{}, <span class="keyword">...</span>
+0156                 <span class="string">'vNorth'</span>,{}, <span class="keyword">...</span>
+0157                 <span class="string">'vVert'</span>,{}, <span class="keyword">...</span>
+0158                 <span class="string">'percentGood'</span>,{});
+0159    Nav = struct(<span class="string">'bvEast'</span>,{}, <span class="keyword">...</span>
+0160                 <span class="string">'bvError'</span>,{}, <span class="keyword">...</span>
+0161                 <span class="string">'bvNorth'</span>,{}, <span class="keyword">...</span>
+0162                 <span class="string">'bvVert'</span>,{}, <span class="keyword">...</span>
+0163                 <span class="string">'depth'</span>,{}, <span class="keyword">...</span>
+0164                 <span class="string">'dsDepth'</span>,{}, <span class="keyword">...</span>
+0165                 <span class="string">'dmg'</span>,{}, <span class="keyword">...</span>
+0166                 <span class="string">'length'</span>,{}, <span class="keyword">...</span>
+0167                 <span class="string">'totDistEast'</span>,{}, <span class="keyword">...</span>
+0168                 <span class="string">'totDistNorth'</span>,{}, <span class="keyword">...</span>
+0169                 <span class="string">'altitude'</span>,{}, <span class="keyword">...</span>
+0170                 <span class="string">'altitudeChng'</span>,{}, <span class="keyword">...</span>
+0171                 <span class="string">'gpsTotDist'</span>,{}, <span class="keyword">...</span>
+0172                 <span class="string">'gpsVariable'</span>,{}, <span class="keyword">...</span>
+0173                 <span class="string">'gpsVeast'</span>,{}, <span class="keyword">...</span>
+0174                 <span class="string">'gpsVnorth'</span>,{}, <span class="keyword">...</span>
+0175                 <span class="string">'lat_deg'</span>,{}, <span class="keyword">...</span>
+0176                 <span class="string">'long_deg'</span>,{}, <span class="keyword">...</span>
+0177                 <span class="string">'nSats'</span>,{}, <span class="keyword">...</span>
+0178                 <span class="string">'hdop'</span>,{});
+0179    Sensor = struct(<span class="string">'pitch_deg'</span>,{}, <span class="keyword">...</span>
+0180                    <span class="string">'roll_deg'</span>,{}, <span class="keyword">...</span>
+0181                    <span class="string">'heading_deg'</span>,{}, <span class="keyword">...</span>
+0182                    <span class="string">'temp_degC'</span>,{});
+0183      Q = struct(<span class="string">'endDepth'</span>,{}, <span class="keyword">...</span>
+0184                 <span class="string">'endDist'</span>,{}, <span class="keyword">...</span>
+0185                 <span class="string">'bot'</span>,{}, <span class="keyword">...</span>
+0186                 <span class="string">'end'</span>,{}, <span class="keyword">...</span>
+0187                 <span class="string">'meas'</span>,{}, <span class="keyword">...</span>
+0188                 <span class="string">'start'</span>,{}, <span class="keyword">...</span>
+0189                 <span class="string">'top'</span>,{}, <span class="keyword">...</span>
+0190                 <span class="string">'unit'</span>,{}, <span class="keyword">...</span>
+0191                 <span class="string">'startDepth'</span>,{}, <span class="keyword">...</span>
+0192                 <span class="string">'startDist'</span>,{});
+0193             A(z).Sup = Sup;
+0194             A(z).Wat = Wat;
+0195             A(z).Nav = Nav;
+0196             A(z).Sensor = Sensor;
+0197             A(z).Q = Q;
+0198             
+0199             <span class="comment">% [EOF] initStructure</span></pre></div>
+<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

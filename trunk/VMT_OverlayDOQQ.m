@@ -1,4 +1,4 @@
-function log_text = VMT_OverlayDOQQ(pathname)
+function [guiprefs,log_text] = VMT_OverlayDOQQ(guiprefs,varargin)
 % Prompts the user for a geotiff DOQQ (USGS) and overlays the aerial image
 % in the plan view vector plot.  User can select multiple files. 
 %
@@ -8,38 +8,14 @@ function log_text = VMT_OverlayDOQQ(pathname)
 % Added save path functionality (PRJ, 6-23-10)
 %
 % P.R. Jackson, USGS 6-14-10
-% Last modified: F.L. Engel, USGS, 3/13/2013
+% Last modified: F.L. Engel, USGS, 7/25/2013
 
 
-
-%% Get the data file
-%[file,path] = uigetfile({'*.tif','All TIF Files'; '*.*','All Files'},'Select DOQQ (GeoTIFF) File','F:\Data');
-%infile{1} = [path file];
-
-i = 1;
-getdoqq = 'Yes';
-doqqpath = pathname;
-log_text = {''};
-while strcmp(getdoqq, 'Yes');
-    [file,doqqpath] = uigetfile({'*.tif;*.shp;*.asc;*.grd;*.ddf','All Background Files'; '*.*','All Files'},'Select Background File',doqqpath);
-        infile{i} = [doqqpath file];
- 
-    options.Interpreter = 'tex';
-    % Include the desired Default answer
-    options.Default = 'No';
-    
-    % Create a TeX string for the question
-    if ~ischar(file) % User hit cancel, get out quick
-        return
-    else
-        qstring = 'Do you want to load another background file?';
-        getdoqq = questdlg(qstring,'Add Background',...
-            'Yes','No',options);
-    end
-    i = i+1;
-    
+if ~isempty(varargin)
+    skip_ui = varargin{1};
+else
+    skip_ui = false;
 end
-
 
 % See if PLOT 1 exists already, if not, make the figure
 fig_planview_handle = findobj(0,'name','Plan View Map');
@@ -50,35 +26,40 @@ else
     %set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
 end
 
-if infile{1}(1) ==  0
-    figure(fig_planview_handle); hold on
-    return
+if ~skip_ui
+    if iscell(guiprefs.aerial_file)
+        [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(...
+            {'*.tif;*.shp;*.asc;*.grd;*.ddf','All Background Files'; '*.*','All Files'},...
+            'Select Background File(s)',...
+            'Multiselect', 'on',...
+            fullfile(guiprefs.aerial_path,guiprefs.aerial_file{1}));
+    else
+        [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(...
+            {'*.tif;*.shp;*.asc;*.grd;*.ddf','All Background Files'; '*.*','All Files'},...
+            'Select Background File(s)',...
+            'Multiselect', 'on',...
+            fullfile(guiprefs.aerial_path,guiprefs.aerial_file));
+    end
 end
 
-%% Save the path
-% if exist('LastDir.mat') == 2
-    % save('LastDir.mat','doqqpath','-append')
-% else
-    % save('LastDir.mat','doqqpath')
-% end
-
-%% Plot the image
-
-for i = 1:length(infile);
-    hdlmap = mapshow(infile{i}); hold on
+if ischar(guiprefs.aerial_file) % User did not hit cancel, 1 file selected
+    
+    hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file)); hold on
     uistack(hdlmap,'bottom')
+    log_text = vertcat({'Adding background image:'},guiprefs.aerial_file);
+    set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+    axis image on
+elseif iscell(guiprefs.aerial_file) % User did not hit cancel, multiple files selected
+    
+    for i = 1:length(guiprefs.aerial_file);
+        hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file{i})); hold on
+        uistack(hdlmap,'bottom')
+        log_text = vertcat({'Adding background image:'},guiprefs.aerial_file{i});
+    end
+    set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+    axis image on
 end
 
-log_text = vertcat({'Adding background image:'},infile);
-
-set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
-axis image on
-% xlabel('UTM Easting (m)')
-% ylabel('UTM Northing (m)')
-% set(gcf,'Color',[0 0 0]) %[0.2 0.2 0.2]
-%set(gca,'Color',[0.8,0.733,0.533]) %[0.3 0.3 0.3]
-% set(gca,'TickDir','out')
-% figure(2); box on
 
 % Format the ticks for UTM and allow zooming and panning
 ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM

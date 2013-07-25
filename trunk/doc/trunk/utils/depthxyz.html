@@ -110,7 +110,7 @@ This function is called by:
 0040     geo=[x,y,-1.*repmat(draft,size(y))+elev];    
 0041 
 0042     <span class="comment">% Compute slant range of each beam</span>
-0043     beamAngleR=beamAngle.*pi/180;    
+0043     beamAngleR=str2double(beamAngle).*pi/180;    
 0044     range=(depthRaw-draft)./cos(beamAngleR);
 0045     
 0046     <span class="comment">% Adjust heading, pitch, and roll</span>
@@ -176,6 +176,6 @@ This function is called by:
 0106     exyz=[beam1enu;beam2enu;beam3enu;beam4enu];
 0107     exyz=sortrows(exyz,1);
 0108</pre></div>
-<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

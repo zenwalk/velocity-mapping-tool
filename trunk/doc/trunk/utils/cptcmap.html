@@ -129,7 +129,7 @@ This function calls:
 <li><a href="cptcmap.html" class="code" title="function varargout = cptcmap(varargin)">cptcmap</a>	CPTCMAP Apply a .cpt file as colormap to an axis</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="cptcmap.html" class="code" title="function varargout = cptcmap(varargin)">cptcmap</a>	CPTCMAP Apply a .cpt file as colormap to an axis</li><li><a href="quiverc.html" class="code" title="function hh = quiverc(varargin)">quiverc</a>	Modified version of Quiver to plots velocity vectors as arrows</li></ul>
+<li><a href="VMT_GraphicsControl.html" class="code" title="function varargout = VMT_GraphicsControl(varargin)">VMT_GraphicsControl</a>	--- THE VELOCITY MAPPING TOOLBOX ---</li><li><a href="cptcmap.html" class="code" title="function varargout = cptcmap(varargin)">cptcmap</a>	CPTCMAP Apply a .cpt file as colormap to an axis</li><li><a href="quiverc.html" class="code" title="function hh = quiverc(varargin)">quiverc</a>	Modified version of Quiver to plots velocity vectors as arrows</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
@@ -245,17 +245,17 @@ This function is called by:
 0106 <span class="comment">% the same place as the cptcmap.m file.  If you change this on your</span>
 0107 <span class="comment">% computer, change the cptpath definition to reflect the new location.</span>
 0108 
-0109 cptpath = [pwd <span class="string">'\utils\colormaps\'</span>];<span class="comment">%fullfile(fileparts(which('cptcmap')), 'cptfiles');</span>
-0110 <span class="keyword">if</span> ~exist(cptpath, <span class="string">'dir'</span>)
-0111     error(<span class="string">'You have moved the cptfiles directory.  Please modify the cptpath variable in this code to point to the directory where your.cpt files are stored'</span>);
-0112 <span class="keyword">end</span>
-0113 
-0114 <span class="comment">% Check for 'showall' option first</span>
-0115 
-0116 <span class="keyword">if</span> nargin == 1 &amp; strcmp(varargin{1}, <span class="string">'showall'</span>)
-0117     <a href="#_sub2" class="code" title="subfunction plotcmaps(folder)">plotcmaps</a>(cptpath);
-0118     <span class="keyword">return</span>;
-0119 <span class="keyword">end</span>
+0109 <span class="comment">% cptpath = [pwd '\utils\colormaps\'];%fullfile(fileparts(which('cptcmap')), 'cptfiles');</span>
+0110 <span class="comment">% if ~exist(cptpath, 'dir')</span>
+0111 <span class="comment">%     error('You have moved the cptfiles directory.  Please modify the cptpath variable in this code to point to the directory where your.cpt files are stored');</span>
+0112 <span class="comment">% end</span>
+0113 <span class="comment">%</span>
+0114 <span class="comment">% % Check for 'showall' option first</span>
+0115 <span class="comment">%</span>
+0116 <span class="comment">% if nargin == 1 &amp; strcmp(varargin{1}, 'showall')</span>
+0117 <span class="comment">%     plotcmaps(cptpath);</span>
+0118 <span class="comment">%     return;</span>
+0119 <span class="comment">% end</span>
 0120 
 0121 <span class="comment">% Name of file</span>
 0122 
@@ -608,6 +608,6 @@ This function is called by:
 0469 <span class="keyword">end</span>
 0470 
 0471</pre></div>
-<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

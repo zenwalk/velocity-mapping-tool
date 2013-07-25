@@ -1,7 +1,10 @@
  function hh = quiverc(varargin)
 % Modified version of Quiver to plots velocity vectors as arrows 
 % with components (u,v) at the points (x,y) using the current colormap 
-
+% 
+% Further edited by Frank L. Engel for use in VMT, allowing for custom
+% scaling and colormap applications to be directed from the GUI 7/25/2013
+% 
 % Bertrand Dano 3-3-03
 % Copyright 1984-2002 The MathWorks, Inc. 
 
@@ -40,6 +43,7 @@
 %   $Revision: 5.21 $  $Date: 2002/06/05 20:05:16 $ 
 %-------------------------------------------------------------
 
+
 % set(gca, 'color', 'blue');
 % Arrow head parameters
 alpha = 0.33; % Size of arrow head relative to the length of the vector
@@ -48,14 +52,37 @@ autoscale = 1; % Autoscale if ~= 0 then scale by this.
 plotarrows = 1; % Plot arrows
 sym = '';
 
+nin = nargin;
+
+% Check numeric input arguments
+if nin<4, % quiver(u,v) or quiver(u,v,s)
+  [msg,x,y,u,v] = xyzchk(varargin{1:2});
+else
+  [msg,x,y,u,v] = xyzchk(varargin{1:4});
+end
+if ~isempty(msg), error(msg); end
+
+if nin==3 | nin==5, % quiver(u,v,s) or quiver(x,y,u,v,s)
+  autoscale = varargin{nin};
+elseif nin==9,
+    autoscale   = varargin{5};
+    minrng      = varargin{6};
+    maxrng      = varargin{7};
+    usecolormap = varargin{8};
+    cptfullfile = varargin{9};
+end
+
 % Setup a custom colormap
 % quiverc fights for some reason if colormaps are longer than the standard
 % 64 elements. Must first ensure that the custom CPT cmap is interpolated
 % to 64 levels.
-if 0
-    CC    = cptcmap('Primary_1.cpt'); % FEX in the utils folder
+if ~isempty(cptfullfile) && strcmpi('Browse for more (cpt)...',usecolormap)
+    CC    = cptcmap(cptfullfile); % FEX in the utils folder
+elseif ~isempty(usecolormap)
+    colormap(usecolormap)
+    CC = colormap;
 else
-    colormap jet
+    colormap('jet')
     CC = colormap;
 end
 c1    = CC(:,1); c2 = CC(:,2); c3 = CC(:,3);
@@ -71,41 +98,6 @@ ls = '-';
 ms = '';
 col = '';
 lw=1;
-
-nin = nargin;
-% Parse the string inputs
-while isstr(varargin{nin}),
-  vv = varargin{nin};
-  if ~isempty(vv) & strcmp(lower(vv(1)),'f')
-    filled = 1;
-    nin = nin-1;
-  else
-    [l,c,m,msg] = colstyle(vv);
-    if ~isempty(msg), 
-      error(sprintf('Unknown option "%s".',vv));
-    end
-    if ~isempty(l), ls = l; end
-    if ~isempty(c), col = c; end
-    if ~isempty(m), ms = m; plotarrows = 0; end
-    if isequal(m,'.'), ms = ''; end % Don't plot '.'
-    nin = nin-1;
-  end
-end
-
-
-error(nargchk(2,5,nin));
-
-% Check numeric input arguments
-if nin<4, % quiver(u,v) or quiver(u,v,s)
-  [msg,x,y,u,v] = xyzchk(varargin{1:2});
-else
-  [msg,x,y,u,v] = xyzchk(varargin{1:4});
-end
-if ~isempty(msg), error(msg); end
-
-if nin==3 | nin==5, % quiver(u,v,s) or quiver(x,y,u,v,s)
-  autoscale = varargin{nin};
-end
 
 % Scalar expand u,v
 if prod(size(u))==1, u = u(ones(size(x))); end
@@ -127,7 +119,17 @@ end
 %----------------------------------------------
 % Define colormap 
 vr=sqrt(u.^2+v.^2);
-vrn=round(vr/max(vr(:))*64);
+if ~isempty(minrng)
+    a = 1; b = 64;
+    vrn=round(...
+        (b-a)*(vr-minrng*autoscale)...
+        /(maxrng*autoscale-minrng*autoscale) + a...
+        );
+    vrn(vrn<1) = 1;
+    vrn(vrn>64) = 64;
+else
+    vrn=round(vr/max(vr(:))*64);
+end
 CC=colormap;
 ax = newplot;
 next = lower(get(ax,'NextPlot'));

@@ -23,7 +23,7 @@
 <div class="box"><strong>Prompts the user for a geotiff DOQQ (USGS) and overlays the aerial image</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function log_text = VMT_OverlayDOQQ(pathname) </strong></div>
+<div class="box"><strong>function [guiprefs,log_text] = VMT_OverlayDOQQ(guiprefs,varargin) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> Prompts the user for a geotiff DOQQ (USGS) and overlays the aerial image
@@ -35,7 +35,7 @@
  Added save path functionality (PRJ, 6-23-10)
 
  P.R. Jackson, USGS 6-14-10
- Last modified: F.L. Engel, USGS, 3/13/2013</pre></div>
+ Last modified: F.L. Engel, USGS, 7/25/2013</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -52,7 +52,7 @@ This function is called by:
 <li><a href="#_sub1" class="code">function mypostcallback_zoom(obj,evd)</a></li><li><a href="#_sub2" class="code">function mypostcallback_pan(obj,evd)</a></li></ul>
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function log_text = VMT_OverlayDOQQ(pathname)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [guiprefs,log_text] = VMT_OverlayDOQQ(guiprefs,varargin)</a>
 0002 <span class="comment">% Prompts the user for a geotiff DOQQ (USGS) and overlays the aerial image</span>
 0003 <span class="comment">% in the plan view vector plot.  User can select multiple files.</span>
 0004 <span class="comment">%</span>
@@ -62,99 +62,80 @@ This function is called by:
 0008 <span class="comment">% Added save path functionality (PRJ, 6-23-10)</span>
 0009 <span class="comment">%</span>
 0010 <span class="comment">% P.R. Jackson, USGS 6-14-10</span>
-0011 <span class="comment">% Last modified: F.L. Engel, USGS, 3/13/2013</span>
+0011 <span class="comment">% Last modified: F.L. Engel, USGS, 7/25/2013</span>
 0012 
 0013 
-0014 
-0015 <span class="comment">%% Get the data file</span>
-0016 <span class="comment">%[file,path] = uigetfile({'*.tif','All TIF Files'; '*.*','All Files'},'Select DOQQ (GeoTIFF) File','F:\Data');</span>
-0017 <span class="comment">%infile{1} = [path file];</span>
-0018 
-0019 i = 1;
-0020 getdoqq = <span class="string">'Yes'</span>;
-0021 doqqpath = pathname;
-0022 log_text = {<span class="string">''</span>};
-0023 <span class="keyword">while</span> strcmp(getdoqq, <span class="string">'Yes'</span>);
-0024     [file,doqqpath] = uigetfile({<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="string">'Select Background File'</span>,doqqpath);
-0025         infile{i} = [doqqpath file];
-0026  
-0027     options.Interpreter = <span class="string">'tex'</span>;
-0028     <span class="comment">% Include the desired Default answer</span>
-0029     options.Default = <span class="string">'No'</span>;
-0030     
-0031     <span class="comment">% Create a TeX string for the question</span>
-0032     <span class="keyword">if</span> ~ischar(file) <span class="comment">% User hit cancel, get out quick</span>
-0033         <span class="keyword">return</span>
-0034     <span class="keyword">else</span>
-0035         qstring = <span class="string">'Do you want to load another background file?'</span>;
-0036         getdoqq = questdlg(qstring,<span class="string">'Add Background'</span>,<span class="keyword">...</span>
-0037             <span class="string">'Yes'</span>,<span class="string">'No'</span>,options);
-0038     <span class="keyword">end</span>
-0039     i = i+1;
-0040     
-0041 <span class="keyword">end</span>
-0042 
-0043 
-0044 <span class="comment">% See if PLOT 1 exists already, if not, make the figure</span>
-0045 fig_planview_handle = findobj(0,<span class="string">'name'</span>,<span class="string">'Plan View Map'</span>);
-0046 <span class="keyword">if</span> ~isempty(fig_planview_handle) &amp;&amp;  ishandle(fig_planview_handle)
-0047     figure(fig_planview_handle);
-0048 <span class="keyword">else</span>
-0049     fig_planview_handle = figure(<span class="string">'name'</span>,<span class="string">'Plan View Map'</span>); clf
-0050     <span class="comment">%set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])</span>
-0051 <span class="keyword">end</span>
-0052 
-0053 <span class="keyword">if</span> infile{1}(1) ==  0
-0054     figure(fig_planview_handle); hold on
-0055     <span class="keyword">return</span>
-0056 <span class="keyword">end</span>
-0057 
-0058 <span class="comment">%% Save the path</span>
-0059 <span class="comment">% if exist('LastDir.mat') == 2</span>
-0060     <span class="comment">% save('LastDir.mat','doqqpath','-append')</span>
-0061 <span class="comment">% else</span>
-0062     <span class="comment">% save('LastDir.mat','doqqpath')</span>
-0063 <span class="comment">% end</span>
-0064 
-0065 <span class="comment">%% Plot the image</span>
-0066 
-0067 <span class="keyword">for</span> i = 1:length(infile);
-0068     hdlmap = mapshow(infile{i}); hold on
-0069     uistack(hdlmap,<span class="string">'bottom'</span>)
-0070 <span class="keyword">end</span>
-0071 
-0072 log_text = vertcat({<span class="string">'Adding background image:'</span>},infile);
+0014 <span class="keyword">if</span> ~isempty(varargin)
+0015     skip_ui = varargin{1};
+0016 <span class="keyword">else</span>
+0017     skip_ui = false;
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="comment">% See if PLOT 1 exists already, if not, make the figure</span>
+0021 fig_planview_handle = findobj(0,<span class="string">'name'</span>,<span class="string">'Plan View Map'</span>);
+0022 <span class="keyword">if</span> ~isempty(fig_planview_handle) &amp;&amp;  ishandle(fig_planview_handle)
+0023     figure(fig_planview_handle);
+0024 <span class="keyword">else</span>
+0025     fig_planview_handle = figure(<span class="string">'name'</span>,<span class="string">'Plan View Map'</span>); clf
+0026     <span class="comment">%set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])</span>
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="keyword">if</span> ~skip_ui
+0030     <span class="keyword">if</span> iscell(guiprefs.aerial_file)
+0031         [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
+0032             {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
+0033             <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
+0034             <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+0035             fullfile(guiprefs.aerial_path,guiprefs.aerial_file{1}));
+0036     <span class="keyword">else</span>
+0037         [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
+0038             {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
+0039             <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
+0040             <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+0041             fullfile(guiprefs.aerial_path,guiprefs.aerial_file));
+0042     <span class="keyword">end</span>
+0043 <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> ischar(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, 1 file selected</span>
+0046     
+0047     hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file)); hold on
+0048     uistack(hdlmap,<span class="string">'bottom'</span>)
+0049     log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file);
+0050     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
+0051     axis image on
+0052 <span class="keyword">elseif</span> iscell(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, multiple files selected</span>
+0053     
+0054     <span class="keyword">for</span> i = 1:length(guiprefs.aerial_file);
+0055         hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file{i})); hold on
+0056         uistack(hdlmap,<span class="string">'bottom'</span>)
+0057         log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file{i});
+0058     <span class="keyword">end</span>
+0059     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
+0060     axis image on
+0061 <span class="keyword">end</span>
+0062 
+0063 
+0064 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
+0065 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
+0066 hdlzm = zoom;
+0067 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
+0068 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0069 hdlpn = pan;
+0070 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
+0071 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0072 
 0073 
-0074 set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
-0075 axis image on
-0076 <span class="comment">% xlabel('UTM Easting (m)')</span>
-0077 <span class="comment">% ylabel('UTM Northing (m)')</span>
-0078 <span class="comment">% set(gcf,'Color',[0 0 0]) %[0.2 0.2 0.2]</span>
-0079 <span class="comment">%set(gca,'Color',[0.8,0.733,0.533]) %[0.3 0.3 0.3]</span>
-0080 <span class="comment">% set(gca,'TickDir','out')</span>
-0081 <span class="comment">% figure(2); box on</span>
-0082 
-0083 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
-0084 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
-0085 hdlzm = zoom;
-0086 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
-0087 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0088 hdlpn = pan;
-0089 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
-0090 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0091 
-0092 
-0093 <span class="comment">%% Embedded functions</span>
-0094 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0095 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
-0096 
-0097 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0098 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
-0099 
-0100     
-0101     
-0102     
-0103</pre></div>
-<hr><address>Generated on Wed 29-May-2013 10:50:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0074 <span class="comment">%% Embedded functions</span>
+0075 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0076 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0077 
+0078 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0079 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
+0080 
+0081     
+0082     
+0083     
+0084</pre></div>
+<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
