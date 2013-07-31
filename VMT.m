@@ -555,7 +555,7 @@ if iscell(guiparams.mat_file)
         'UTM_East' 'UTM_North' 'Elev_m'...
         ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
         ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
-    PVdata.outmat(4:5) = PVdata.outmat(4:5).*100; % velocities in cm/s
+    PVdata.outmat(4:5,:) = PVdata.outmat(4:5,:).*100; % velocities in cm/s
     pvdata = num2cell(PVdata.outmat');
     pvout = vertcat(pvheaders,pvdata);
     xlswrite(outfile,pvout,'Planview');
@@ -632,6 +632,7 @@ else
             'UTM_East' 'UTM_North' 'Elev_m'...
             ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
             ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
+        PVdata.outmat(4:5,:) = PVdata.outmat(4:5,:).*100; % velocities in cm/s
         pvdata = num2cell(PVdata.outmat');
         pvout = vertcat(pvheaders,pvdata);
         xlswrite(outfile,pvout,'Planview');
