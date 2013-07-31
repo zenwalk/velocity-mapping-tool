@@ -47,3 +47,6 @@ copyfile('VMT_Background.png',[pathname 'VMT_Background.png'])
 % Documentation
 backup([pwd filesep 'doc'],[pathname 'doc'],[],'/E /Y')
 
+% Default colormaps
+backup([pwd filesep 'cpt'],[pathname 'cpt'],[],'/E /Y')
+
