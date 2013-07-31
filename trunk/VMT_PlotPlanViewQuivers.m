@@ -89,7 +89,7 @@ end
 
 for n=1:zf
     if mapmult
-        eval(['load ' zPathName '\' zFileName{n}]);
+        eval(['load (' sprintf( '\''' ) fullfile(zPathName,zFileName{n}) sprintf( '\''' ) ')']);
     end
     
     if ~isempty(drng)

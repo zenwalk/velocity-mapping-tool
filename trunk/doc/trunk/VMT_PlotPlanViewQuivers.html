@@ -157,7 +157,7 @@ This function is called by:
 0089 
 0090 <span class="keyword">for</span> n=1:zf
 0091     <span class="keyword">if</span> mapmult
-0092         eval([<span class="string">'load '</span> zPathName <span class="string">'\'</span> zFileName{n}]);
+0092         eval([<span class="string">'load ('</span> sprintf( <span class="string">'\'''</span> ) fullfile(zPathName,zFileName{n}) sprintf( <span class="string">'\'''</span> ) <span class="string">')'</span>]);
 0093     <span class="keyword">end</span>
 0094     
 0095     <span class="keyword">if</span> ~isempty(drng)
@@ -367,6 +367,6 @@ This function is called by:
 0299 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
 0300 
 0301</pre></div>
-<hr><address>Generated on Thu 25-Jul-2013 11:02:04 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 31-Jul-2013 10:14:43 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
