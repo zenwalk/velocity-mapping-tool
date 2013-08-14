@@ -284,8 +284,8 @@ else
             vmin = nanmin(guiparams.gp_vmt.V.mcsBackSmooth(:));
             vmax = nanmax(guiparams.gp_vmt.V.mcsBackSmooth(:));
         case 'flowangle'
-            vmin = nanmin(guiparams.gp_vmt.V.mfd(:));
-            vmax = nanmax(guiparams.gp_vmt.V.mfd(:));
+            vmin = nanmin(guiparams.gp_vmt.V.mcsDirSmooth(:));
+            vmax = nanmax(guiparams.gp_vmt.V.mcsDirSmooth(:));
     end
     guiparams.min_velocity_mcs              = vmin;
     guiparams.max_velocity_mcs              = vmax;
@@ -724,17 +724,33 @@ hVMTgui                 = getappdata(0,'hVMTgui');
 guiparams_vmt           = getappdata(hVMTgui,'guiparams');
 guiparams.gp_vmt        = guiparams_vmt;
 
+% Check to see what plots already exist
+% -------------------------------------
+fig_planview_handle = findobj(0,'name','Plan View Map');
+fig_mcs_handle = findobj(0,'name','Mean Cross Section Contour');
+% if ~isempty(fig_planview_handle) &&  ishandle(fig_planview_handle)
+%     figure(fig_planview_handle); clf
+% else
+%     fig_planview_handle = figure('name','Plan View Map'); clf
+%     %set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
+% end
+
 %%%%%%%%%%%%%%%%%
 % Plan View Map %
 %%%%%%%%%%%%%%%%%
 guiparams.use_data_limits_planview      = 1;
 
-% Compute the data limits to populate edit boxes
-PVdata = guiparams.gp_vmt.iric_anv_planview_data.outmat';
-PVdata(:,4:5) = PVdata(:,4:5).*100; % in cm/s
-vr = sqrt(PVdata(:,4).^2+PVdata(:,5).^2);
-guiparams.min_velocity_planview  = nanmin(vr);
-guiparams.max_velocity_planview  = nanmax(vr);
+if ~isempty(fig_planview_handle) && ishandle(fig_planview_handle)
+    % Compute the data limits to populate edit boxes
+    PVdata = guiparams.gp_vmt.iric_anv_planview_data.outmat';
+    PVdata(:,4:5) = PVdata(:,4:5).*100; % in cm/s
+    vr = sqrt(PVdata(:,4).^2+PVdata(:,5).^2);
+    guiparams.min_velocity_planview  = nanmin(vr);
+    guiparams.max_velocity_planview  = nanmax(vr);
+else
+    guiparams.min_velocity_planview  = 0;
+    guiparams.max_velocity_planview  = 0;
+end
 
 % Colormap choices
 guiparams.idx_colormap_planview  = 1;
@@ -774,6 +790,7 @@ guiparams.cpt_planview                     = [];
 guiparams.use_data_limits_mcs           = 1;
 guiparams.use_defaults                  = 1;
 
+if ~isempty(fig_mcs_handle) && ishandle(fig_mcs_handle)
 if iscell(guiparams.gp_vmt.mat_file) % Multiple mat files loaded
     guiparams.min_velocity_mcs   = 0;
     guiparams.max_velocity_mcs   = 0;
@@ -830,8 +847,8 @@ else
             vmin = nanmin(guiparams.gp_vmt.V.mcsBackSmooth(:));
             vmax = nanmax(guiparams.gp_vmt.V.mcsBackSmooth(:));
         case 'flowangle'
-            vmin = nanmin(guiparams.gp_vmt.V.mfd(:));
-            vmax = nanmax(guiparams.gp_vmt.V.mfd(:));
+            vmin = nanmin(guiparams.gp_vmt.V.mcsDirSmooth(:));
+            vmax = nanmax(guiparams.gp_vmt.V.mcsDirSmooth(:));
     end
     guiparams.min_velocity_mcs              = vmin;
     guiparams.max_velocity_mcs              = vmax;
@@ -861,6 +878,13 @@ else
         guiparams.distance           = guiparams.distance*3.281;
         guiparams.depth              = guiparams.depth*3.281;
     end
+end
+else
+    guiparams.min_velocity_mcs   = 0;
+    guiparams.max_velocity_mcs   = 0;
+    guiparams.distance           = 0;
+    guiparams.depth              = 0;
+    guiparams.reference_velocity = 0; % cm/s to ft/s
 end
 
 guiparams.idx_colormap_mcs              = 1;
@@ -897,29 +921,72 @@ guiparams.colormap_mcs = ...
 guiparams.cpt_mcs                      = [];
 
 % Set the units
-if ~guiparams.gp_vmt.english_units
-    guiparams.min_velocity_planview_units   = 'cm/s';
-    guiparams.max_velocity_planview_units   = 'cm/s';
-    
-    guiparams.min_velocity_mcs_units        = 'cm/s';
-    guiparams.max_velocity_mcs_units        = 'cm/s';
-    guiparams.reference_velocity_units      = 'cm/s';
-    guiparams.distance_units                = 'm';
-    guiparams.depth_units                   = 'm';
-else
-    guiparams.min_velocity_planview_units   = 'ft/s';
-    guiparams.max_velocity_planview_units   = 'ft/s';
-    
-    guiparams.min_velocity_mcs_units        = 'ft/s';
-    guiparams.max_velocity_mcs_units        = 'ft/s';
-    guiparams.reference_velocity_units      = 'ft/s';
-    guiparams.distance_units                = 'ft';
-    guiparams.depth_units                   = 'ft';
-    
-    guiparams.min_velocity_planview = guiparams.min_velocity_planview*0.03281;
-    guiparams.max_velocity_planview = guiparams.max_velocity_planview*0.03281;
-    guiparams.min_velocity_mcs      = guiparams.min_velocity_mcs*0.03281;
-    guiparams.max_velocity_mcs      = guiparams.max_velocity_mcs*0.03281;
+switch guiparams.gp_vmt.contour
+    case 'backscatter'
+        guiparams.min_velocity_mcs_units   = 'dB';
+        guiparams.max_velocity_mcs_units   = 'dB';
+        if ~guiparams.gp_vmt.english_units
+            guiparams.min_velocity_planview_units   = 'cm/s';
+            guiparams.max_velocity_planview_units   = 'cm/s';
+            %guiparams.min_velocity_mcs_units        = 'cm/s';
+            %guiparams.max_velocity_mcs_units        = 'cm/s';
+            guiparams.reference_velocity_units      = 'cm/s';
+            guiparams.distance_units                = 'm';
+            guiparams.depth_units                   = 'm';
+        else
+            guiparams.min_velocity_planview_units   = 'ft/s';
+            guiparams.max_velocity_planview_units   = 'ft/s';
+            %guiparams.min_velocity_mcs_units        = 'ft/s';
+            %guiparams.max_velocity_mcs_units        = 'ft/s';
+            guiparams.reference_velocity_units      = 'ft/s';
+            guiparams.distance_units                = 'ft';
+            guiparams.depth_units                   = 'ft';
+        end
+    case 'flowangle'
+        guiparams.min_velocity_mcs_units   = 'deg';
+        guiparams.max_velocity_mcs_units   = 'deg';
+        if ~guiparams.gp_vmt.english_units
+            guiparams.min_velocity_planview_units   = 'cm/s';
+            guiparams.max_velocity_planview_units   = 'cm/s';
+            %guiparams.min_velocity_mcs_units        = 'cm/s';
+            %guiparams.max_velocity_mcs_units        = 'cm/s';
+            guiparams.reference_velocity_units      = 'cm/s';
+            guiparams.distance_units                = 'm';
+            guiparams.depth_units                   = 'm';
+        else
+            guiparams.min_velocity_planview_units   = 'ft/s';
+            guiparams.max_velocity_planview_units   = 'ft/s';
+            %guiparams.min_velocity_mcs_units        = 'ft/s';
+            %guiparams.max_velocity_mcs_units        = 'ft/s';
+            guiparams.reference_velocity_units      = 'ft/s';
+            guiparams.distance_units                = 'ft';
+            guiparams.depth_units                   = 'ft';
+        end
+    otherwise
+        if ~guiparams.gp_vmt.english_units
+            guiparams.min_velocity_planview_units   = 'cm/s';
+            guiparams.max_velocity_planview_units   = 'cm/s';
+            
+            guiparams.min_velocity_mcs_units        = 'cm/s';
+            guiparams.max_velocity_mcs_units        = 'cm/s';
+            guiparams.reference_velocity_units      = 'cm/s';
+            guiparams.distance_units                = 'm';
+            guiparams.depth_units                   = 'm';
+        else
+            guiparams.min_velocity_planview_units   = 'ft/s';
+            guiparams.max_velocity_planview_units   = 'ft/s';
+            
+            guiparams.min_velocity_mcs_units        = 'ft/s';
+            guiparams.max_velocity_mcs_units        = 'ft/s';
+            guiparams.reference_velocity_units      = 'ft/s';
+            guiparams.distance_units                = 'ft';
+            guiparams.depth_units                   = 'ft';
+            
+            guiparams.min_velocity_planview = guiparams.min_velocity_planview*0.03281;
+            guiparams.max_velocity_planview = guiparams.max_velocity_planview*0.03281;
+            guiparams.min_velocity_mcs      = guiparams.min_velocity_mcs*0.03281;
+            guiparams.max_velocity_mcs      = guiparams.max_velocity_mcs*0.03281;
+        end
 end
 % [EOF] createGUIparams
 

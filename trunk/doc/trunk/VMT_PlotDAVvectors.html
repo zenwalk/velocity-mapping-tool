@@ -107,58 +107,63 @@ This function is called by:
 0055 <span class="keyword">else</span>  <span class="comment">%plot in metric units</span>
 0056 <span class="comment">%     figure(2); hold on</span>
 0057     quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),ascale);
-0058     colorbar(<span class="string">'FontSize'</span>,16,<span class="string">'XColor'</span>,<span class="string">'w'</span>,<span class="string">'YColor'</span>,<span class="string">'w'</span>);
-0059     <span class="keyword">if</span> sum(~isnan(vr)) == 0
-0060         errordlg(<span class="string">'No Valid Data'</span>,<span class="string">'Plotting Error'</span>);
-0061     <span class="keyword">end</span>
-0062     disp([<span class="string">'DAV range (m/s) = '</span> num2str(nanmin(vr)) <span class="string">' to '</span> num2str(nanmax(vr))])
-0063     caxis([nanmin(vr) nanmax(vr)])  <span class="comment">%resets the color bar axis from 0 to 64 to span the velocity mag range</span>
-0064     title(<span class="string">'Depth-Averaged Velocities (m/s)'</span>,<span class="string">'Color'</span>,<span class="string">'w'</span>);
-0065 <span class="keyword">end</span>
-0066 xlabel(<span class="string">'UTM Easting (m)'</span>)
-0067 ylabel(<span class="string">'UTM Northing (m)'</span>)
-0068 box on
-0069 
-0070 <span class="comment">% Make the changes to figure</span>
-0071 <span class="comment">% Defaults for Presentation Stlye Figure</span>
-0072 <span class="comment">% --------------------------------------</span>
-0073 BkgdColor   = <span class="string">'black'</span>;
-0074 AxColor     = <span class="string">'white'</span>;
-0075 FigColor    = <span class="string">'black'</span>; <span class="comment">% [0.3 0.3 0.3]</span>
-0076 FntSize     = 14;
-0077 figure(fig_planview_handle)
-0078 
-0079 set(gcf,<span class="string">'Color'</span>,BkgdColor);
-0080 set(gca,<span class="string">'FontSize'</span>,FntSize)
-0081 set(get(gca,<span class="string">'Title'</span>),<span class="string">'FontSize'</span>,FntSize)
-0082 set(gca,<span class="string">'Color'</span>,FigColor)
-0083 set(gca,<span class="string">'XColor'</span>,AxColor)
-0084 set(gca,<span class="string">'YColor'</span>,AxColor)
-0085 set(gca,<span class="string">'ZColor'</span>,AxColor)
-0086 set(findobj(gcf,<span class="string">'tag'</span>,<span class="string">'Colorbar'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'XColor'</span>,AxColor,<span class="string">'YColor'</span>,AxColor);
-0087 set(get(gca,<span class="string">'Title'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
-0088 set(get(gca,<span class="string">'xLabel'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
-0089 set(get(gca,<span class="string">'yLabel'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
-0090 
-0091 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
-0092 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
-0093 hdlzm = zoom;
-0094 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
-0095 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0096 hdlpn = pan;
-0097 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
-0098 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0099 
-0100 disp(<span class="string">'Plotting Complete...'</span>)
-0101 
-0102 
-0103 <span class="comment">%% Embedded functions</span>
-0104 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0105 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0058 <span class="comment">%     quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,ascale,...</span>
+0059 <span class="comment">%         minrng,...</span>
+0060 <span class="comment">%         maxrng,...</span>
+0061 <span class="comment">%         usecolormap,...</span>
+0062 <span class="comment">%         cptfullfile);</span>
+0063     colorbar(<span class="string">'FontSize'</span>,16,<span class="string">'XColor'</span>,<span class="string">'w'</span>,<span class="string">'YColor'</span>,<span class="string">'w'</span>);
+0064     <span class="keyword">if</span> sum(~isnan(vr)) == 0
+0065         errordlg(<span class="string">'No Valid Data'</span>,<span class="string">'Plotting Error'</span>);
+0066     <span class="keyword">end</span>
+0067     disp([<span class="string">'DAV range (m/s) = '</span> num2str(nanmin(vr)) <span class="string">' to '</span> num2str(nanmax(vr))])
+0068     caxis([nanmin(vr) nanmax(vr)])  <span class="comment">%resets the color bar axis from 0 to 64 to span the velocity mag range</span>
+0069     title(<span class="string">'Depth-Averaged Velocities (m/s)'</span>,<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0070 <span class="keyword">end</span>
+0071 xlabel(<span class="string">'UTM Easting (m)'</span>)
+0072 ylabel(<span class="string">'UTM Northing (m)'</span>)
+0073 box on
+0074 
+0075 <span class="comment">% Make the changes to figure</span>
+0076 <span class="comment">% Defaults for Presentation Stlye Figure</span>
+0077 <span class="comment">% --------------------------------------</span>
+0078 BkgdColor   = <span class="string">'black'</span>;
+0079 AxColor     = <span class="string">'white'</span>;
+0080 FigColor    = <span class="string">'black'</span>; <span class="comment">% [0.3 0.3 0.3]</span>
+0081 FntSize     = 14;
+0082 figure(fig_planview_handle)
+0083 
+0084 set(gcf,<span class="string">'Color'</span>,BkgdColor);
+0085 set(gca,<span class="string">'FontSize'</span>,FntSize)
+0086 set(get(gca,<span class="string">'Title'</span>),<span class="string">'FontSize'</span>,FntSize)
+0087 set(gca,<span class="string">'Color'</span>,FigColor)
+0088 set(gca,<span class="string">'XColor'</span>,AxColor)
+0089 set(gca,<span class="string">'YColor'</span>,AxColor)
+0090 set(gca,<span class="string">'ZColor'</span>,AxColor)
+0091 set(findobj(gcf,<span class="string">'tag'</span>,<span class="string">'Colorbar'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'XColor'</span>,AxColor,<span class="string">'YColor'</span>,AxColor);
+0092 set(get(gca,<span class="string">'Title'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
+0093 set(get(gca,<span class="string">'xLabel'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
+0094 set(get(gca,<span class="string">'yLabel'</span>),<span class="string">'FontSize'</span>,FntSize,<span class="string">'Color'</span>,AxColor)
+0095 
+0096 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
+0097 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
+0098 hdlzm = zoom;
+0099 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
+0100 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0101 hdlpn = pan;
+0102 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
+0103 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0104 
+0105 disp(<span class="string">'Plotting Complete...'</span>)
 0106 
-0107 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0108 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
-0109</pre></div>
-<hr><address>Generated on Wed 31-Jul-2013 10:28:59 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0107 
+0108 <span class="comment">%% Embedded functions</span>
+0109 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0110 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0111 
+0112 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0113 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
+0114</pre></div>
+<hr><address>Generated on Wed 14-Aug-2013 08:31:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

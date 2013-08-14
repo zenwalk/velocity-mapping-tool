@@ -105,77 +105,85 @@ This function is called by:
 0035         <span class="keyword">else</span>
 0036             draft=double(draft)*.01;
 0037     <span class="keyword">end</span>;
-0038         
-0039     <span class="comment">% Create geo matrix of x, y, and elevation of transducers</span>
-0040     geo=[x,y,-1.*repmat(draft,size(y))+elev];    
-0041 
-0042     <span class="comment">% Compute slant range of each beam</span>
-0043     beamAngleR=str2double(beamAngle).*pi/180;    
-0044     range=(depthRaw-draft)./cos(beamAngleR);
-0045     
-0046     <span class="comment">% Adjust heading, pitch, and roll</span>
-0047     rollR=roll.*pi/180;
-0048     pitchRawR=pitchRaw.*pi/180;
-0049     headingR=heading.*pi/180;
-0050     pitchR=atan(tan(pitchRawR).*cos(rollR));
-0051 
-0052     <span class="comment">% Compute sine and cosine values</span>
-0053     ch=cos(headingR);
-0054     sh=sin(headingR);
-0055     cp=cos(pitchR);
-0056     sp=sin(pitchR);
-0057     cr=cos(rollR);
-0058     sr=sin(rollR);
-0059     
-0060     <span class="comment">% Configure transformation vectors for east, north, and vertical</span>
-0061     trans2e=[ch.*cr+sh.*sp.*sr sh.*cp ch.*sr-sh.*sp.*cr];
-0062     trans2n=[-sh.*cr+ch.*sp.*sr ch.*cp -sh.*sr-ch.*sp.*cr];
-0063     trans2u=[-cp.*sr sp cp.*cr];
-0064     
-0065     <span class="comment">% Create matrix to convert from slant range to xyz</span>
-0066     rng2xyz=[-sin(beamAngleR) 0 -cos(beamAngleR);<span class="keyword">...</span>
-0067               sin(beamAngleR) 0 -cos(beamAngleR);<span class="keyword">...</span>
-0068               0 sin(beamAngleR) -cos(beamAngleR);<span class="keyword">...</span>
-0069              0 -sin(beamAngleR) -cos(beamAngleR)];
-0070     
-0071     <span class="comment">% Compute xyz for each beam</span>
-0072     beam1xyz=repmat(rng2xyz(1,:),size(range,1),1).*repmat(range(:,1),1,3);
-0073     beam2xyz=repmat(rng2xyz(2,:),size(range,1),1).*repmat(range(:,2),1,3);
-0074     beam3xyz=repmat(rng2xyz(3,:),size(range,1),1).*repmat(range(:,3),1,3);
-0075     beam4xyz=repmat(rng2xyz(4,:),size(range,1),1).*repmat(range(:,4),1,3);
-0076     
-0077     <span class="comment">% Correct beam 1 xyz for heading, pitch, and roll and compute elevation</span>
-0078     beam1enu(:,1)=ens;
-0079     beam1enu(:,2)=sum(trans2e.*beam1xyz,2);
-0080     beam1enu(:,3)=sum(trans2n.*beam1xyz,2);
-0081     beam1enu(:,4)=sum(trans2u.*beam1xyz,2);
-0082     beam1enu(:,2:4)=beam1enu(:,2:4)+geo;
-0083     
-0084     <span class="comment">% Correct beam 2 xyz for heading, pitch, and roll and compute elevation</span>
-0085     beam2enu(:,1)=ens;
-0086     beam2enu(:,2)=sum(trans2e.*beam2xyz,2);
-0087     beam2enu(:,3)=sum(trans2n.*beam2xyz,2);
-0088     beam2enu(:,4)=sum(trans2u.*beam2xyz,2);
-0089     beam2enu(:,2:4)=beam2enu(:,2:4)+geo;
-0090     
-0091     <span class="comment">% Correct beam 3 xyz for heading, pitch, and roll and compute elevation</span>
-0092     beam3enu(:,1)=ens;
-0093     beam3enu(:,2)=sum(trans2e.*beam3xyz,2);
-0094     beam3enu(:,3)=sum(trans2n.*beam3xyz,2);
-0095     beam3enu(:,4)=sum(trans2u.*beam3xyz,2);
-0096     beam3enu(:,2:4)=beam3enu(:,2:4)+geo;
-0097     
-0098     <span class="comment">% Correct beam 4 xyz for heading, pitch, and roll and compute elevation</span>
-0099     beam4enu(:,1)=ens;
-0100     beam4enu(:,2)=sum(trans2e.*beam4xyz,2);
-0101     beam4enu(:,3)=sum(trans2n.*beam4xyz,2);
-0102     beam4enu(:,4)=sum(trans2u.*beam4xyz,2);
-0103     beam4enu(:,2:4)=beam4enu(:,2:4)+geo;
-0104     
-0105     <span class="comment">% Create final matrix</span>
-0106     exyz=[beam1enu;beam2enu;beam3enu;beam4enu];
-0107     exyz=sortrows(exyz,1);
-0108</pre></div>
-<hr><address>Generated on Wed 31-Jul-2013 10:28:59 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0038     
+0039     <span class="comment">% Depending on how you got here, elev may be a char array. Check and</span>
+0040     <span class="comment">% convert if necessary</span>
+0041     <span class="keyword">if</span> ischar(elev); elev = str2num(elev); <span class="keyword">end</span>;
+0042         
+0043     <span class="comment">% Create geo matrix of x, y, and elevation of transducers</span>
+0044     geo=[x,y,-1.*repmat(draft,size(y))+elev];    
+0045 
+0046     <span class="comment">% Compute slant range of each beam</span>
+0047     <span class="keyword">if</span> ischar(beamAngle)
+0048         beamAngleR=str2double(beamAngle).*pi/180;
+0049     <span class="keyword">else</span>
+0050         beamAngleR=beamAngle.*pi/180;
+0051     <span class="keyword">end</span>
+0052     range=(depthRaw-draft)./cos(beamAngleR);
+0053     
+0054     <span class="comment">% Adjust heading, pitch, and roll</span>
+0055     rollR=roll.*pi/180;
+0056     pitchRawR=pitchRaw.*pi/180;
+0057     headingR=heading.*pi/180;
+0058     pitchR=atan(tan(pitchRawR).*cos(rollR));
+0059 
+0060     <span class="comment">% Compute sine and cosine values</span>
+0061     ch=cos(headingR);
+0062     sh=sin(headingR);
+0063     cp=cos(pitchR);
+0064     sp=sin(pitchR);
+0065     cr=cos(rollR);
+0066     sr=sin(rollR);
+0067     
+0068     <span class="comment">% Configure transformation vectors for east, north, and vertical</span>
+0069     trans2e=[ch.*cr+sh.*sp.*sr sh.*cp ch.*sr-sh.*sp.*cr];
+0070     trans2n=[-sh.*cr+ch.*sp.*sr ch.*cp -sh.*sr-ch.*sp.*cr];
+0071     trans2u=[-cp.*sr sp cp.*cr];
+0072     
+0073     <span class="comment">% Create matrix to convert from slant range to xyz</span>
+0074     rng2xyz=[-sin(beamAngleR) 0 -cos(beamAngleR);<span class="keyword">...</span>
+0075               sin(beamAngleR) 0 -cos(beamAngleR);<span class="keyword">...</span>
+0076               0 sin(beamAngleR) -cos(beamAngleR);<span class="keyword">...</span>
+0077              0 -sin(beamAngleR) -cos(beamAngleR)];
+0078     
+0079     <span class="comment">% Compute xyz for each beam</span>
+0080     beam1xyz=repmat(rng2xyz(1,:),size(range,1),1).*repmat(range(:,1),1,3);
+0081     beam2xyz=repmat(rng2xyz(2,:),size(range,1),1).*repmat(range(:,2),1,3);
+0082     beam3xyz=repmat(rng2xyz(3,:),size(range,1),1).*repmat(range(:,3),1,3);
+0083     beam4xyz=repmat(rng2xyz(4,:),size(range,1),1).*repmat(range(:,4),1,3);
+0084     
+0085     <span class="comment">% Correct beam 1 xyz for heading, pitch, and roll and compute elevation</span>
+0086     beam1enu(:,1)=ens;
+0087     beam1enu(:,2)=sum(trans2e.*beam1xyz,2);
+0088     beam1enu(:,3)=sum(trans2n.*beam1xyz,2);
+0089     beam1enu(:,4)=sum(trans2u.*beam1xyz,2);
+0090     beam1enu(:,2:4)=beam1enu(:,2:4)+geo;
+0091     
+0092     <span class="comment">% Correct beam 2 xyz for heading, pitch, and roll and compute elevation</span>
+0093     beam2enu(:,1)=ens;
+0094     beam2enu(:,2)=sum(trans2e.*beam2xyz,2);
+0095     beam2enu(:,3)=sum(trans2n.*beam2xyz,2);
+0096     beam2enu(:,4)=sum(trans2u.*beam2xyz,2);
+0097     beam2enu(:,2:4)=beam2enu(:,2:4)+geo;
+0098     
+0099     <span class="comment">% Correct beam 3 xyz for heading, pitch, and roll and compute elevation</span>
+0100     beam3enu(:,1)=ens;
+0101     beam3enu(:,2)=sum(trans2e.*beam3xyz,2);
+0102     beam3enu(:,3)=sum(trans2n.*beam3xyz,2);
+0103     beam3enu(:,4)=sum(trans2u.*beam3xyz,2);
+0104     beam3enu(:,2:4)=beam3enu(:,2:4)+geo;
+0105     
+0106     <span class="comment">% Correct beam 4 xyz for heading, pitch, and roll and compute elevation</span>
+0107     beam4enu(:,1)=ens;
+0108     beam4enu(:,2)=sum(trans2e.*beam4xyz,2);
+0109     beam4enu(:,3)=sum(trans2n.*beam4xyz,2);
+0110     beam4enu(:,4)=sum(trans2u.*beam4xyz,2);
+0111     beam4enu(:,2:4)=beam4enu(:,2:4)+geo;
+0112     
+0113     <span class="comment">% Create final matrix</span>
+0114     exyz=[beam1enu;beam2enu;beam3enu;beam4enu];
+0115     exyz=sortrows(exyz,1);
+0116</pre></div>
+<hr><address>Generated on Wed 14-Aug-2013 08:31:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

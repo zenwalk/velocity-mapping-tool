@@ -109,7 +109,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.02';
+guiparams.vmt_version = 'v4.03';
 
 % Draw the VMT Background
 % -----------------
@@ -391,7 +391,7 @@ fig_handles = findobj('type','figure');
 fig_names   = get(fig_handles,'name');
 
 % Remove the VMT GUI as a valid figure in the list
-[~, idx] = ismember(get(handles.figure1,'Name'), fig_names);
+[~, idx] = ismember({get(handles.figure1,'Name'),'VMT_GraphicsControl'}, fig_names);
 if ~isempty(idx)
     fig_names(idx) = [];
 end
@@ -419,22 +419,26 @@ end
 function menuBathymetryExportSettings_Callback(hObject, eventdata, handles)
 % Get the Application data:
 % -------------------------
-guiparams = getappdata(handles.figure1,'guiparams');
-beam_angle = guiparams.beam_angle; 
-magnetic_variation = guiparams.magnetic_variation; 
-wse = guiparams.wse;
-output_auxilliary_data = guiparams.output_auxiliary_data; 
+guiparams              = getappdata(handles.figure1,'guiparams');
+beam_angle             = guiparams.beam_angle; 
+magnetic_variation     = guiparams.magnetic_variation; 
+wse                    = guiparams.wse;
+output_auxiliary_data = guiparams.output_auxiliary_data; 
 
 % Open dialog and allow user to select settings
 % ---------------------------------------------
-[guiparams.beam_angle,...
-    guiparams.magnetic_variation,...
-    guiparams.wse,...
-    guiparams.output_auxilliary_data] = ...
-    exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxilliary_data,handles.figure1);
+[beam_angle,...
+    magnetic_variation,...
+    wse,...
+    output_auxiliary_data] = ...
+    exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxiliary_data,handles.figure1);
 
 % Re-store the Application data:
 % ------------------------------
+guiparams.beam_angle            = beam_angle;
+guiparams.magnetic_variation    = magnetic_variation; 
+guiparams.wse                   = wse;
+guiparams.output_auxiliary_data = output_auxiliary_data;
 setappdata(handles.figure1,'guiparams',guiparams)
 
 % [EOF] menuExportSettings_Callback
@@ -559,7 +563,8 @@ if iscell(guiparams.mat_file)
     pvdata = num2cell(PVdata.outmat');
     pvout = vertcat(pvheaders,pvdata);
     xlswrite(outfile,pvout,'Planview');
-    waitbar(4/5,hwait)
+    waitbar(1,hwait)
+    delete(hwait)
     
     % Push messages to Log Window:
     % ----------------------------
@@ -2051,6 +2056,11 @@ function ExportMultibeamBathymetry_Callback(hObject, eventdata, handles)
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
 guiprefs  = getappdata(handles.figure1,'guiprefs');
+z = guiparams.z;
+A = guiparams.A;
+V = guiparams.V; %#ok<NASGU>
+% Map = guiparams.Map;
+setends = guiparams.set_cross_section_endpoints;
 
 [the_file,the_path] = ...
     uiputfile({'*.csv','Multibeam Bathymetry Files (*.csv)'}, ...
@@ -2085,6 +2095,27 @@ if ischar(the_file)
     log_text = {'Multibeam bathymetry file saved to:';...
         ['   ' savefile]};
     statusLogging(handles.LogWindow,log_text)
+    
+    % Process the transects:
+    % ----------------------
+    A(1).hgns = guiparams.horizontal_grid_node_spacing;
+    A(1).wse  = guiparams.wse;  %Set the WSE to entered value
+    [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
+        guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
+    
+    % Compute the smoothed variables
+    % ------------------------------
+    % This is required so that the V struc is complete at any point during
+    % runtime.
+    V = VMT_SmoothVar(V, ...
+        ...guiparams.contour, ...
+        guiparams.horizontal_smoothing_window, ...
+        guiparams.vertical_smoothing_window);
+    
+    % Push messages to Log Window:
+    % ----------------------------
+    statusLogging(handles.LogWindow, processing_log_text)
+
     
     VMT_MBBathy(guiparams.z, ...
         guiparams.A, ...
@@ -2192,7 +2223,7 @@ end
 
 % --------------------------------------------------------------------
 function OutputAuxiliaryData_Callback(hObject, eventdata, handles)
-% Bathymetry Auxillary Data
+% Bathymetry Auxiliary Data
 
 % Get the Application data:
 % -------------------------
@@ -3434,6 +3465,8 @@ switch enable_state
             handles.menuBathymetryExportSettings
             handles.menuExportMultibeamBathymetry
             handles.menuKMZExport
+            handles.menuSaveKMZFile
+            handles.menuSaveTecplot
             ],'Enable','off')
         
         set([handles.toolbarLoadData
@@ -3603,7 +3636,7 @@ end
 
 % Set the callbacks:
 % ------------------
-set(handles.Figure,            'CloseRequestFcn',{@dialogCloseReq,handles.OK})
+set(handles.Figure,            'CloseRequestFcn',{@dialogCloseReq, handles.OK})
 set(handles.UnitsMetric,       'Callback',       {@dialogUnits,    handles,'metric'})
 set(handles.UnitsEnglish,      'Callback',       {@dialogUnits,    handles,'english'})
 set(handles.EndpointsAutomatic,'Callback',       {@dialogEnpoints, handles,'auto'})
@@ -3724,7 +3757,7 @@ delete(h_OK)
 
 % [EOF] dialogCloseReq
 
-function [beam_angle,magnetic_variation,wse,output_auxilliary_data] = exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxilliary_data,hf)
+function [beam_angle,magnetic_variation,wse,output_auxiliary_data] = exportSettingsDialog(beam_angle,magnetic_variation,wse,output_auxiliary_data,hf)
 w = 230;
 h = 200;
 dx = 10;
@@ -3744,7 +3777,7 @@ handles.Figure = figure('Name', 'Export Settings', ...
 dialog_params.beam_angle             = beam_angle;
 dialog_params.magnetic_variation     = magnetic_variation;
 dialog_params.wse                    = wse;
-dialog_params.output_auxilliary_data = output_auxilliary_data;
+dialog_params.output_auxiliary_data = output_auxiliary_data;
 setappdata(handles.Figure,'dialog_params',dialog_params)
 setappdata(handles.Figure,'original_dialog_params',dialog_params)
 
@@ -3797,9 +3830,9 @@ handles.WSE = uicontrol('Style','edit', ...
     'BackgroundColor','w',...
     'Units','pixels', ...
     'Position',[w-dx-80 h-ph 50 22]);
-handles.OutputAuxilliaryData = uicontrol('Style','checkbox', ...
+handles.OutputauxiliaryData = uicontrol('Style','checkbox', ...
     'Parent',handles.BathymetryPanel, ...
-    'String','Output Auxilliary Data', ...
+    'String','Output auxiliary Data', ...
     'Units','pixels', ...
     'Position',[dx+5 20 w-2*dx-30 22]);
 handles.OK = uicontrol('Style',   'pushbutton', ...
@@ -3818,7 +3851,7 @@ handles.Cancel = uicontrol('Style',   'pushbutton', ...
 set(handles.BeamAngle,                'String',dialog_params.beam_angle)
 set(handles.MagneticVariation,        'String',dialog_params.magnetic_variation)
 set(handles.WSE,                      'String',dialog_params.wse)
-set(handles.OutputAuxilliaryData,     'Value',dialog_params.output_auxilliary_data)
+set(handles.OutputauxiliaryData,     'Value', double(dialog_params.output_auxiliary_data))
 
 % Set the callbacks:
 % ------------------
@@ -3826,7 +3859,7 @@ set(handles.Figure,                      'CloseRequestFcn',{@dialogCloseReq,hand
 set(handles.BeamAngle,                   'Callback',       {@dialogExportSettings,handles})
 set(handles.MagneticVariation,           'Callback',       {@dialogExportSettings,handles})
 set(handles.WSE,                         'Callback',       {@dialogExportSettings,handles})
-set(handles.OutputAuxilliaryData,        'Callback',       {@dialogExportSettings,handles})
+set(handles.OutputauxiliaryData,        'Callback',       {@dialogExportSettings,handles})
 set(handles.OK,                          'Callback',       {@dialogOK,      handles.OK})
 set(handles.Cancel,                      'Callback',       {@dialogCancel,  handles})
 
@@ -3846,8 +3879,8 @@ waitfor(handles.OK)
 dialog_params           = getappdata(handles.Figure,'dialog_params');
 beam_angle              = dialog_params.beam_angle;
 magnetic_variation      = dialog_params.magnetic_variation;
-wse                     = str2num(dialog_params.wse);
-output_auxilliary_data  = dialog_params.output_auxilliary_data;
+wse                     = dialog_params.wse;
+output_auxiliary_data  = logical(dialog_params.output_auxiliary_data);
 
 delete(handles.Figure)
 
@@ -3863,7 +3896,7 @@ dialog_params = getappdata(handles.Figure,'dialog_params');
 dialog_params.beam_angle                = get(handles.BeamAngle,'String');
 dialog_params.magnetic_variation        = get(handles.MagneticVariation,'String');
 dialog_params.wse                       = get(handles.WSE,'String');
-dialog_params.output_auxilliary_data    = get(handles.OutputAuxilliaryData,'Value');
+dialog_params.output_auxiliary_data    = get(handles.OutputauxiliaryData,'Value');
 
 % Re-store the application data
 setappdata(handles.Figure,'dialog_params',dialog_params)

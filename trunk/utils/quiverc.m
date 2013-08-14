@@ -63,7 +63,11 @@ end
 if ~isempty(msg), error(msg); end
 
 if nin==3 | nin==5, % quiver(u,v,s) or quiver(x,y,u,v,s)
-  autoscale = varargin{nin};
+    autoscale   = varargin{nin};
+    minrng      = [];
+    maxrng      = [];
+    usecolormap = [];
+    cptfullfile = [];
 elseif nin==9,
     autoscale   = varargin{5};
     minrng      = varargin{6};
