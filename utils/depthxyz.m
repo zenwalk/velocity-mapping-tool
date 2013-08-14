@@ -35,12 +35,20 @@ function [exyz]=depthxyz(depthRaw,draft,pitchRaw,roll,heading,beamAngle,...
         else
             draft=double(draft)*.01;
     end;
+    
+    % Depending on how you got here, elev may be a char array. Check and
+    % convert if necessary
+    if ischar(elev); elev = str2num(elev); end;
         
     % Create geo matrix of x, y, and elevation of transducers    
     geo=[x,y,-1.*repmat(draft,size(y))+elev];    
 
     % Compute slant range of each beam
-    beamAngleR=str2double(beamAngle).*pi/180;    
+    if ischar(beamAngle)
+        beamAngleR=str2double(beamAngle).*pi/180;
+    else
+        beamAngleR=beamAngle.*pi/180;
+    end
     range=(depthRaw-draft)./cos(beamAngleR);
     
     % Adjust heading, pitch, and roll
