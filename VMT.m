@@ -109,7 +109,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.04';
+guiparams.vmt_version = 'v4.05';
 
 % Draw the VMT Background
 % -----------------
@@ -380,6 +380,146 @@ set(handles.menuPrintFormat,       'Checked','off')
 set(handles.menuPresentationFormat,'Checked','on')
 
 % [EOF] menuPresentationFormat_Callback
+
+% --------------------------------------------------------------------
+function menuGraphicsRenderer_Callback(hObject, eventdata, handles)
+%  --- Empty ---
+
+% --------------------------------------------------------------------
+function menuOpenGL_Callback(hObject, eventdata, handles)
+% Get the Application Data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+
+% Update the Application Data:
+% ----------------------------
+guiparams.renderer  = 'OpenGL';
+
+% Re-store the Application data:
+% ------------------------------
+setappdata(handles.figure1,'guiparams',guiparams)
+
+% Update the GUI:
+% ---------------
+set(handles.menuOpenGL,   'Checked','on')
+set(handles.menuPainters, 'Checked','off')
+set(handles.menuZbuffer,  'Checked','off')
+
+% Modify the existing figures
+% ---------------------------
+% Find what plots exist already
+hf = findobj('type','figure');
+valid_names = {'Plan View Map'; 'Mean Cross Section Contour'};
+
+% Loop through valid figures and adjust
+% -------------------------------------
+if ~isempty(hf) &&  any(ishandle(hf))
+    for i = 1:length(valid_names)
+        % Focus the figure
+        hff = findobj('name','Plan View Map');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+        hff = findobj('name','Mean Cross Section Contour');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+    end
+end
+% [EOF] menuOpenGL_Callback
+
+
+% --------------------------------------------------------------------
+function menuPainters_Callback(hObject, eventdata, handles)
+% Get the Application Data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+
+% Update the Application Data:
+% ----------------------------
+guiparams.renderer  = 'painters';
+
+% Re-store the Application data:
+% ------------------------------
+setappdata(handles.figure1,'guiparams',guiparams)
+
+% Update the GUI:
+% ---------------
+set(handles.menuOpenGL,   'Checked','off')
+set(handles.menuPainters, 'Checked','on')
+set(handles.menuZbuffer,  'Checked','off')
+
+% Modify the existing figures
+% ---------------------------
+% Find what plots exist already
+hf = findobj('type','figure');
+valid_names = {'Plan View Map'; 'Mean Cross Section Contour'};
+
+% Loop through valid figures and adjust
+% -------------------------------------
+if ~isempty(hf) &&  any(ishandle(hf))
+    for i = 1:length(valid_names)
+        % Focus the figure
+        hff = findobj('name','Plan View Map');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+        hff = findobj('name','Mean Cross Section Contour');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+    end
+end
+% [EOF] menuPainters_Callback
+
+% --------------------------------------------------------------------
+function menuZbuffer_Callback(hObject, eventdata, handles)
+% Get the Application Data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+
+% Update the Application Data:
+% ----------------------------
+guiparams.renderer  = 'zbuffer';
+
+% Re-store the Application data:
+% ------------------------------
+setappdata(handles.figure1,'guiparams',guiparams)
+
+% Update the GUI:
+% ---------------
+set(handles.menuOpenGL,   'Checked','off')
+set(handles.menuPainters, 'Checked','off')
+set(handles.menuZbuffer,  'Checked','on')
+
+% Modify the existing figures
+% ---------------------------
+% Find what plots exist already
+hf = findobj('type','figure');
+valid_names = {'Plan View Map'; 'Mean Cross Section Contour'};
+
+% Loop through valid figures and adjust
+% -------------------------------------
+if ~isempty(hf) &&  any(ishandle(hf))
+    for i = 1:length(valid_names)
+        % Focus the figure
+        hff = findobj('name','Plan View Map');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+        hff = findobj('name','Mean Cross Section Contour');
+        if ~isempty(hff) &&  ishandle(hff)
+            figure(hff)
+            set(hff,'Renderer',guiparams.renderer)
+        end
+    end
+end
+% [EOF] menuZbuffer_Callback
 
 % --------------------------------------------------------------------
 function menuExportFigures_Callback(hObject, eventdata, handles)
@@ -1045,7 +1185,7 @@ end
 % [EOF] menuStylePresentation_Callback
 
 % --------------------------------------------------------------------
-function menuKMZExport_Callback(hObject, eventdata, handles)
+function menuKMZVerticalOffset_Callback(hObject, eventdata, handles)
 
 % Get the Application data:
 % -------------------------
@@ -1109,6 +1249,15 @@ guiprefs.kmz_file = outfile;
 setappdata(handles.figure1,'guiprefs',guiprefs)
 
 % [EOF] menuASCII2KML_Callback
+
+% --------------------------------------------------------------------
+function menuOpenBatchMode_Callback(hObject, eventdata, handles)
+% Get the Application preferences:
+% --------------------------------
+guiprefs  = getappdata(handles.figure1,'guiprefs');
+
+VMT_BatchMode;
+% [EOF] menuOpenBatchMode_Callback
 
 % --------------------------------------------------------------------
 function menuHelp_Callback(hObject, eventdata, handles)
@@ -1746,6 +1895,14 @@ if guiparams.presentation
 else
     menuStylePrint_Callback(hObject, eventdata, handles)
 end
+switch guiparams.renderer
+    case 'OpenGL'
+        menuOpenGL_Callback(hObject, eventdata, handles)
+    case 'painters'
+        menuPainters_Callback(hObject, eventdata, handles)
+    case 'zbuffer'
+        menuZbuffer_Callback(hObject, eventdata, handles)
+end
 
 % Start the Graphics Control Gui
 % ------------------------------
@@ -1850,6 +2007,14 @@ if guiparams.presentation
     menuStylePresentation_Callback(hObject, eventdata, handles)
 else
     menuStylePrint_Callback(hObject, eventdata, handles)
+end
+switch guiparams.renderer
+    case 'OpenGL'
+        menuOpenGL_Callback(hObject, eventdata, handles)
+    case 'painters'
+        menuPainters_Callback(hObject, eventdata, handles)
+    case 'zbuffer'
+        menuZbuffer_Callback(hObject, eventdata, handles)
 end
 
 % Re-store the Application data:
@@ -3304,6 +3469,21 @@ elseif guiparams.presentation
 else
 end
 
+switch guiparams.renderer
+    case 'OpenGL'
+        set(handles.menuOpenGL,        'Checked','on')
+        set(handles.menuPainters,      'Checked','off')
+        set(handles.menuZbuffer,       'Checked','off')
+    case 'painters'
+        set(handles.menuOpenGL,        'Checked','off')
+        set(handles.menuPainters,      'Checked','on')
+        set(handles.menuZbuffer,       'Checked','off')
+    case 'zbuffer'
+        set(handles.menuOpenGL,        'Checked','off')
+        set(handles.menuPainters,      'Checked','off')
+        set(handles.menuZbuffer,       'Checked','on')
+end
+
 
 %%%%%%%%%%%%%%%
 % DATA EXPORT %
@@ -3419,7 +3599,7 @@ switch enable_state
             handles.menuEnglish
             handles.menuBathymetryExportSettings
             handles.menuExportMultibeamBathymetry
-            handles.menuKMZExport
+            handles.menuKMZVerticalOffset
             ],'Enable','on')
         
         set([handles.toolbarLoadData
@@ -3476,7 +3656,7 @@ switch enable_state
         set([handles.menuSaveMAT
             handles.menuBathymetryExportSettings
             handles.menuExportMultibeamBathymetry
-            handles.menuKMZExport
+            handles.menuKMZVerticalOffset
             handles.menuSaveKMZFile
             handles.menuSaveTecplot
             ],'Enable','off')
@@ -4565,6 +4745,7 @@ guiparams.set_cross_section_endpoints        = false;
 guiparams.unit_discharge_correction          = false;
 guiparams.english_units                      = false;
 guiparams.vertical_offset                    = 0;
+guiparams.renderer                           = 'OpenGL';
 % guiparams.plot_ship_tracks                   = false;
 % guiparams.plot_planview                      = false;
 % guiparams.plot_cross_section                 = false;
@@ -4615,3 +4796,9 @@ function ShiptracksPan_Callback(obj,evd,handles)
 ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM (when panning) 
 
 % [EOF] VMT
+
+
+
+
+
+
