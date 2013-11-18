@@ -316,13 +316,13 @@ This function is called by:
 0266     <span class="keyword">end</span>
 0267     contour_handle = pcolor(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact); hold on
 0268     shading interp
-0269 <span class="comment">%     contour(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact,zlevs*convfact,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)</span>
-0270     bed_handle = plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,<span class="string">'w'</span>, <span class="string">'LineWidth'</span>,2); hold on
+0269     <span class="comment">%[~,contour_handle] = contour(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact,zlevs*convfact,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)</span>
+0270     bed_handle         = plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,<span class="string">'w'</span>, <span class="string">'LineWidth'</span>,2); hold on
 0271 <span class="keyword">else</span>
 0272     contour_handle = pcolor(V.mcsDist,V.mcsDepth,eval(wtp)); hold on
 0273     shading interp
-0274 <span class="comment">%     contour(V.mcsDist,V.mcsDepth,eval(wtp),zlevs,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)</span>
-0275     bed_handle = plot(V.mcsDist(1,:),V.mcsBed,<span class="string">'w'</span>, <span class="string">'LineWidth'</span>,2); hold on
+0274     <span class="comment">%[~,contour_handle] = contour(V.mcsDist,V.mcsDepth,eval(wtp),zlevs,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)</span>
+0275     bed_handle         = plot(V.mcsDist(1,:),V.mcsBed,<span class="string">'w'</span>, <span class="string">'LineWidth'</span>,2); hold on
 0276 <span class="keyword">end</span>
 0277 
 0278 
@@ -452,6 +452,6 @@ This function is called by:
 0402 
 0403 <span class="comment">%figure(5); clf; compass(V.mcsEast,V.mcsNorth)</span>
 0404</pre></div>
-<hr><address>Generated on Thu 22-Aug-2013 11:04:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Mon 18-Nov-2013 11:40:38 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

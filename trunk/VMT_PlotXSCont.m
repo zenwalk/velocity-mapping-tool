@@ -266,13 +266,13 @@ if plot_english
     end
     contour_handle = pcolor(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact); hold on
     shading interp
-%     contour(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact,zlevs*convfact,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
-    bed_handle = plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,'w', 'LineWidth',2); hold on
+    %[~,contour_handle] = contour(V.mcsDist*3.281,V.mcsDepth*3.281,eval(wtp)*convfact,zlevs*convfact,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
+    bed_handle         = plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,'w', 'LineWidth',2); hold on
 else
     contour_handle = pcolor(V.mcsDist,V.mcsDepth,eval(wtp)); hold on
     shading interp
-%     contour(V.mcsDist,V.mcsDepth,eval(wtp),zlevs,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
-    bed_handle = plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on
+    %[~,contour_handle] = contour(V.mcsDist,V.mcsDepth,eval(wtp),zlevs,'Fill','on','Linestyle','none'); hold on  %wtp(1,:)
+    bed_handle         = plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on
 end
 
 
