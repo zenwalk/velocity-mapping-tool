@@ -2,6 +2,6 @@
 #sidebar TableOfContents
 =The Velocity Mapping Toolbox User Guide=
 
-This is the User Guide for VMT version 4.0. It is currently under construction. Check back soon.
+The [https://velocity-mapping-tool.googlecode.com/files/VMTUserGuide_Ver4.xx.pdf VMT version 4 User Guide] is available as a PDF. 
 
-In the meantime, please refernece the old [UserGuidev2x].
+The old [UserGuidev2x] is also available.
