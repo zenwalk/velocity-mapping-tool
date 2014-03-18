@@ -87,9 +87,13 @@ else
     zf = 1;
 end
 
+if mapmult
+    hwait = waitbar(0,'Plotting multiple input files, please be patient...');
+end
 for n=1:zf
     if mapmult
         eval(['load (' sprintf( '\''' ) fullfile(zPathName,zFileName{n}) sprintf( '\''' ) ')']);
+        waitbar(n/(zf+1),hwait)
     end
     
     if ~isempty(drng)
@@ -193,6 +197,12 @@ vr = sqrt(toquiv(:,3).^2+toquiv(:,4).^2);
 % Save only the good data  %Added 3-28-12 PRJ
 gdindx = find(~isnan(vr));
 toquiv = toquiv(gdindx,:);
+
+% Take care of waitbar if used
+if exist('hwait','var') && ishandle(hwait)
+    waitbar(1,hwait)
+    delete(hwait)
+end
 
 figure(fig_planview_handle); hold on
 % if pdoqq

@@ -81,61 +81,69 @@ This function is called by:
 0027 <span class="keyword">end</span>
 0028 
 0029 <span class="keyword">if</span> ~skip_ui
-0030     <span class="keyword">if</span> iscell(guiprefs.aerial_file)
-0031         [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
-0032             {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
-0033             <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
-0034             <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
-0035             fullfile(guiprefs.aerial_path,guiprefs.aerial_file{1}));
-0036     <span class="keyword">else</span>
-0037         [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
-0038             {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
-0039             <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
-0040             <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
-0041             fullfile(guiprefs.aerial_path,guiprefs.aerial_file));
-0042     <span class="keyword">end</span>
-0043 <span class="keyword">end</span>
-0044 
-0045 <span class="keyword">if</span> ischar(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, 1 file selected</span>
-0046     
-0047     hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file)); hold on
-0048     uistack(hdlmap,<span class="string">'bottom'</span>)
-0049     log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file);
-0050     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
-0051     axis image on
-0052 <span class="keyword">elseif</span> iscell(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, multiple files selected</span>
-0053     
-0054     <span class="keyword">for</span> i = 1:length(guiprefs.aerial_file);
-0055         hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file{i})); hold on
-0056         uistack(hdlmap,<span class="string">'bottom'</span>)
-0057         log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file{i});
-0058     <span class="keyword">end</span>
-0059     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
-0060     axis image on
-0061 <span class="keyword">end</span>
-0062 
-0063 
-0064 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
-0065 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
-0066 hdlzm = zoom;
-0067 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
-0068 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0069 hdlpn = pan;
-0070 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
-0071 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
-0072 
-0073 
-0074 <span class="comment">%% Embedded functions</span>
-0075 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0076 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
-0077 
-0078 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0079 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
+0030     <span class="keyword">if</span> exist(<span class="string">'guiprefs'</span>,<span class="string">'var'</span>) &amp;&amp; isfield(guiprefs,<span class="string">'aerial_path'</span>)
+0031         <span class="keyword">if</span> iscell(guiprefs.aerial_file)
+0032             [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
+0033                 {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
+0034                 <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
+0035                 <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+0036                 fullfile(guiprefs.aerial_path,guiprefs.aerial_file{1}));
+0037         <span class="keyword">else</span>
+0038             [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
+0039                 {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
+0040                 <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
+0041                 <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+0042                 fullfile(guiprefs.aerial_path,guiprefs.aerial_file));
+0043         <span class="keyword">end</span>
+0044     <span class="keyword">else</span>
+0045         [guiprefs.aerial_file,guiprefs.aerial_path] = uigetfile(<span class="keyword">...</span>
+0046             {<span class="string">'*.tif;*.shp;*.asc;*.grd;*.ddf'</span>,<span class="string">'All Background Files'</span>; <span class="string">'*.*'</span>,<span class="string">'All Files'</span>},<span class="keyword">...</span>
+0047             <span class="string">'Select Background File(s)'</span>,<span class="keyword">...</span>
+0048             <span class="string">'Multiselect'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+0049             pwd);
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="keyword">if</span> ischar(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, 1 file selected</span>
+0054     
+0055     hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file)); hold on
+0056     uistack(hdlmap,<span class="string">'bottom'</span>)
+0057     log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file);
+0058     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
+0059     axis image on
+0060 <span class="keyword">elseif</span> iscell(guiprefs.aerial_file) <span class="comment">% User did not hit cancel, multiple files selected</span>
+0061     
+0062     <span class="keyword">for</span> i = 1:length(guiprefs.aerial_file);
+0063         hdlmap = mapshow(fullfile(guiprefs.aerial_path,guiprefs.aerial_file{i})); hold on
+0064         uistack(hdlmap,<span class="string">'bottom'</span>)
+0065         log_text = vertcat({<span class="string">'Adding background image:'</span>},guiprefs.aerial_file{i});
+0066     <span class="keyword">end</span>
+0067     set(gca,<span class="string">'DataAspectRatio'</span>,[1 1 1],<span class="string">'PlotBoxAspectRatio'</span>,[1 1 1])
+0068     axis image on
+0069 <span class="keyword">end</span>
+0070 
+0071 
+0072 <span class="comment">% Format the ticks for UTM and allow zooming and panning</span>
+0073 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM</span>
+0074 hdlzm = zoom;
+0075 set(hdlzm,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub1" class="code" title="subfunction mypostcallback_zoom(obj,evd)">mypostcallback_zoom</a>);
+0076 set(hdlzm,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0077 hdlpn = pan;
+0078 set(hdlpn,<span class="string">'ActionPostCallback'</span>,@<a href="#_sub2" class="code" title="subfunction mypostcallback_pan(obj,evd)">mypostcallback_pan</a>);
+0079 set(hdlpn,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
 0080 
-0081     
-0082     
-0083     
-0084</pre></div>
-<hr><address>Generated on Mon 18-Nov-2013 11:40:38 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0081 
+0082 <span class="comment">%% Embedded functions</span>
+0083 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0084 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0085 
+0086 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0087 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
+0088 
+0089     
+0090     
+0091     
+0092</pre></div>
+<hr><address>Generated on Tue 18-Mar-2014 15:13:16 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
