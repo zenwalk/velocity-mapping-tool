@@ -109,7 +109,7 @@ load_prefs(handles.figure1)
 % Initialize the GUI parameters:
 % ------------------------------
 guiparams = createGUIparams;
-guiparams.vmt_version = 'v4.05';
+guiparams.vmt_version = 'v4.06';
 
 % Draw the VMT Background
 % -----------------
@@ -698,13 +698,55 @@ if iscell(guiparams.mat_file)
     vmin = num2str(guiparams.depth_range_min);
     vmax = num2str(guiparams.depth_range_max);
     pvheaders = {...
-        'UTM_East' 'UTM_North' 'Elev_m'...
+        'UTM_East' 'UTM_North' 'Dist_m' 'Bed_Elev_m'...
         ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
-        ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
-    PVdata.outmat(4:5,:) = PVdata.outmat(4:5,:).*100; % velocities in cm/s
-    pvdata = num2cell(PVdata.outmat');
-    pvout = vertcat(pvheaders,pvdata);
+        ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
+        'Vel_mag_cm/s' 'Vel_dir_deg'};
+    
+
+    % Initialize Variables
+    pvdata = []; Dist = [];
+    X = []; Y = []; E = [];
+    Ve = []; Vn =[]; Vm = []; Vd = [];
+    
+    % Concatenate data from all MAT files into arrays
+    for i = 1:length(guiparams.mat_file)
+        % Load current MAT-file
+        load(fullfile(guiparams.mat_path, guiparams.mat_file{i}))
+        
+        % Location and Bathy
+        X = [X V.mcsX(1,:)];
+        Y = [Y V.mcsY(1,:)];
+        Dist = [Dist sort(V.mcsDist(1,:),'descend')];
+        E = [E V.mcsBedElev];
+        
+        % Build layer-averaged velocities
+        indx = find(V.mcsDepth(:,1) < str2num(vmin) | V.mcsDepth(:,1) > str2num(vmax));
+        V.mcsX(indx,:) = nan;
+        V.mcsY(indx,:) = nan;
+        V.mcsEast(indx,:) = nan;
+        V.mcsNorth(indx,:) = nan;
+        Ve = [Ve VMT_LayerAveMean(V.mcsDepth,V.mcsEast)];
+        Vn = [Vn VMT_LayerAveMean(V.mcsDepth,V.mcsNorth)];
+        Vm = [Vm sqrt(VMT_LayerAveMean(V.mcsDepth,V.mcsEast).^2 + VMT_LayerAveMean(V.mcsDepth,V.mcsNorth).^2)];
+        Vd = [Vd ari2geodeg(atan2(VMT_LayerAveMean(V.mcsDepth,V.mcsNorth),VMT_LayerAveMean(V.mcsDepth,V.mcsEast))*180/pi)];
+        
+        waitbar(i/(length(guiparams.mat_file)+1),hwait)
+    end
+    
+    % Put output into 1 matrix
+    pvdata = [...
+        X; Y; Dist; E;... % Bathy and locations
+        Ve; Vn; Vm; Vd... % Velocity
+        ];
+    pvdata(isnan(pvdata)) = -9999;
+    
+    % Create table and write to Excel
+    pvout = num2cell(pvdata');
+    pvout = vertcat(pvheaders,pvout);
     xlswrite(outfile,pvout,'Planview');
+    
+    % Close out waitbar
     waitbar(1,hwait)
     delete(hwait)
     
@@ -776,12 +818,36 @@ else
         vmin = num2str(guiparams.depth_range_min);
         vmax = num2str(guiparams.depth_range_max);
         pvheaders = {...
-            'UTM_East' 'UTM_North' 'Elev_m'...
-            ['EastDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']...
-            ['NorthDAV_cm/s, dpth rng ' vmin ' to ' vmax ' m']};
-        PVdata.outmat(4:5,:) = PVdata.outmat(4:5,:).*100; % velocities in cm/s
-        pvdata = num2cell(PVdata.outmat');
-        pvout = vertcat(pvheaders,pvdata);
+            'UTM_East_WGS84' 'UTM_North_WGS84' 'Dist_m' 'Bed_Elev_m'...
+            ['EastDAV_cms_dpthrng_' vmin '_to_' vmax 'm']...
+            ['NorthDAV_cms_dpthrng_' vmin '_to_' vmax 'm']...
+            'Vel_mag_cms' 'Vel_dir_deg'};
+        
+        % Create block style matrix of all processed data
+        pvdata = [];
+        
+        % Sort the Distances such that when plotting in 2D (Dist. vs. Depth),
+        % you are looking upstream into the transect
+        Dist = sort(V.mcsDist,2,'descend');
+        
+        % Build bathy data matrix
+        pvdata = [V.mcsX(1,:); V.mcsY(1,:); Dist(1,:); V.mcsBedElev];
+        
+        % Build layer-averaged velocities
+        indx = find(V.mcsDepth(:,1) < str2num(vmin) | V.mcsDepth(:,1) > str2num(vmax));
+        V.mcsX(indx,:) = nan;
+        V.mcsY(indx,:) = nan;
+        V.mcsEast(indx,:) = nan;
+        V.mcsNorth(indx,:) = nan;
+        pvdata = [...
+            pvdata;...
+            VMT_LayerAveMean(V.mcsDepth,V.mcsEast);...
+            VMT_LayerAveMean(V.mcsDepth,V.mcsNorth);...
+            sqrt(VMT_LayerAveMean(V.mcsDepth,V.mcsEast).^2 + VMT_LayerAveMean(V.mcsDepth,V.mcsNorth).^2);...
+            ari2geodeg(atan2(VMT_LayerAveMean(V.mcsDepth,V.mcsNorth), VMT_LayerAveMean(V.mcsDepth,V.mcsEast))*180/pi)];
+        pvdata(isnan(pvdata)) = -9999;
+        pvout = num2cell(pvdata');
+        pvout = vertcat(pvheaders,pvout);
         xlswrite(outfile,pvout,'Planview');
         waitbar(4/5,hwait)
         
@@ -791,7 +857,7 @@ else
             'UTM_North'...
             'Distance from Left Bank, in meters'...
             'Elevation, in meters'...
-            'Bed Elevation, in meters'...
+            ...'Bed Elevation, in meters'...
             'East Velocity, in cm/s'...
             'North Velocity, in cm/s'...
             'Vertical Velocity, in cm/s'...
@@ -809,7 +875,7 @@ else
             V.mcsY(:)...
             V.mcsDist(:)...
             (wse - V.mcsDepth(:))...
-            repmat((wse - V.mcsBed(:)),size(V.mcsX,1),1)...
+            ...repmat((wse - V.mcsBed(:)),size(V.mcsX,1),1)...
             V.mcsEast(:)...
             V.mcsNorth(:)...
             V.mcsVert(:)...
@@ -4071,7 +4137,7 @@ waitfor(handles.OK)
 dialog_params           = getappdata(handles.Figure,'dialog_params');
 beam_angle              = dialog_params.beam_angle;
 magnetic_variation      = dialog_params.magnetic_variation;
-wse                     = dialog_params.wse;
+wse                     = str2double(dialog_params.wse);
 output_auxiliary_data  = logical(dialog_params.output_auxiliary_data);
 
 delete(handles.Figure)
