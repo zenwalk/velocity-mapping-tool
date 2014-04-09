@@ -7,6 +7,16 @@ function [A]=tfile(fullName,screenData,ignoreBS);
 % Sensor - Sensor data
 % Q - discharge related data
 %
+% tfile accepts RioGrande, RiverRay, or StreamPro WinRiver II produced
+% ASCII files. 
+% 
+% NOTE: With the edition of RiverRay functionality (March 2014), tfile was
+% modified to output binSize and binDepth as matrices (because the RiverRay
+% ADCP can vary bin sizes from ensemble to ensemble, and near surface bins
+% are pulse-coherent (WM3), and thus can be smaller than deeper bins).
+% Although this shouldn't change previous software that uses tfile, it may
+% cause errors if not accounted for.
+% 
 % The data can be screened (screenData=1) so that invalid data are set to
 % nan or data reflect strictly the ASCII output file (screenData=0). If
 % screenData=0 then the data reflect the ASCII file and -32768 and other
@@ -19,6 +29,10 @@ function [A]=tfile(fullName,screenData,ignoreBS);
 %
 % David S. Mueller, USGS, Office of Surface Water
 % Frank L. Engel, USGS, Illinois Water Science Center
+% Justin A. Boldt, USGS, Kentucky Water Science Center
+%
+% Last Modified: 03-26-2014
+
 
 %% Initial Scan of File
 %  Initial scan required to preallocate arrays. All ensembles must be
@@ -69,7 +83,7 @@ dummy=textscan(fid, '%s %*[^\n]',bins(k));
 % leader
 leaderlines=linecount-1;
 
-% Begin loop to determin number of ensembles and maximum number of bins
+% Begin loop to determine number of ensembles and maximum number of bins
 % for preallocating arrays. Looping through the entire file is required
 % because RiverRay data have variable numbers of bins in each ensemble.
 while fileEnd==0
@@ -99,8 +113,8 @@ bins=max(bins);
 % Initialize Data Structure.
 Sup=struct( 'absorption_dbpm',nan(noe,1),...
     'bins',nan(noe,1),...
-    'binSize_cm',nan(1),...
-    'nBins',nan(1),...
+    'binSize_cm',nan(bins,noe),... % Now a matrix to handle RR variable bins (Mar 2014)
+    'nBins',nan(1),...   % nan(noe,1)
     'blank_cm',nan(1),...
     'draft_cm',nan(1),...
     'ensNo',nan(noe,1),...
@@ -185,13 +199,25 @@ Sup.note1=fgetl(fid);
 Sup.note2=fgetl(fid);
 C = textscan(fid,'%u %u %u %u %u %u %u',1);
 [...
-    Sup.binSize_cm,...
+    dummy,... % binSize is now computed for each ensemble (Mar 2014)
+    ...Sup.binSize_cm,... % This was the original (for RGs)
     Sup.blank_cm,...
     Sup.draft_cm,...
     Sup.nBins,...
     Sup.nPings,...
     Sup.timeDelta_sec100,...
     Sup.wm] = deal(C{:});
+
+% Adjustment needed to correctly read Sup.nBins for RiverRay files. The
+% fixed header line in the ASCII output from WinRiverII is not correct for
+% RiverRay files because it just uses the number of bins in the first
+% ensemble. This assumption was fine for Rio Grandes but not for RiverRays.
+% Instead, need to use the max(bins) value from the initial scan.
+% Use the max(bins) value from the initial scan for RiverRay files.
+% (added 2/20/2014 jab)
+if Sup.nBins ~= bins
+    Sup.nBins = bins;
+end
 
 % Read Variable Leader
 waitstep = floor(noe/100);
@@ -369,6 +395,38 @@ if screenData==1
     Nav.gpsVeast(Nav.gpsVeast==-32768)=nan;
     Q.unit(Q.unit==2147483647)=nan;
 end;
+
+
+% Set min & max bin size for RiverRay
+% -----------------------------------
+if strcmp(Sup.units(1,1),'f')
+    rrMinBinSize=0.328083;
+else
+    rrMinBinSize=0.10;
+end
+
+% Compute the bin sizes (all probes)
+% ----------------------------------
+binDepth=Wat.binDepth;
+nBins=Sup.bins;
+idx=~isnan(binDepth);
+for i=1:noe;
+    if nBins(i)>1
+        maxBinSize=binDepth(nBins(i),i)-binDepth(nBins(i)-1,i);
+    else
+        maxBinSize=binSize(nBins(i));
+    end
+    difBinDepth=diff(binDepth(:,i));
+    binSize(:,i)=repmat(maxBinSize,size(binDepth,1),1);
+    
+    % Enforce min binSize for RiverRay
+    if Sup.wm==3 
+        binSize((difBinDepth-maxBinSize)<-0.03,i)=rrMinBinSize;
+    end
+end
+% Write result to structure as a matrix
+Sup.binSize_cm = binSize.*100;
+
 
 % Assign Data to One Structure
 A.Sup=Sup;

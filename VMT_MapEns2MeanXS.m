@@ -377,8 +377,13 @@ for zi = 1 : z
     end
     
     % Determine velocity vector grid for individual transects
-    [A(zi).Comp.itDist, A(zi).Comp.itDepth] = ...
-        meshgrid(A(zi).Comp.dlsortgpsfix,A(zi).Wat.binDepth(:,1));
+    % Previous method used meshgrid. Now, tfile reads the binDepths
+    % dynamically (for case of RiverRay), thus it's faster to use repmat
+    % for itDist, and just assign itDepth. [FLE, 3/25/2014]
+%     [A(zi).Comp.itDist, ~] = ...
+%         meshgrid(A(zi).Comp.dlsortgpsfix,A(zi).Wat.binDepth(:,1));
+    A(zi).Comp.itDist  = repmat(A(zi).Comp.dlsortgpsfix',size(A(zi).Wat.binDepth,1),1);
+    A(zi).Comp.itDepth = A(zi).Wat.binDepth(:,A(zi).Comp.vecmap);
     %A(zi).Comp.itDepth = A(zi).Wat.binDepth;
     
     clear I I2 J J2 bg chk df ed i j nbrk xUTM yUTM n zi...

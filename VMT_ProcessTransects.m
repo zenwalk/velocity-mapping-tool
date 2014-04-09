@@ -31,8 +31,12 @@ try
     log_text = vertcat(log_text, map_xs_log_text);
     
     %% Set the probe type
+    if A(1).Sup.wm == 3 % RiverRay
+        V.probeType = 'RR';
+    else
     %V.probeType = A(1).probeType;
-    V.probeType = 'RG';
+        V.probeType = 'RG';
+    end
     
     %% Grid the measured data along the mean cross-section
     %[A,V] = VMT_GridData2MeanXS(z,A,V);

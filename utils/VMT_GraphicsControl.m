@@ -854,7 +854,16 @@ else
     guiparams.max_velocity_mcs              = vmax;
     
     % Reference arrow
-    [~,J] = ind2sub(size(guiparams.gp_vmt.V.vp(1,:)),find(~isnan(guiparams.gp_vmt.V.vp(1,:))==1));
+    % Find first full row of data. Typically this is row 1 with RG data,
+    % however it may not be for M9 and/or RR data.
+    i = 1;
+    while any(isnan(guiparams.gp_vmt.V.vp(i,:)))
+        i=i+1;
+        if i > size(guiparams.gp_vmt.V.vp,1)
+            break
+        end
+    end
+    [~,J] = ind2sub(size(guiparams.gp_vmt.V.vp(i,:)),find(~isnan(guiparams.gp_vmt.V.vp(i,:))==1));
     et = J(1):guiparams.gp_vmt.horizontal_vector_spacing:J(end);
     [r, ~]=size(guiparams.gp_vmt.V.vp);
     bi = 1:guiparams.gp_vmt.vertical_vector_spacing:r;

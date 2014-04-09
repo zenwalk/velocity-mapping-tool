@@ -10,8 +10,11 @@ function [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection)
 %% User Input
 
 xgdspc      = A(1).hgns; %Horizontal Grid node spacing in meters
-%ygdspc      = A(1).vgns; %double(A(1).Sup.binSize_cm)/100; %Vertical Grid node spacing in meters
-ygdspc      = double(A(1).Sup.binSize_cm)/100; %Vertical Grid node spacing in meters
+ygdspc      = A(1).vgns; %double(A(1).Sup.binSize_cm)/100; %Vertical Grid node spacing in meters
+
+% For now, take the minumum bin size as the vertical resolution. 
+% Later, I will specify this in the GUI (FLE)
+%ygdspc      = min(min(double(A(1).Sup.binSize_cm)/100)); %Vertical Grid node spacing in meters
 if 0
     xgdspc  = V.meddens + V.stddens;  %Auto method should include 67% of the values
     %disp(['X Grid Node Auto Spacing = ' num2str(xgdspc) ' m'])
@@ -21,9 +24,15 @@ end
 
 %% Determine uniform mean c-s grid for vector interpolating
 
-% Determine mean cross-section velocity vector grid
-% NEW: Allowed for explicit specification of vertical grid node spacing
-V.mcsDist               = linspace(0,V.dl,floor(V.dl/xgdspc));
+% Determine mean cross-section velocity vector grid NEW: Allowed for
+% explicit specification of vertical grid node spacing Also, using linspace
+% doesn't necessarily give exactly hgns spaced grid nodes, so the method
+% has been adjusted (this is important for user that want to output to a
+% model grid). A fragment of length<xgdsoc may be truncated. The impact on
+% this for data analysis should be minor, but should be investigated [FLE
+% 3/25/2014]
+% V.mcsDist               = linspace(0,V.dl,floor(V.dl/xgdspc));
+V.mcsDist               = 0:xgdspc:V.dl;
 V.mcsDepth              = ...
     min(A(1).Wat.binDepth(:)):ygdspc:max(A(1).Wat.binDepth(:));
 % V.mcsDepth              = A(1).Wat.binDepth(:,1);
@@ -93,19 +102,62 @@ end
 %% Interpolate individual transects onto uniform mean c-s grid
 % Fill in uniform grid based on individual transects mapped onto the mean
 % cross-section by interpolating between adjacent points
+% 
+% Originally, the data matrices contained monotonic, finite values. With
+% the inclusion of RiverRay data, this assuption is no longer valid. To
+% interpolate the quasi-scattered data requires vectorizing and isolating
+% the valid data, and then using the TriScatteredInterp class. Ultimately,
+% this method should produce the same results with RioGrande data, but with
+% marked speed improvements (vecotrized operations are faster in Matlab).
+% NOTE: TriScattertedInterp has been replaced by scatteredInterpolant in
+% R2013+
+% [FLE 3/25/2014]
+
+XI = V.mcsDist(:);
+YI = V.mcsDepth(:);
 
 %ZI = interp2(X,Y,Z,XI,YI)
 for zi = 1 : z
- 
-    A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
-        A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);
-    A(zi).Comp.mcsBack(A(zi).Comp.mcsBack>=255) = NaN;
-    A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
-        A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
-    A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
-        A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
-    A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
-        A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
+    % Vectorize inputs to interp2, index valid data, and preallocate the
+    % result vectors
+    [nrows,ncols] = size(A(zi).Comp.itDist);
+    X             = A(zi).Comp.itDist; 
+    Y             = A(zi).Comp.itDepth;
+    valid         = ~isnan(X) & ~isnan(Y);
+           
+    % Inputs
+    bs = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
+    vE = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
+    vN = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
+    vV = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
+    
+    % Create scatteredInterpolant class
+    F = TriScatteredInterp(X(valid),Y(valid),bs(valid));
+    
+    % Interpolate to each output
+    mcsBack  = F(XI,YI);
+    F.V      = vE(valid);
+    mcsEast  = F(XI,YI);
+    F.V      = vN(valid);
+    mcsNorth = F(XI,YI);
+    F.V      = vV(valid);
+    mcsVert  = F(XI,YI);
+    
+    % Reshape and save to outputs
+    A(zi).Comp.mcsBack  = reshape(mcsBack ,size(V.mcsX));
+    A(zi).Comp.mcsEast  = reshape(mcsEast ,size(V.mcsX));
+    A(zi).Comp.mcsNorth = reshape(mcsNorth,size(V.mcsX));
+    A(zi).Comp.mcsVert  = reshape(mcsVert ,size(V.mcsX));
+    
+    %A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
+    %    A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);
+    %A(zi).Comp.mcsBack(A(zi).Comp.mcsBack>=255) = NaN;
+    %A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
+    %    A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
+    %A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
+    %    A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
+    %A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
+    %    A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
     
     %Compute magnitude
     A(zi).Comp.mcsMag = sqrt(A(zi).Comp.mcsEast.^2 + A(zi).Comp.mcsNorth.^2);
