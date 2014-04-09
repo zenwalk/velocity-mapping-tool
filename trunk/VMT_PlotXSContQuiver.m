@@ -67,7 +67,17 @@ if 0 %A(1).Sup.binSize_cm == 25  %Changed some stuff below--not sure of the reas
     [r c]=size(V.vp);
     bi = 1:2:r;  %8:4:r;
 else
-    [I,J] = ind2sub(size(V.vp(1,:)),find(~isnan(V.vp(1,:))==1));
+    % Reference arrow
+    % Find first full row of data. Typically this is row 1 with RG data,
+    % however it may not be for M9 and/or RR data.
+    i = 1;
+    while any(isnan(V.vp(i,:)))
+        i=i+1;
+        if i > size(V.vp,1)
+            break
+        end
+    end
+    [I,J] = ind2sub(size(V.vp(i,:)),find(~isnan(V.vp(i,:))==1));
     et = J(1):qspchorz:J(end);
     [r c]=size(V.vp);
     bi = 1:qspcvert:r;

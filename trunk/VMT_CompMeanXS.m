@@ -15,7 +15,35 @@ function [A,V,log_text] = VMT_CompMeanXS(z,A,V)
 
 switch V.probeType
     % Assign mapped uniform grid vectors to the same array for averaging
-    case 'RG'
+    % Put all of the Sontek data in one place, then interpolate values at
+    % the MCS grid
+    case 'M9'
+        
+        x       = []; 
+        y       = []; 
+        East    = [];
+        North   = [];
+        Vert    = [];
+        for zi = 1: z
+            
+            Dir(:,:,zi) = A(zi).Comp.mcsDir(:,:);
+            Bed(:,:,zi) = A(zi).Comp.mcsBed(:,:);
+            
+            xx    = meshgrid(A(zi).Comp.dl,A(zi).Wat.binDepth(:,1));
+            x     = [x; xx(:)];
+            y     = [y; A(zi).Wat.binDepth(:)];
+            East  = [East;  A(zi).Wat.vEast(:)];
+            North = [North; A(zi).Wat.vNorth(:)];
+            Vert  = [Vert;  A(zi).Wat.vVert(:)];
+        end
+
+        % FIXME: I call griddate 3 times. Need to rewrite to create 1
+        % delauney tri, and replace the V data.
+        V.mcsEast  = griddata(x,y,East,V.mcsDist,V.mcsDepth);
+        V.mcsNorth = griddata(x,y,North,V.mcsDist,V.mcsDepth);
+        V.mcsVert  = griddata(x,y,Vert,V.mcsDist,V.mcsDepth);
+        
+    otherwise % Could be 'RG' or 'RR'
         for zi = 1 : z
             
             Back(:,:,zi) = A(zi).Comp.mcsBack(:,:);
@@ -68,33 +96,7 @@ switch V.probeType
         V.mcsNorth = nanmean(North,3);
         V.mcsVert = nanmean(Vert,3);
     
-    % Put all of the Sontek data in one place, then interpolate values at
-    % the MCS grid
-    case 'M9'
-        
-        x       = []; 
-        y       = []; 
-        East    = [];
-        North   = [];
-        Vert    = [];
-        for zi = 1: z
-            
-            Dir(:,:,zi) = A(zi).Comp.mcsDir(:,:);
-            Bed(:,:,zi) = A(zi).Comp.mcsBed(:,:);
-            
-            xx    = meshgrid(A(zi).Comp.dl,A(zi).Wat.binDepth(:,1));
-            x     = [x; xx(:)];
-            y     = [y; A(zi).Wat.binDepth(:)];
-            East  = [East;  A(zi).Wat.vEast(:)];
-            North = [North; A(zi).Wat.vNorth(:)];
-            Vert  = [Vert;  A(zi).Wat.vVert(:)];
-        end
-
-        % FIXME: I call griddate 3 times. Need to rewrite to create 1
-        % delauney tri, and replace the V data.
-        V.mcsEast  = griddata(x,y,East,V.mcsDist,V.mcsDepth);
-        V.mcsNorth = griddata(x,y,North,V.mcsDist,V.mcsDepth);
-        V.mcsVert  = griddata(x,y,Vert,V.mcsDist,V.mcsDepth);
+    
 
 end % switch Probe type
 

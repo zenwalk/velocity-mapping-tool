@@ -274,6 +274,16 @@ if ischar(filename) % Single MAT file loaded
             'Invalid File...')
     end
     
+    % Set the vertical grid node spacing
+    % ----------------------------------
+    % For RioGrande probes, use the bin size, else just use the default
+    % Backwards compatible
+    if vars.A(1).Sup.wm ~= 3 % RG
+        set(handles.VerticalGridNodeSpacing,'String',double(vars.A(1).Sup.binSize_cm(1))/100)
+    else % Older file, must be RG
+        set(handles.VerticalGridNodeSpacing,'String',0.4)
+    end
+    
 elseif iscell(filename) % Multiple MAT files loaded
     % Set the filenames
     % -----------------
@@ -390,14 +400,18 @@ function menuOpenGL_Callback(hObject, eventdata, handles)
 % Get the Application Data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 % Update the Application Data:
 % ----------------------------
 guiparams.renderer  = 'OpenGL';
+guiprefs.renderer   = 'OpenGL';
 
 % Re-store the Application data:
 % ------------------------------
 setappdata(handles.figure1,'guiparams',guiparams)
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'renderer')
 
 % Update the GUI:
 % ---------------
@@ -436,14 +450,18 @@ function menuPainters_Callback(hObject, eventdata, handles)
 % Get the Application Data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 % Update the Application Data:
 % ----------------------------
 guiparams.renderer  = 'painters';
+guiprefs.renderer   = 'painters';
 
 % Re-store the Application data:
 % ------------------------------
 setappdata(handles.figure1,'guiparams',guiparams)
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'renderer')
 
 % Update the GUI:
 % ---------------
@@ -481,14 +499,18 @@ function menuZbuffer_Callback(hObject, eventdata, handles)
 % Get the Application Data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 % Update the Application Data:
 % ----------------------------
 guiparams.renderer  = 'zbuffer';
+guiprefs.renderer   = 'zbuffer';
 
 % Re-store the Application data:
 % ------------------------------
 setappdata(handles.figure1,'guiparams',guiparams)
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'renderer')
 
 % Update the GUI:
 % ---------------
@@ -969,14 +991,18 @@ function menuMetric_Callback(hObject, eventdata, handles)
 % Get the Application Data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 % Update the Application Data:
 % ----------------------------
 guiparams.english_units = false;
+guiprefs.units = 'metric';
 
 % Re-store the Application data:
 % ------------------------------
 setappdata(handles.figure1,'guiparams',guiparams)
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'units')
 
 % Update the GUI:
 % ---------------
@@ -993,14 +1019,18 @@ function menuEnglish_Callback(hObject, eventdata, handles)
 % Get the Application Data:
 % -------------------------
 guiparams = getappdata(handles.figure1,'guiparams');
+guiprefs  = getappdata(handles.figure1,'guiprefs');
 
 % Update the Application Data:
 % ----------------------------
 guiparams.english_units = true;
+guiprefs.units = 'english';
 
 % Re-store the Application data:
 % ------------------------------
 setappdata(handles.figure1,'guiparams',guiparams)
+setappdata(handles.figure1,'guiprefs',guiprefs)
+store_prefs(handles.figure1,'units')
 
 % Update the GUI:
 % ---------------
@@ -1520,6 +1550,17 @@ if ischar(pathname) % The user did not hit "Cancel"
     guiparams.A        = A;
     guiparams.z        = z;
     setappdata(handles.figure1,'guiparams',guiparams)
+    
+    % Set the vertical grid node spacing
+    % ----------------------------------
+    % For RioGrande probes, use the bin size, else just use the default
+    % Backwards compatible
+    if A(1).Sup.wm ~= 3 % RG
+        set(handles.VerticalGridNodeSpacing,'String',double(A(1).Sup.binSize_cm(1))/100)
+    else % Older file, must be RG
+        set(handles.VerticalGridNodeSpacing,'String',0.4)
+    end
+       
 %     
 %     % Preprocess the data:
 %     % --------------------
@@ -1553,6 +1594,9 @@ if ischar(pathname) % The user did not hit "Cancel"
     % Update the GUI:
     % ---------------
     set_enable(handles,'fileloaded')
+    
+    % If data are RG or SP, set vertical grid node spacing to bin size
+    
 end
 % [EOF] loadDataCallback
 
@@ -1727,6 +1771,7 @@ statusLogging(handles.LogWindow, log_text)
 % Process the transects:
 % ----------------------
 A(1).hgns = guiparams.horizontal_grid_node_spacing;
+A(1).vgns = guiparams.vertical_grid_node_spacing;
 A(1).wse  = guiparams.wse;  %Set the WSE to entered value
 [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
     guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
@@ -1861,6 +1906,7 @@ else
     % Process the transects:
     % ----------------------
     A(1).hgns = guiparams.horizontal_grid_node_spacing;
+	A(1).vgns = guiparams.vertical_grid_node_spacing;
     A(1).wse  = guiparams.wse;  %Set the WSE to entered value
     [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
         guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
@@ -1970,6 +2016,13 @@ switch guiparams.renderer
         menuZbuffer_Callback(hObject, eventdata, handles)
 end
 
+% Focus the figure
+% ----------------
+hff = findobj('name','Plan View Map');
+if ~isempty(hff) &&  ishandle(hff)
+    figure(hff)
+end
+
 % Start the Graphics Control Gui
 % ------------------------------
 VMT_GraphicsControl
@@ -2001,6 +2054,7 @@ statusLogging(handles.LogWindow, log_text)
 % Process the transects:
 % ----------------------
 A(1).hgns = guiparams.horizontal_grid_node_spacing;
+A(1).vgns = guiparams.vertical_grid_node_spacing;
 A(1).wse  = guiparams.wse;  %Set the WSE to entered value
 [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
     guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
@@ -2081,6 +2135,13 @@ switch guiparams.renderer
         menuPainters_Callback(hObject, eventdata, handles)
     case 'zbuffer'
         menuZbuffer_Callback(hObject, eventdata, handles)
+end
+
+% Focus the figure
+% ----------------
+hff = findobj('name','Mean Cross Section Contour');
+if ~isempty(hff) &&  ishandle(hff)
+    figure(hff)
 end
 
 % Re-store the Application data:
@@ -2198,6 +2259,7 @@ if ischar(the_file)
     if isempty(V)
         A = guiparams.A;
         A(1).hgns = guiparams.horizontal_grid_node_spacing;
+		A(1).vgns = guiparams.vertical_grid_node_spacing;
         A(1).wse  = guiparams.wse;  %Set the WSE to entered value
         [~,V,processing_log_text] = VMT_ProcessTransects(z,A,...
             guiparams.set_cross_section_endpoints,...
@@ -2264,6 +2326,7 @@ if ischar(the_file)
     if isempty(V)
         A = guiparams.A;
         A(1).hgns = guiparams.horizontal_grid_node_spacing;
+		A(1).vgns = guiparams.vertical_grid_node_spacing;
         A(1).wse  = guiparams.wse;  %Set the WSE to entered value
         [~,V,processing_log_text] = VMT_ProcessTransects(z,A,...
             guiparams.set_cross_section_endpoints,...
@@ -2332,6 +2395,7 @@ if ischar(the_file)
     % Process the transects:
     % ----------------------
     A(1).hgns = guiparams.horizontal_grid_node_spacing;
+	A(1).vgns = guiparams.vertical_grid_node_spacing;
     A(1).wse  = guiparams.wse;  %Set the WSE to entered value
     [A,V,processing_log_text] = VMT_ProcessTransects(z,A,...
         guiparams.set_cross_section_endpoints,guiparams.unit_discharge_correction);
@@ -2700,6 +2764,34 @@ end
 
 % [EOF] HorizontalGridNodeSpacing_Callback
 
+% --------------------------------------------------------------------
+function VerticalGridNodeSpacing_Callback(hObject, eventdata, handles)
+% Set the horizontal grid node spacing
+
+% Get the Application data:
+% -------------------------
+guiparams = getappdata(handles.figure1,'guiparams');
+
+% Get the new entry and make sure it is valid (numeric, positive):
+% ----------------------------------------------------------------
+new_vertical_grid_node_spacing = str2double(get(hObject,'String'));
+is_a_number = ~isnan(new_vertical_grid_node_spacing);
+is_positive = new_vertical_grid_node_spacing>=0;
+
+% Modify the Application data:
+% ----------------------------
+if is_a_number && is_positive
+    guiparams.vertical_grid_node_spacing = new_vertical_grid_node_spacing;
+    
+    % Re-store the Application data:
+    % ------------------------------
+    setappdata(handles.figure1,'guiparams',guiparams)
+    
+else % Reject the (incorrect) input
+    set(hObject,'String',guiparams.vertical_grid_node_spacing)
+end
+
+% [EOF] VerticalGridNodeSpacing_Callback
 
 % --------------------------------------------------------------------
 function SetCrossSectionEndpoints_Callback(hObject, eventdata, handles)
@@ -3132,6 +3224,8 @@ function load_prefs(hfigure)
 % 'excel'                Path and filename of last Excel file
 % 'aerial'               Path and filename of last Aerial file
 % 'shoreline'            Path and filename of last Shoreline file
+% 'renderer'             Default graphics renderer
+% 'units'                Default plotting units
 
 % Originals
 % prefs = {'ascii2gispath' 'ascii2kmlpath' 'asciipath'   'doqqpath' ...
@@ -3403,6 +3497,26 @@ end
 %     guiprefs.(prefs{k}) = newpref;
 % end
 
+% RENDERER
+if ispref('VMT','renderer')
+    renderer = getpref('VMT','renderer');
+    guiprefs.renderer = renderer;
+else % Initialize RENDERER
+    renderer           = 'OpenGL';
+    guiprefs.renderer  = renderer;
+    setpref('VMT','renderer',renderer)
+end
+
+% UNITS
+if ispref('VMT','units')
+    units = getpref('VMT','units');
+    guiprefs.units = units;
+else % Initialize RENDERER
+    units           = 'metric';
+    guiprefs.units  = renderer;
+    setpref('VMT','units',units)
+end
+
 setappdata(hfigure,'guiprefs',guiprefs)
 
 % [EOF] load_prefs
@@ -3424,6 +3538,8 @@ function store_prefs(hfigure,pref)
 % 'excel'                Path and filename of last Excel file
 % 'aerial'               Path and filename of last Aerial file
 % 'shoreline'            Path and filename of last Shoreline file
+% 'renderer'             Default graphics renderer
+% 'units'                Default plotting units
 
 guiprefs = getappdata(hfigure,'guiprefs');
 
@@ -3468,6 +3584,12 @@ switch pref
         shoreline.path = guiprefs.shoreline_path;
         shoreline.file = guiprefs.shoreline_file;
         setpref('VMT','shoreline',shoreline)
+    case 'renderer'
+        renderer = guiprefs.renderer;
+        setpref('VMT','renderer',renderer)
+    case 'units'
+        units = guiprefs.units;
+        setpref('VMT','units',units)
     otherwise
 end
 
@@ -3577,6 +3699,7 @@ set(handles.AddBackground,              'Value', guiparams.add_background)
 %%%%%%%%%%%%%%%%%%%%%%%%
 % ShiptracksPanel
 set(handles.HorizontalGridNodeSpacing,  'String',guiparams.horizontal_grid_node_spacing)
+set(handles.VerticalGridNodeSpacing,    'String',guiparams.vertical_grid_node_spacing)
 %set(handles.SetCrossSectionEndpoints,   'Value', guiparams.set_cross_section_endpoints)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3608,6 +3731,7 @@ guiparams = getappdata(handles.figure1,'guiparams');
 
 switch enable_state
     case 'init'
+        guiparams.gui_state = 'init';
         set([handles.menuFile
             handles.menuOpen
             handles.menuOpenASCII
@@ -3635,6 +3759,7 @@ switch enable_state
             ],'Enable','off')
         
         set([handles.HorizontalGridNodeSpacing
+            handles.VerticalGridNodeSpacing
             handles.PlotShiptracks
             ],'Enable','off')
         
@@ -3652,6 +3777,7 @@ switch enable_state
             ],'Enable','off')
         
     case 'fileloaded'
+        guiparams.gui_state = 'fileloaded';
         set([handles.menuFile
             handles.menuOpen
             handles.menuOpenASCII
@@ -3694,6 +3820,7 @@ switch enable_state
         end
         
         set([handles.HorizontalGridNodeSpacing
+            handles.VerticalGridNodeSpacing
             handles.PlotShiptracks
             ],'Enable','on')
         
@@ -3710,6 +3837,7 @@ switch enable_state
             handles.PlotCrossSection
             ],'Enable','on')
     case 'multiplematfiles'
+        guiparams.gui_state = 'multiplematfiles';
         set([handles.menuFile
             handles.menuOpen
             handles.menuOpenASCII
@@ -3752,6 +3880,7 @@ switch enable_state
         end
         
         set([handles.HorizontalGridNodeSpacing
+            handles.VerticalGridNodeSpacing
             handles.PlotShiptracks
             ],'Enable','off')
         
@@ -3769,6 +3898,9 @@ switch enable_state
             ],'Enable','off')
     otherwise
 end
+
+% Save Application Data
+setappdata(handles.figure1,'guiparams',guiparams)
 
 % [EOF] set_enable
 
@@ -4682,11 +4814,17 @@ icons(idx).data(:,:,3) = ...
 function guiparams = createGUIparams
 % Creates the guiparams structure with specified defaults.
 
+% Check for any stored prefs
+% --------------------------
+% Currently, units and the graphics renderer are stored as persistent prefs
+guiprefs = getpref('VMT');
+
 % Organized by GUI panels
 %%%%%%%%%%%%%%%%%%%
 % SHIPTRACKS PLOT %
 %%%%%%%%%%%%%%%%%%%
 guiparams.horizontal_grid_node_spacing       = 1.0;
+guiparams.vertical_grid_node_spacing         = 0.4;
 
 %%%%%%%%%%%%%%%%%%%%%%
 % CROSS SECTION PLOT %
@@ -4809,9 +4947,24 @@ guiparams.presentation                       = true;
 guiparams.print 							 = false;
 guiparams.set_cross_section_endpoints        = false;
 guiparams.unit_discharge_correction          = false;
-guiparams.english_units                      = false;
+
+if ispref('VMT','units')
+    switch guiprefs.units
+        case 'metric'
+            guiparams.english_units          = false;
+        case 'english'
+            guiparams.english_units          = true;
+    end
+else
+    guiparams.english_units                  = false;
+end
 guiparams.vertical_offset                    = 0;
-guiparams.renderer                           = 'OpenGL';
+
+if ispref('VMT','renderer')
+    guiparams.renderer                       = guiprefs.renderer;
+else
+    guiparams.renderer                       = 'OpenGL';
+end
 % guiparams.plot_ship_tracks                   = false;
 % guiparams.plot_planview                      = false;
 % guiparams.plot_cross_section                 = false;
@@ -4852,6 +5005,7 @@ guiparams.iric_anv_planview_data = [];
 % guiprefs = getappdata(handles.figure1,'guiprefs');
 guiparams.data_folder = '';
 guiparams.data_files  = {''};
+guiparams.gui_state   = 'init';
 
 % [EOF] createGUIparams
 
@@ -4867,4 +5021,112 @@ ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM (when panning)
 
 
 
+% --- Hidden keyboard commands
+function figure1_WindowKeyPressFcn(hObject, eventdata, handles)
+% Used to pass specific hidden keyboard commands to VMT. Currently, the
+% only use for this function is to open Beta support for SonTek M9 data.
+% 
+% hObject    handle to figure1 (see GCBO)
+% eventdata  structure with the following fields (see FIGURE)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
 
+in1 = eventdata.Modifier; 
+in2 = eventdata.Key;
+
+if ~isempty(in1) % User pressed at least one modifier key
+    input = [in1{:} in2];
+else
+    input = in2;
+end
+
+switch input
+    % Hidden SonTek M9 support
+    case 'shiftcontrols'
+        msgtxt = {...
+            'VMT offers limited support for SonTek M9/S5 data.';...
+            'SonTek RiverSurveyorLive required data format:';...
+            '      -ENU coordinates';...
+            '      -Desired GPS reference (VTG/GGA)'
+            '';...
+            'Abosolutely NO GUARANTEE is made or implied that this';...
+            'functionality will work for all cases. Results are';...
+            'PROVISIONAL at best.'};
+        msgbox(msgtxt, 'Hidden Functionality: Process SonTek M9', 'warn','replace')
+        
+        % Get the Application data:
+        % -------------------------
+        guiparams = getappdata(handles.figure1,'guiparams');
+        guiprefs = getappdata(handles.figure1,'guiprefs');
+        
+        % Ask the user to select files:
+        % -----------------------------
+        % current_file = fullfile(guiparams.data_folder,guiparams.data_files{1});
+        % current_file = fullfile(guiprefs.mat_path,guiprefs.mat_file);
+        if iscell(guiprefs.mat_file)
+            uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file{1});
+        else
+            uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file);
+        end
+        [filename,pathname] = ...
+            uigetfile({'*.mat','MAT-files (*.mat)'}, ...
+            'Select SonTek RiverSurveyor Live v3.60 MAT File', ...
+            uifile, 'MultiSelect','on');
+        
+        if ischar(pathname) % The user did not hit "Cancel"
+            guiparams.data_folder = pathname;
+            if ischar(filename)
+                filename = {filename};
+            end
+            guiparams.data_files = filename;
+            guiparams.mat_file = '';
+            
+            setappdata(handles.figure1,'guiparams',guiparams)
+            
+            
+            
+            % Update the preferences:
+            % -----------------------
+            guiprefs = getappdata(handles.figure1,'guiprefs');
+            guiprefs.ascii_path = pathname;
+            guiprefs.ascii_file = filename;
+            setappdata(handles.figure1,'guiprefs',guiprefs)
+            store_prefs(handles.figure1,'ascii')
+            
+            % Push messages to Log Window:
+            % ----------------------------
+            log_text = {...
+                '';...
+                ['%--- ' datestr(now) ' ---%'];...
+                'Current Project Directory:';...
+                guiparams.data_folder;
+                'Loading the following files into memory:';...
+                char(filename)};
+            statusLogging(handles.LogWindow, log_text)
+            
+            % Read the file(s)
+            % ----------------
+            %A = parseSonTekVMT(fullfile(pathname,filename));
+            
+            [~,~,savefile,A,z] = ...
+                VMT_ReadFiles_SonTek(guiparams.data_folder,guiparams.data_files);
+            guiparams.savefile = savefile;
+            guiparams.A        = A;
+            guiparams.z        = z;
+            setappdata(handles.figure1,'guiparams',guiparams)
+            
+            
+            % Update the GUI:
+            % ---------------
+            set_enable(handles,'fileloaded')
+        end  
+    case 'f1' % Call the VMT UsersGuide
+        menuUsersGuide_Callback(hObject, eventdata, handles)
+        
+    case 'controlalte'
+        VMT_BuildCustomFlatFile;
+    otherwise
+        %disp(input)
+end
