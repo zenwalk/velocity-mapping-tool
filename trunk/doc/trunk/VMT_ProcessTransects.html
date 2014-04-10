@@ -90,68 +90,72 @@ This function is called by:
 0031     log_text = vertcat(log_text, map_xs_log_text);
 0032     
 0033     <span class="comment">%% Set the probe type</span>
-0034     <span class="comment">%V.probeType = A(1).probeType;</span>
-0035     V.probeType = <span class="string">'RG'</span>;
-0036     
-0037     <span class="comment">%% Grid the measured data along the mean cross-section</span>
-0038     <span class="comment">%[A,V] = VMT_GridData2MeanXS(z,A,V);</span>
-0039     [A,V] = <a href="VMT_GridData2MeanXS.html" class="code" title="function [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection)">VMT_GridData2MeanXS</a>(z,A,V,unitQcorrection);
-0040     <span class="keyword">if</span> unitQcorrection
-0041         log_text = vertcat(log_text,<span class="keyword">...</span>
-0042             {<span class="string">'      Streamwise unit discharge continuity enforced'</span>});
-0043     <span class="keyword">end</span>
-0044     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0045     <span class="comment">%log_text = {log_text; grid_data_log_text};</span>
-0046 
-0047     <span class="comment">%% Computes the mean data for the mean cross-section</span>
-0048     <span class="comment">%[A,V] = VMT_CompMeanXS(z,A,V);</span>
-0049     [A,V,comp_xs_log_text] = <a href="VMT_CompMeanXS.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS(z,A,V)">VMT_CompMeanXS</a>(z,A,V);
-0050     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0051     log_text = vertcat(log_text, comp_xs_log_text);
-0052 
-0053     <span class="comment">%% Decompose the velocities into u, v, and w components</span>
-0054     [A,V] = <a href="VMT_CompMeanXS_UVW.html" class="code" title="function [A,V] = VMT_CompMeanXS_UVW(z,A,V)">VMT_CompMeanXS_UVW</a>(z,A,V);
-0055     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0034     <span class="keyword">if</span> A(1).Sup.wm == 3 <span class="comment">% RiverRay</span>
+0035         V.probeType = <span class="string">'RR'</span>;
+0036     <span class="keyword">else</span>
+0037     <span class="comment">%V.probeType = A(1).probeType;</span>
+0038         V.probeType = <span class="string">'RG'</span>;
+0039     <span class="keyword">end</span>
+0040     
+0041     <span class="comment">%% Grid the measured data along the mean cross-section</span>
+0042     <span class="comment">%[A,V] = VMT_GridData2MeanXS(z,A,V);</span>
+0043     [A,V] = <a href="VMT_GridData2MeanXS.html" class="code" title="function [A,V] = VMT_GridData2MeanXS(z,A,V,unitQcorrection)">VMT_GridData2MeanXS</a>(z,A,V,unitQcorrection);
+0044     <span class="keyword">if</span> unitQcorrection
+0045         log_text = vertcat(log_text,<span class="keyword">...</span>
+0046             {<span class="string">'      Streamwise unit discharge continuity enforced'</span>});
+0047     <span class="keyword">end</span>
+0048     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0049     <span class="comment">%log_text = {log_text; grid_data_log_text};</span>
+0050 
+0051     <span class="comment">%% Computes the mean data for the mean cross-section</span>
+0052     <span class="comment">%[A,V] = VMT_CompMeanXS(z,A,V);</span>
+0053     [A,V,comp_xs_log_text] = <a href="VMT_CompMeanXS.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS(z,A,V)">VMT_CompMeanXS</a>(z,A,V);
+0054     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0055     log_text = vertcat(log_text, comp_xs_log_text);
 0056 
-0057     <span class="comment">%% Decompose the velocities into primary and secondary components</span>
-0058     [A,V,comp_prisec_log_text] = <a href="VMT_CompMeanXS_PriSec.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS_PriSec(z,A,V)">VMT_CompMeanXS_PriSec</a>(z,A,V);
+0057     <span class="comment">%% Decompose the velocities into u, v, and w components</span>
+0058     [A,V] = <a href="VMT_CompMeanXS_UVW.html" class="code" title="function [A,V] = VMT_CompMeanXS_UVW(z,A,V)">VMT_CompMeanXS_UVW</a>(z,A,V);
 0059     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
-0060     log_text = vertcat(log_text, comp_prisec_log_text);
-0061 
-0062     <span class="comment">%% Perform the Rozovskii computations</span>
-0063     [V,roz_log_text] = <a href="VMT_Rozovskii.html" class="code" title="function [V,log_text] = VMT_Rozovskii(V,A)">VMT_Rozovskii</a>(V,A);
-0064     log_text = vertcat(log_text, roz_log_text);
-0065     
-0066     <span class="comment">%figure(4); clf</span>
-0067     <span class="comment">%plot3(V.mcsX,V.mcsY,V.mcsDepth(1))</span>
-0068     <span class="comment">%disp('Processing Completed')</span>
-0069     log_text = vertcat(log_text, <span class="string">'   Processing Completed.'</span>);
-0070 <span class="keyword">catch</span> err
-0071     <span class="keyword">if</span> isdeployed
-0072         errLogFileName = fullfile(pwd,<span class="keyword">...</span>
-0073             [<span class="string">'errorLog'</span> datestr(now,<span class="string">'yyyymmddHHMMSS'</span>) <span class="string">'.txt'</span>]);
-0074         msgbox({[<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier];<span class="keyword">...</span>
-0075             [<span class="string">'Error details are being written to the following file: '</span>];<span class="keyword">...</span>
-0076             errLogFileName},<span class="keyword">...</span>
-0077             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
-0078             <span class="string">'error'</span>);
-0079         fid = fopen(errLogFileName,<span class="string">'W'</span>);
-0080         fwrite(fid,err.getReport(<span class="string">'extended'</span>,<span class="string">'hyperlinks'</span>,<span class="string">'off'</span>));
-0081         fclose(fid);
-0082         rethrow(err)
-0083     <span class="keyword">else</span>
-0084         msgbox([<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier],<span class="keyword">...</span>
-0085             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
-0086             <span class="string">'error'</span>);
-0087         rethrow(err);
-0088     <span class="keyword">end</span>
-0089 <span class="keyword">end</span>
-0090 
-0091 
-0092 <span class="comment">%% Notes:</span>
-0093 
-0094 <span class="comment">%1. I removed scripts at the end of the original code that computes</span>
-0095 <span class="comment">%standard deviations (12-9-08)</span></pre></div>
-<hr><address>Generated on Tue 18-Mar-2014 15:13:16 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0060 
+0061     <span class="comment">%% Decompose the velocities into primary and secondary components</span>
+0062     [A,V,comp_prisec_log_text] = <a href="VMT_CompMeanXS_PriSec.html" class="code" title="function [A,V,log_text] = VMT_CompMeanXS_PriSec(z,A,V)">VMT_CompMeanXS_PriSec</a>(z,A,V);
+0063     <span class="comment">%msgbox('Processing Data...Please Be Patient','VMT Status','help','replace');</span>
+0064     log_text = vertcat(log_text, comp_prisec_log_text);
+0065 
+0066     <span class="comment">%% Perform the Rozovskii computations</span>
+0067     [V,roz_log_text] = <a href="VMT_Rozovskii.html" class="code" title="function [V,log_text] = VMT_Rozovskii(V,A)">VMT_Rozovskii</a>(V,A);
+0068     log_text = vertcat(log_text, roz_log_text);
+0069     
+0070     <span class="comment">%figure(4); clf</span>
+0071     <span class="comment">%plot3(V.mcsX,V.mcsY,V.mcsDepth(1))</span>
+0072     <span class="comment">%disp('Processing Completed')</span>
+0073     log_text = vertcat(log_text, <span class="string">'   Processing Completed.'</span>);
+0074 <span class="keyword">catch</span> err
+0075     <span class="keyword">if</span> isdeployed
+0076         errLogFileName = fullfile(pwd,<span class="keyword">...</span>
+0077             [<span class="string">'errorLog'</span> datestr(now,<span class="string">'yyyymmddHHMMSS'</span>) <span class="string">'.txt'</span>]);
+0078         msgbox({[<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier];<span class="keyword">...</span>
+0079             [<span class="string">'Error details are being written to the following file: '</span>];<span class="keyword">...</span>
+0080             errLogFileName},<span class="keyword">...</span>
+0081             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0082             <span class="string">'error'</span>);
+0083         fid = fopen(errLogFileName,<span class="string">'W'</span>);
+0084         fwrite(fid,err.getReport(<span class="string">'extended'</span>,<span class="string">'hyperlinks'</span>,<span class="string">'off'</span>));
+0085         fclose(fid);
+0086         rethrow(err)
+0087     <span class="keyword">else</span>
+0088         msgbox([<span class="string">'An unexpected error occurred. Error code: '</span> err.identifier],<span class="keyword">...</span>
+0089             <span class="string">'VMT Status: Unexpected Error'</span>,<span class="keyword">...</span>
+0090             <span class="string">'error'</span>);
+0091         rethrow(err);
+0092     <span class="keyword">end</span>
+0093 <span class="keyword">end</span>
+0094 
+0095 
+0096 <span class="comment">%% Notes:</span>
+0097 
+0098 <span class="comment">%1. I removed scripts at the end of the original code that computes</span>
+0099 <span class="comment">%standard deviations (12-9-08)</span></pre></div>
+<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

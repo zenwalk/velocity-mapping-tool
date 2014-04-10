@@ -61,125 +61,177 @@ This function is called by:
 0010 <span class="comment">%% User Input</span>
 0011 
 0012 xgdspc      = A(1).hgns; <span class="comment">%Horizontal Grid node spacing in meters</span>
-0013 <span class="comment">%ygdspc      = A(1).vgns; %double(A(1).Sup.binSize_cm)/100; %Vertical Grid node spacing in meters</span>
-0014 ygdspc      = double(A(1).Sup.binSize_cm)/100; <span class="comment">%Vertical Grid node spacing in meters</span>
-0015 <span class="keyword">if</span> 0
-0016     xgdspc  = V.meddens + V.stddens;  <span class="comment">%Auto method should include 67% of the values</span>
-0017     <span class="comment">%disp(['X Grid Node Auto Spacing = ' num2str(xgdspc) ' m'])</span>
-0018     log_text = [<span class="string">'X Grid Node Auto Spacing = '</span> num2str(xgdspc) <span class="string">' m'</span>];
-0019 <span class="keyword">end</span>
-0020 
-0021 
-0022 <span class="comment">%% Determine uniform mean c-s grid for vector interpolating</span>
+0013 ygdspc      = A(1).vgns; <span class="comment">%double(A(1).Sup.binSize_cm)/100; %Vertical Grid node spacing in meters</span>
+0014 
+0015 <span class="comment">% For now, take the minumum bin size as the vertical resolution.</span>
+0016 <span class="comment">% Later, I will specify this in the GUI (FLE)</span>
+0017 <span class="comment">%ygdspc      = min(min(double(A(1).Sup.binSize_cm)/100)); %Vertical Grid node spacing in meters</span>
+0018 <span class="keyword">if</span> 0
+0019     xgdspc  = V.meddens + V.stddens;  <span class="comment">%Auto method should include 67% of the values</span>
+0020     <span class="comment">%disp(['X Grid Node Auto Spacing = ' num2str(xgdspc) ' m'])</span>
+0021     log_text = [<span class="string">'X Grid Node Auto Spacing = '</span> num2str(xgdspc) <span class="string">' m'</span>];
+0022 <span class="keyword">end</span>
 0023 
-0024 <span class="comment">% Determine mean cross-section velocity vector grid</span>
-0025 <span class="comment">% NEW: Allowed for explicit specification of vertical grid node spacing</span>
-0026 V.mcsDist               = linspace(0,V.dl,floor(V.dl/xgdspc));
-0027 V.mcsDepth              = <span class="keyword">...</span>
-0028     min(A(1).Wat.binDepth(:)):ygdspc:max(A(1).Wat.binDepth(:));
-0029 <span class="comment">% V.mcsDepth              = A(1).Wat.binDepth(:,1);</span>
-0030 [V.mcsDist, V.mcsDepth] = meshgrid(V.mcsDist,V.mcsDepth');
-0031 
-0032 
-0033 <span class="comment">% Define the MCS XY points. (REVISED PRJ, 10-18-12)</span>
-0034 <span class="comment">% Coordinate assignments depend on the starting</span>
-0035 <span class="comment">% point and the slope of the cross section. Theta is limited to 0 to 180</span>
-0036 <span class="comment">% (geographic) and 90 to 270 (arithmetic).  For COS, arithmetic angles</span>
-0037 <span class="comment">% between 90 and 270 are always negative so no need to add additional IF</span>
-0038 <span class="comment">% statement based on the slope.  However, SIN theta (aritmetic) is positive</span>
-0039 <span class="comment">% in MFD quadrants 2 and 4 and negative in 1 and 3. Therefore, we use the slope</span>
-0040 <span class="comment">% (positive in MFD quadrants 1 and 3, negative in 2 and 4) to determine whether to add or</span>
-0041 <span class="comment">% subtract the incremental distances from the start point.  (MFD = mean</span>
-0042 <span class="comment">% flow direction, used to define quadrants above and below)</span>
-0043 
-0044 <span class="keyword">if</span> V.xLeftBank == V.xe <span class="comment">% MFD Quadrants 2 and 3 (east start)</span>
-0045     V.mcsX = V.xLeftBank - V.mcsDist(1,:).*cosd(geo2arideg(V.theta));
-0046 <span class="keyword">else</span> <span class="comment">% MFD Quadrants 1 and 4 (west start)</span>
-0047     V.mcsX = V.xLeftBank + V.mcsDist(1,:).*cosd(geo2arideg(V.theta));
-0048 <span class="keyword">end</span>
-0049 
-0050 <span class="keyword">if</span> V.yLeftBank == V.yn <span class="comment">% MFD Quadrants 1 and 2 (north start)</span>
-0051     <span class="keyword">if</span> V.m &gt;= 0 <span class="comment">%MFD Quadrant 2</span>
-0052         V.mcsY = V.yLeftBank - V.mcsDist(1,:).*sind(geo2arideg(V.theta)); 
-0053     <span class="keyword">else</span> <span class="comment">%MFD Quadrant 1</span>
-0054         V.mcsY = V.yLeftBank + V.mcsDist(1,:).*sind(geo2arideg(V.theta));
-0055     <span class="keyword">end</span>
-0056 <span class="keyword">else</span> <span class="comment">% MFD Quadrants 3 and 4 (south start)</span>
-0057     <span class="keyword">if</span> V.m &gt;= 0 <span class="comment">%MFD Quadrant 4</span>
-0058         V.mcsY = V.yLeftBank + V.mcsDist(1,:).*sind(geo2arideg(V.theta)); 
-0059     <span class="keyword">else</span> <span class="comment">%MFD Quadrant 3</span>
-0060         V.mcsY = V.yLeftBank - V.mcsDist(1,:).*sind(geo2arideg(V.theta));
-0061     <span class="keyword">end</span>
-0062 <span class="keyword">end</span>
-0063 
-0064 V.mcsX = meshgrid(V.mcsX,V.mcsDepth(:,1));
-0065 V.mcsY = meshgrid(V.mcsY,V.mcsDepth(:,1));
-0066 
-0067 
-0068 <span class="comment">% %Plot the MCS on figure 1</span>
-0069 <span class="comment">% figure(1); hold on</span>
-0070 <span class="comment">% plot(V.xLeftBank,V.yLeftBank,'gs','MarkerFaceColor','g'); hold on  %Green left bank start point</span>
-0071 <span class="comment">% plot(V.xRightBank,V.yRightBank,'rs','MarkerFaceColor','r'); hold on %Red right bank end point</span>
-0072 <span class="comment">% plot(V.mcsX(1,:),V.mcsY(1,:),'k+'); hold on</span>
-0073 <span class="comment">% figure(1); set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])</span>
-0074 <span class="comment">% clear zi</span>
-0075 <span class="comment">%</span>
-0076 <span class="comment">% % Format the ticks for UTM and allow zooming and panning</span>
-0077 <span class="comment">% figure(1);</span>
-0078 <span class="comment">% ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM</span>
-0079 <span class="comment">% hdlzm_fig1 = zoom;</span>
-0080 <span class="comment">% set(hdlzm_fig1,'ActionPostCallback',@mypostcallback_zoom);</span>
-0081 <span class="comment">% set(hdlzm_fig1,'Enable','on');</span>
-0082 <span class="comment">% hdlpn_fig1 = pan;</span>
-0083 <span class="comment">% set(hdlpn_fig1,'ActionPostCallback',@mypostcallback_pan);</span>
-0084 <span class="comment">% set(hdlpn_fig1,'Enable','on');</span>
-0085 
-0086 
-0087 <span class="comment">%% If specified, correct the streamwise velocity by enforcing mass</span>
-0088 <span class="comment">% flux (capacitor) continuity</span>
-0089 <span class="keyword">if</span> unitQcorrection
-0090     A = <a href="VMT_unitQcont.html" class="code" title="function A = VMT_unitQcont(A,V,z)">VMT_unitQcont</a>(A,V,z);
-0091 <span class="keyword">end</span>
-0092 
-0093 <span class="comment">%% Interpolate individual transects onto uniform mean c-s grid</span>
-0094 <span class="comment">% Fill in uniform grid based on individual transects mapped onto the mean</span>
-0095 <span class="comment">% cross-section by interpolating between adjacent points</span>
-0096 
-0097 <span class="comment">%ZI = interp2(X,Y,Z,XI,YI)</span>
-0098 <span class="keyword">for</span> zi = 1 : z
-0099  
-0100     A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, <span class="keyword">...</span>
-0101         A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);
-0102     A(zi).Comp.mcsBack(A(zi).Comp.mcsBack&gt;=255) = NaN;
-0103     A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, <span class="keyword">...</span>
-0104         A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
-0105     A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, <span class="keyword">...</span>
-0106         A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
-0107     A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, <span class="keyword">...</span>
-0108         A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);
-0109     
-0110     <span class="comment">%Compute magnitude</span>
-0111     A(zi).Comp.mcsMag = sqrt(A(zi).Comp.mcsEast.^2 + A(zi).Comp.mcsNorth.^2);
-0112     
-0113     
-0114     <span class="comment">%For direction, compute from the velocity components</span>
-0115     A(zi).Comp.mcsDir = ari2geodeg((atan2(A(zi).Comp.mcsNorth,A(zi).Comp.mcsEast))*180/pi); 
-0116     
-0117     A(zi).Comp.mcsBed  = interp1(A(zi).Comp.itDist(1,:),<span class="keyword">...</span>
-0118         nanmean(A(zi).Nav.depth(A(zi).Comp.vecmap,:),2),V.mcsDist(1,:));
-0119     
-0120 <span class="keyword">end</span>
-0121 
-0122 <span class="comment">% clear zi</span>
-0123 
-0124 <span class="comment">%%%%%%%%%%%%%%%%</span>
-0125 <span class="comment">% SUBFUNCTIONS %</span>
-0126 <span class="comment">%%%%%%%%%%%%%%%%</span>
-0127 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0128 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
-0129 
-0130 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0131 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
-<hr><address>Generated on Tue 18-Mar-2014 15:13:16 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0024 
+0025 <span class="comment">%% Determine uniform mean c-s grid for vector interpolating</span>
+0026 
+0027 <span class="comment">% Determine mean cross-section velocity vector grid NEW: Allowed for</span>
+0028 <span class="comment">% explicit specification of vertical grid node spacing Also, using linspace</span>
+0029 <span class="comment">% doesn't necessarily give exactly hgns spaced grid nodes, so the method</span>
+0030 <span class="comment">% has been adjusted (this is important for user that want to output to a</span>
+0031 <span class="comment">% model grid). A fragment of length&lt;xgdsoc may be truncated. The impact on</span>
+0032 <span class="comment">% this for data analysis should be minor, but should be investigated [FLE</span>
+0033 <span class="comment">% 3/25/2014]</span>
+0034 <span class="comment">% V.mcsDist               = linspace(0,V.dl,floor(V.dl/xgdspc));</span>
+0035 V.mcsDist               = 0:xgdspc:V.dl;
+0036 V.mcsDepth              = <span class="keyword">...</span>
+0037     min(A(1).Wat.binDepth(:)):ygdspc:max(A(1).Wat.binDepth(:));
+0038 <span class="comment">% V.mcsDepth              = A(1).Wat.binDepth(:,1);</span>
+0039 [V.mcsDist, V.mcsDepth] = meshgrid(V.mcsDist,V.mcsDepth');
+0040 
+0041 
+0042 <span class="comment">% Define the MCS XY points. (REVISED PRJ, 10-18-12)</span>
+0043 <span class="comment">% Coordinate assignments depend on the starting</span>
+0044 <span class="comment">% point and the slope of the cross section. Theta is limited to 0 to 180</span>
+0045 <span class="comment">% (geographic) and 90 to 270 (arithmetic).  For COS, arithmetic angles</span>
+0046 <span class="comment">% between 90 and 270 are always negative so no need to add additional IF</span>
+0047 <span class="comment">% statement based on the slope.  However, SIN theta (aritmetic) is positive</span>
+0048 <span class="comment">% in MFD quadrants 2 and 4 and negative in 1 and 3. Therefore, we use the slope</span>
+0049 <span class="comment">% (positive in MFD quadrants 1 and 3, negative in 2 and 4) to determine whether to add or</span>
+0050 <span class="comment">% subtract the incremental distances from the start point.  (MFD = mean</span>
+0051 <span class="comment">% flow direction, used to define quadrants above and below)</span>
+0052 
+0053 <span class="keyword">if</span> V.xLeftBank == V.xe <span class="comment">% MFD Quadrants 2 and 3 (east start)</span>
+0054     V.mcsX = V.xLeftBank - V.mcsDist(1,:).*cosd(geo2arideg(V.theta));
+0055 <span class="keyword">else</span> <span class="comment">% MFD Quadrants 1 and 4 (west start)</span>
+0056     V.mcsX = V.xLeftBank + V.mcsDist(1,:).*cosd(geo2arideg(V.theta));
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="keyword">if</span> V.yLeftBank == V.yn <span class="comment">% MFD Quadrants 1 and 2 (north start)</span>
+0060     <span class="keyword">if</span> V.m &gt;= 0 <span class="comment">%MFD Quadrant 2</span>
+0061         V.mcsY = V.yLeftBank - V.mcsDist(1,:).*sind(geo2arideg(V.theta)); 
+0062     <span class="keyword">else</span> <span class="comment">%MFD Quadrant 1</span>
+0063         V.mcsY = V.yLeftBank + V.mcsDist(1,:).*sind(geo2arideg(V.theta));
+0064     <span class="keyword">end</span>
+0065 <span class="keyword">else</span> <span class="comment">% MFD Quadrants 3 and 4 (south start)</span>
+0066     <span class="keyword">if</span> V.m &gt;= 0 <span class="comment">%MFD Quadrant 4</span>
+0067         V.mcsY = V.yLeftBank + V.mcsDist(1,:).*sind(geo2arideg(V.theta)); 
+0068     <span class="keyword">else</span> <span class="comment">%MFD Quadrant 3</span>
+0069         V.mcsY = V.yLeftBank - V.mcsDist(1,:).*sind(geo2arideg(V.theta));
+0070     <span class="keyword">end</span>
+0071 <span class="keyword">end</span>
+0072 
+0073 V.mcsX = meshgrid(V.mcsX,V.mcsDepth(:,1));
+0074 V.mcsY = meshgrid(V.mcsY,V.mcsDepth(:,1));
+0075 
+0076 
+0077 <span class="comment">% %Plot the MCS on figure 1</span>
+0078 <span class="comment">% figure(1); hold on</span>
+0079 <span class="comment">% plot(V.xLeftBank,V.yLeftBank,'gs','MarkerFaceColor','g'); hold on  %Green left bank start point</span>
+0080 <span class="comment">% plot(V.xRightBank,V.yRightBank,'rs','MarkerFaceColor','r'); hold on %Red right bank end point</span>
+0081 <span class="comment">% plot(V.mcsX(1,:),V.mcsY(1,:),'k+'); hold on</span>
+0082 <span class="comment">% figure(1); set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])</span>
+0083 <span class="comment">% clear zi</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">% % Format the ticks for UTM and allow zooming and panning</span>
+0086 <span class="comment">% figure(1);</span>
+0087 <span class="comment">% ticks_format('%6.0f','%8.0f'); %formats the ticks for UTM</span>
+0088 <span class="comment">% hdlzm_fig1 = zoom;</span>
+0089 <span class="comment">% set(hdlzm_fig1,'ActionPostCallback',@mypostcallback_zoom);</span>
+0090 <span class="comment">% set(hdlzm_fig1,'Enable','on');</span>
+0091 <span class="comment">% hdlpn_fig1 = pan;</span>
+0092 <span class="comment">% set(hdlpn_fig1,'ActionPostCallback',@mypostcallback_pan);</span>
+0093 <span class="comment">% set(hdlpn_fig1,'Enable','on');</span>
+0094 
+0095 
+0096 <span class="comment">%% If specified, correct the streamwise velocity by enforcing mass</span>
+0097 <span class="comment">% flux (capacitor) continuity</span>
+0098 <span class="keyword">if</span> unitQcorrection
+0099     A = <a href="VMT_unitQcont.html" class="code" title="function A = VMT_unitQcont(A,V,z)">VMT_unitQcont</a>(A,V,z);
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">%% Interpolate individual transects onto uniform mean c-s grid</span>
+0103 <span class="comment">% Fill in uniform grid based on individual transects mapped onto the mean</span>
+0104 <span class="comment">% cross-section by interpolating between adjacent points</span>
+0105 <span class="comment">%</span>
+0106 <span class="comment">% Originally, the data matrices contained monotonic, finite values. With</span>
+0107 <span class="comment">% the inclusion of RiverRay data, this assuption is no longer valid. To</span>
+0108 <span class="comment">% interpolate the quasi-scattered data requires vectorizing and isolating</span>
+0109 <span class="comment">% the valid data, and then using the TriScatteredInterp class. Ultimately,</span>
+0110 <span class="comment">% this method should produce the same results with RioGrande data, but with</span>
+0111 <span class="comment">% marked speed improvements (vecotrized operations are faster in Matlab).</span>
+0112 <span class="comment">% NOTE: TriScattertedInterp has been replaced by scatteredInterpolant in</span>
+0113 <span class="comment">% R2013+</span>
+0114 <span class="comment">% [FLE 3/25/2014]</span>
+0115 
+0116 XI = V.mcsDist(:);
+0117 YI = V.mcsDepth(:);
+0118 
+0119 <span class="comment">%ZI = interp2(X,Y,Z,XI,YI)</span>
+0120 <span class="keyword">for</span> zi = 1 : z
+0121     <span class="comment">% Vectorize inputs to interp2, index valid data, and preallocate the</span>
+0122     <span class="comment">% result vectors</span>
+0123     [nrows,ncols] = size(A(zi).Comp.itDist);
+0124     X             = A(zi).Comp.itDist; 
+0125     Y             = A(zi).Comp.itDepth;
+0126     valid         = ~isnan(X) &amp; ~isnan(Y);
+0127            
+0128     <span class="comment">% Inputs</span>
+0129     bs = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
+0130     vE = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
+0131     vN = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
+0132     vV = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
+0133     
+0134     <span class="comment">% Create scatteredInterpolant class</span>
+0135     F = TriScatteredInterp(X(valid),Y(valid),bs(valid));
+0136     
+0137     <span class="comment">% Interpolate to each output</span>
+0138     mcsBack  = F(XI,YI);
+0139     F.V      = vE(valid);
+0140     mcsEast  = F(XI,YI);
+0141     F.V      = vN(valid);
+0142     mcsNorth = F(XI,YI);
+0143     F.V      = vV(valid);
+0144     mcsVert  = F(XI,YI);
+0145     
+0146     <span class="comment">% Reshape and save to outputs</span>
+0147     A(zi).Comp.mcsBack  = reshape(mcsBack ,size(V.mcsX));
+0148     A(zi).Comp.mcsEast  = reshape(mcsEast ,size(V.mcsX));
+0149     A(zi).Comp.mcsNorth = reshape(mcsNorth,size(V.mcsX));
+0150     A(zi).Comp.mcsVert  = reshape(mcsVert ,size(V.mcsX));
+0151     
+0152     <span class="comment">%A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0153     <span class="comment">%    A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);</span>
+0154     <span class="comment">%A(zi).Comp.mcsBack(A(zi).Comp.mcsBack&gt;=255) = NaN;</span>
+0155     <span class="comment">%A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0156     <span class="comment">%    A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
+0157     <span class="comment">%A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0158     <span class="comment">%    A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
+0159     <span class="comment">%A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0160     <span class="comment">%    A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
+0161     
+0162     <span class="comment">%Compute magnitude</span>
+0163     A(zi).Comp.mcsMag = sqrt(A(zi).Comp.mcsEast.^2 + A(zi).Comp.mcsNorth.^2);
+0164     
+0165     
+0166     <span class="comment">%For direction, compute from the velocity components</span>
+0167     A(zi).Comp.mcsDir = ari2geodeg((atan2(A(zi).Comp.mcsNorth,A(zi).Comp.mcsEast))*180/pi); 
+0168     
+0169     A(zi).Comp.mcsBed  = interp1(A(zi).Comp.itDist(1,:),<span class="keyword">...</span>
+0170         nanmean(A(zi).Nav.depth(A(zi).Comp.vecmap,:),2),V.mcsDist(1,:));
+0171     
+0172 <span class="keyword">end</span>
+0173 
+0174 <span class="comment">% clear zi</span>
+0175 
+0176 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0177 <span class="comment">% SUBFUNCTIONS %</span>
+0178 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0179 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0180 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0181 
+0182 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0183 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
+<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
