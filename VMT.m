@@ -115,15 +115,15 @@ guiparams.vmt_version = 'v4.06';
 % -----------------
 pos = get(handles.figure1,'position');
 axes(handles.VMTBackground);
-if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
+% if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
     X = imread('VMT_Background.png');
     imdisp(X,'size',[pos(4) pos(3)]) % Avoids problems with users not having Image Processing TB
-else
-    X = imread('VMT_Background.png');
-    X = imresize(X, [pos(4) pos(3)]);
-    X = uint8(X);
-    imshow(X,'Border','tight')
-end
+% else
+%     X = imread('VMT_Background.png');
+%     X = imresize(X, [pos(4) pos(3)]);
+%     X = uint8(X);
+%     imshow(X,'Border','tight')
+% end
 uistack(handles.VMTBackground,'bottom')
 
 % Store the application data:
@@ -169,15 +169,15 @@ function figure1_ResizeFcn(hObject, eventdata, handles)
 % -----------------
 pos = get(handles.figure1,'position');
 axes(handles.VMTBackground);
-if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
+% if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))
     X = imread('VMT_Background.png');
     imdisp(X,'size',[pos(4) pos(3)]) % Avoids problems with users not having Image Processing TB
-else
-    X = imread('VMT_Background.png');
-    X = imresize(X, [pos(4) pos(3)]);
-    X = uint8(X);
-    imshow(X,'Border','tight')
-end
+% else
+%     X = imread('VMT_Background.png');
+%     X = imresize(X, [pos(4) pos(3)]);
+%     X = uint8(X);
+%     imshow(X,'Border','tight')
+% end
 uistack(handles.VMTBackground,'bottom')
 
 % --- Executes when user attempts to close figure1.
