@@ -123,6 +123,12 @@ switch var
         zmax=ceil(nanmax(nanmax(V.mcsEastSmooth)));
         zinc = (zmax - zmin) / clvls;
         zlevs = zmin:zinc:zmax;
+    case{'error'} %Plots the error velocity
+        wtp=['V.mcsErrorSmooth'];
+        zmin=floor(nanmin(nanmin(V.mcsErrorSmooth)));
+        zmax=ceil(nanmax(nanmax(V.mcsErrorSmooth)));
+        zinc = (zmax - zmin) / clvls;
+        zlevs = zmin:zinc:zmax;
     case{'north'} %Plots the north velocity
         wtp=['V.mcsNorthSmooth'];
         zmin=floor(nanmin(nanmin(V.mcsNorthSmooth)));
@@ -303,6 +309,8 @@ switch var
         title_handle = title(['East Velocity ' unitlabel]);
     case{'north'}
         title_handle = title(['North Velocity ' unitlabel]);
+    case{'error'}
+        title_handle = title(['Error Velocity ' unitlabel]);
     case{'primary_zsd'}
         title_handle = title(['Primary Velocity (Zero Secondary Discharge Definition) ' unitlabel]);
     case{'secondary_zsd'}

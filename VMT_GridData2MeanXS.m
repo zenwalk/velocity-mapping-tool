@@ -126,10 +126,11 @@ for zi = 1 : z
     valid         = ~isnan(X) & ~isnan(Y);
            
     % Inputs
-    bs = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
-    vE = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
-    vN = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
-    vV = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
+    bs  = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
+    vE  = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
+    vN  = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
+    vV  = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
+    vEr = A(zi).Clean.vError(:,A(zi).Comp.vecmap);
     
     % Create scatteredInterpolant class
     F = TriScatteredInterp(X(valid),Y(valid),bs(valid));
@@ -142,12 +143,15 @@ for zi = 1 : z
     mcsNorth = F(XI,YI);
     F.V      = vV(valid);
     mcsVert  = F(XI,YI);
+    F.V      = vEr(valid);
+    mcsError = F(XI,YI);
     
     % Reshape and save to outputs
-    A(zi).Comp.mcsBack  = reshape(mcsBack ,size(V.mcsX));
-    A(zi).Comp.mcsEast  = reshape(mcsEast ,size(V.mcsX));
-    A(zi).Comp.mcsNorth = reshape(mcsNorth,size(V.mcsX));
-    A(zi).Comp.mcsVert  = reshape(mcsVert ,size(V.mcsX));
+    A(zi).Comp.mcsBack  = reshape(mcsBack  ,size(V.mcsX));
+    A(zi).Comp.mcsEast  = reshape(mcsEast  ,size(V.mcsX));
+    A(zi).Comp.mcsNorth = reshape(mcsNorth ,size(V.mcsX));
+    A(zi).Comp.mcsVert  = reshape(mcsVert  ,size(V.mcsX));
+    A(zi).Comp.mcsError = reshape(mcsError ,size(V.mcsX));
     
     %A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...
     %    A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);

@@ -177,61 +177,65 @@ This function is called by:
 0126     valid         = ~isnan(X) &amp; ~isnan(Y);
 0127            
 0128     <span class="comment">% Inputs</span>
-0129     bs = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
-0130     vE = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
-0131     vN = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
-0132     vV = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
-0133     
-0134     <span class="comment">% Create scatteredInterpolant class</span>
-0135     F = TriScatteredInterp(X(valid),Y(valid),bs(valid));
-0136     
-0137     <span class="comment">% Interpolate to each output</span>
-0138     mcsBack  = F(XI,YI);
-0139     F.V      = vE(valid);
-0140     mcsEast  = F(XI,YI);
-0141     F.V      = vN(valid);
-0142     mcsNorth = F(XI,YI);
-0143     F.V      = vV(valid);
-0144     mcsVert  = F(XI,YI);
-0145     
-0146     <span class="comment">% Reshape and save to outputs</span>
-0147     A(zi).Comp.mcsBack  = reshape(mcsBack ,size(V.mcsX));
-0148     A(zi).Comp.mcsEast  = reshape(mcsEast ,size(V.mcsX));
-0149     A(zi).Comp.mcsNorth = reshape(mcsNorth,size(V.mcsX));
-0150     A(zi).Comp.mcsVert  = reshape(mcsVert ,size(V.mcsX));
-0151     
-0152     <span class="comment">%A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
-0153     <span class="comment">%    A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);</span>
-0154     <span class="comment">%A(zi).Comp.mcsBack(A(zi).Comp.mcsBack&gt;=255) = NaN;</span>
-0155     <span class="comment">%A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
-0156     <span class="comment">%    A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
-0157     <span class="comment">%A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
-0158     <span class="comment">%    A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
-0159     <span class="comment">%A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
-0160     <span class="comment">%    A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
-0161     
-0162     <span class="comment">%Compute magnitude</span>
-0163     A(zi).Comp.mcsMag = sqrt(A(zi).Comp.mcsEast.^2 + A(zi).Comp.mcsNorth.^2);
-0164     
+0129     bs  = A(zi).Clean.bs(:,A(zi).Comp.vecmap);
+0130     vE  = A(zi).Clean.vEast(:,A(zi).Comp.vecmap);
+0131     vN  = A(zi).Clean.vNorth(:,A(zi).Comp.vecmap);
+0132     vV  = A(zi).Clean.vVert(:,A(zi).Comp.vecmap);
+0133     vEr = A(zi).Clean.vError(:,A(zi).Comp.vecmap);
+0134     
+0135     <span class="comment">% Create scatteredInterpolant class</span>
+0136     F = TriScatteredInterp(X(valid),Y(valid),bs(valid));
+0137     
+0138     <span class="comment">% Interpolate to each output</span>
+0139     mcsBack  = F(XI,YI);
+0140     F.V      = vE(valid);
+0141     mcsEast  = F(XI,YI);
+0142     F.V      = vN(valid);
+0143     mcsNorth = F(XI,YI);
+0144     F.V      = vV(valid);
+0145     mcsVert  = F(XI,YI);
+0146     F.V      = vEr(valid);
+0147     mcsError = F(XI,YI);
+0148     
+0149     <span class="comment">% Reshape and save to outputs</span>
+0150     A(zi).Comp.mcsBack  = reshape(mcsBack  ,size(V.mcsX));
+0151     A(zi).Comp.mcsEast  = reshape(mcsEast  ,size(V.mcsX));
+0152     A(zi).Comp.mcsNorth = reshape(mcsNorth ,size(V.mcsX));
+0153     A(zi).Comp.mcsVert  = reshape(mcsVert  ,size(V.mcsX));
+0154     A(zi).Comp.mcsError = reshape(mcsError ,size(V.mcsX));
+0155     
+0156     <span class="comment">%A(zi).Comp.mcsBack = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0157     <span class="comment">%    A(zi).Clean.bs(:,A(zi).Comp.vecmap),V.mcsDist, V.mcsDepth);</span>
+0158     <span class="comment">%A(zi).Comp.mcsBack(A(zi).Comp.mcsBack&gt;=255) = NaN;</span>
+0159     <span class="comment">%A(zi).Comp.mcsEast = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0160     <span class="comment">%    A(zi).Clean.vEast(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
+0161     <span class="comment">%A(zi).Comp.mcsNorth = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0162     <span class="comment">%    A(zi).Clean.vNorth(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
+0163     <span class="comment">%A(zi).Comp.mcsVert = interp2(A(zi).Comp.itDist, A(zi).Comp.itDepth, ...</span>
+0164     <span class="comment">%    A(zi).Clean.vVert(:,A(zi).Comp.vecmap), V.mcsDist, V.mcsDepth);</span>
 0165     
-0166     <span class="comment">%For direction, compute from the velocity components</span>
-0167     A(zi).Comp.mcsDir = ari2geodeg((atan2(A(zi).Comp.mcsNorth,A(zi).Comp.mcsEast))*180/pi); 
+0166     <span class="comment">%Compute magnitude</span>
+0167     A(zi).Comp.mcsMag = sqrt(A(zi).Comp.mcsEast.^2 + A(zi).Comp.mcsNorth.^2);
 0168     
-0169     A(zi).Comp.mcsBed  = interp1(A(zi).Comp.itDist(1,:),<span class="keyword">...</span>
-0170         nanmean(A(zi).Nav.depth(A(zi).Comp.vecmap,:),2),V.mcsDist(1,:));
-0171     
-0172 <span class="keyword">end</span>
-0173 
-0174 <span class="comment">% clear zi</span>
-0175 
-0176 <span class="comment">%%%%%%%%%%%%%%%%</span>
-0177 <span class="comment">% SUBFUNCTIONS %</span>
-0178 <span class="comment">%%%%%%%%%%%%%%%%</span>
-0179 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0180 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
-0181 
-0182 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0183 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
-<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0169     
+0170     <span class="comment">%For direction, compute from the velocity components</span>
+0171     A(zi).Comp.mcsDir = ari2geodeg((atan2(A(zi).Comp.mcsNorth,A(zi).Comp.mcsEast))*180/pi); 
+0172     
+0173     A(zi).Comp.mcsBed  = interp1(A(zi).Comp.itDist(1,:),<span class="keyword">...</span>
+0174         nanmean(A(zi).Nav.depth(A(zi).Comp.vecmap,:),2),V.mcsDist(1,:));
+0175     
+0176 <span class="keyword">end</span>
+0177 
+0178 <span class="comment">% clear zi</span>
+0179 
+0180 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0181 <span class="comment">% SUBFUNCTIONS %</span>
+0182 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0183 <a name="_sub1" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0184 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0185 
+0186 <a name="_sub2" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0187 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
+<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

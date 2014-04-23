@@ -321,9 +321,20 @@ This function is called by:
 0270     <span class="keyword">end</span>
 0271 <span class="keyword">end</span>
 0272 
-0273 <span class="comment">%% Close</span>
-0274 warning on
-0275 <span class="comment">%disp('Smoothing Completed')</span></pre></div>
-<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0273 <span class="comment">% Smooth error velocity also</span>
+0274 <span class="keyword">if</span> Fr == 0 &amp; Fc == 0
+0275     V.mcsErrorSmooth = V.mcsError;
+0276 <span class="keyword">else</span>
+0277     <span class="keyword">if</span> use_smooth2a
+0278         [V.mcsErrorSmooth] = smooth2a(V.mcsError,Fr,Fc);
+0279     <span class="keyword">else</span>
+0280         [V.mcsErrorSmooth] = nanmoving_average2(V.mcsError,Fr,Fc);
+0281     <span class="keyword">end</span>
+0282 <span class="keyword">end</span>
+0283 
+0284 <span class="comment">%% Close</span>
+0285 warning on
+0286 <span class="comment">%disp('Smoothing Completed')</span></pre></div>
+<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
