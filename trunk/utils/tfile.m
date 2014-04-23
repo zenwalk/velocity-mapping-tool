@@ -414,7 +414,7 @@ for i=1:noe;
     if nBins(i)>1
         maxBinSize=binDepth(nBins(i),i)-binDepth(nBins(i)-1,i);
     else
-        maxBinSize=binSize(nBins(i));
+        maxBinSize=binDepth(nBins(i));
     end
     difBinDepth=diff(binDepth(:,i));
     binSize(:,i)=repmat(maxBinSize,size(binDepth,1),1);
