@@ -587,7 +587,7 @@ guiparams              = getappdata(handles.figure1,'guiparams');
 beam_angle             = guiparams.beam_angle; 
 magnetic_variation     = guiparams.magnetic_variation; 
 wse                    = guiparams.wse;
-output_auxiliary_data = guiparams.output_auxiliary_data; 
+output_auxiliary_data  = guiparams.output_auxiliary_data; 
 
 % Open dialog and allow user to select settings
 % ---------------------------------------------
@@ -4216,7 +4216,7 @@ handles.WSEText = uicontrol('Style','text', ...
 handles.WSE = uicontrol('Style','edit', ...
     'Parent',handles.BathymetryPanel, ...
     ...'String','Magnetic Variation', ...
-    'String',wse,...
+    'String',num2str(wse),...
     'BackgroundColor','w',...
     'Units','pixels', ...
     'Position',[w-dx-80 h-ph 50 22]);
@@ -4249,7 +4249,7 @@ set(handles.Figure,                      'CloseRequestFcn',{@dialogCloseReq,hand
 set(handles.BeamAngle,                   'Callback',       {@dialogExportSettings,handles})
 set(handles.MagneticVariation,           'Callback',       {@dialogExportSettings,handles})
 set(handles.WSE,                         'Callback',       {@dialogExportSettings,handles})
-set(handles.OutputauxiliaryData,        'Callback',       {@dialogExportSettings,handles})
+set(handles.OutputauxiliaryData,         'Callback',       {@dialogExportSettings,handles})
 set(handles.OK,                          'Callback',       {@dialogOK,      handles.OK})
 set(handles.Cancel,                      'Callback',       {@dialogCancel,  handles})
 
