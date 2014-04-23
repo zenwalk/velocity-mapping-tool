@@ -190,9 +190,11 @@ if plot_english %english units
         case{'mag'}
             title_handle = title({['Velocity Magnitude (Streamwise and Transverse) ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'east'}
-            title_handle = title({'East Velocity';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+            title_handle = title({['East Velocity ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'error'}
+            title_handle = title({['Error Velocity ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'north'}
-            title_handle = title({'North Velocity';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+            title_handle = title({['North Velocity ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'primary_zsd'}
             title_handle = title({['Primary Velocity (Zero Secondary Discharge Definition) ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'secondary_zsd'}
@@ -240,6 +242,8 @@ else %metric units
             title_handle = title({'Velocity Magnitude (Streamwise and Transverse) (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'east'}
             title_handle = title({'East Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+        case{'error'}
+            title_handle = title({'Error Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'north'}
             title_handle = title({'North Velocity (cm/s)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'primary_zsd'}

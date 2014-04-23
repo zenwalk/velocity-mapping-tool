@@ -819,6 +819,9 @@ else
         case 'north'
             vmin = nanmin(guiparams.gp_vmt.V.mcsEastSmooth(:));
             vmax = nanmax(guiparams.gp_vmt.V.mcsNorthSmooth(:));
+        case 'error'
+            vmin = nanmin(guiparams.gp_vmt.V.mcsError(:));
+            vmax = nanmax(guiparams.gp_vmt.V.mcsError(:));
         case 'primary_zsd'
             vmin = nanmin(guiparams.gp_vmt.V.vpSmooth(:));
             vmax = nanmax(guiparams.gp_vmt.V.vpSmooth(:));

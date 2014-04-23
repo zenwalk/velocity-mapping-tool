@@ -270,6 +270,17 @@ else
     end
 end
 
+% Smooth error velocity also
+if Fr == 0 & Fc == 0
+    V.mcsErrorSmooth = V.mcsError;
+else
+    if use_smooth2a
+        [V.mcsErrorSmooth] = smooth2a(V.mcsError,Fr,Fc);
+    else
+        [V.mcsErrorSmooth] = nanmoving_average2(V.mcsError,Fr,Fc);
+    end
+end
+
 %% Close
 warning on
 %disp('Smoothing Completed')

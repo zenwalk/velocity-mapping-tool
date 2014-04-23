@@ -24,6 +24,7 @@ switch V.probeType
         East    = [];
         North   = [];
         Vert    = [];
+        Error   = [];
         for zi = 1: z
             
             Dir(:,:,zi) = A(zi).Comp.mcsDir(:,:);
@@ -35,6 +36,7 @@ switch V.probeType
             East  = [East;  A(zi).Wat.vEast(:)];
             North = [North; A(zi).Wat.vNorth(:)];
             Vert  = [Vert;  A(zi).Wat.vVert(:)];
+            Error = [Error; A(zi).Wat.vError(:)];
         end
 
         % FIXME: I call griddate 3 times. Need to rewrite to create 1
@@ -42,17 +44,19 @@ switch V.probeType
         V.mcsEast  = griddata(x,y,East,V.mcsDist,V.mcsDepth);
         V.mcsNorth = griddata(x,y,North,V.mcsDist,V.mcsDepth);
         V.mcsVert  = griddata(x,y,Vert,V.mcsDist,V.mcsDepth);
+        V.mcsError = griddata(x,y,Error,V.mcsDist,V.mcsDepth);
         
     otherwise % Could be 'RG' or 'RR'
         for zi = 1 : z
             
-            Back(:,:,zi) = A(zi).Comp.mcsBack(:,:);
-            Dir(:,:,zi) = A(zi).Comp.mcsDir(:,:);
-            Mag(:,:,zi) = A(zi).Comp.mcsMag(:,:);
-            East(:,:,zi) = A(zi).Comp.mcsEast(:,:);
+            Back(:,:,zi)  = A(zi).Comp.mcsBack(:,:);
+            Dir(:,:,zi)   = A(zi).Comp.mcsDir(:,:);
+            Mag(:,:,zi)   = A(zi).Comp.mcsMag(:,:);
+            East(:,:,zi)  = A(zi).Comp.mcsEast(:,:);
             North(:,:,zi) = A(zi).Comp.mcsNorth(:,:);
-            Vert(:,:,zi) = A(zi).Comp.mcsVert(:,:);
-            Bed(:,:,zi) = A(zi).Comp.mcsBed(:,:);
+            Vert(:,:,zi)  = A(zi).Comp.mcsVert(:,:);
+            Error(:,:,zi) = A(zi).Comp.mcsError(:,:);
+            Bed(:,:,zi)   = A(zi).Comp.mcsBed(:,:);
             
         end
         
@@ -92,9 +96,10 @@ switch V.probeType
         %V.mcsDir = nanmean(Dir,3);  % Will not average correctly in all cases due to 0-360
         %wrapping (PRJ, 9-29-10)
         %V.mcsMag = nanmean(Mag,3);  %Mag recomputed from north, east, up components(PRJ, 3-21-11)
-        V.mcsEast = nanmean(East,3);
+        V.mcsEast  = nanmean(East,3);
         V.mcsNorth = nanmean(North,3);
-        V.mcsVert = nanmean(Vert,3);
+        V.mcsVert  = nanmean(Vert,3);
+        V.mcsError = nanmean(Error,3);
     
     
 

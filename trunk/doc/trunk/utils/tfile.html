@@ -489,7 +489,7 @@ This function is called by:
 0414     <span class="keyword">if</span> nBins(i)&gt;1
 0415         maxBinSize=binDepth(nBins(i),i)-binDepth(nBins(i)-1,i);
 0416     <span class="keyword">else</span>
-0417         maxBinSize=binSize(nBins(i));
+0417         maxBinSize=binDepth(nBins(i));
 0418     <span class="keyword">end</span>
 0419     difBinDepth=diff(binDepth(:,i));
 0420     binSize(:,i)=repmat(maxBinSize,size(binDepth,1),1);
@@ -512,6 +512,6 @@ This function is called by:
 0437 
 0438 <span class="comment">% Close waitbar</span>
 0439 close(hwait);</pre></div>
-<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

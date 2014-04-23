@@ -77,29 +77,35 @@ This function is called by:
 0027 <span class="keyword">end</span>
 0028 <span class="comment">% Command string</span>
 0029 <span class="comment">% --------------</span>
-0030 com_str = [<span class="string">'-o '</span> <span class="keyword">...</span>
-0031     filename <span class="keyword">...</span>
-0032     <span class="string">' -W WinMain -T link:exe -d '</span> <span class="keyword">...</span>
-0033     pathname<span class="keyword">...</span>
-0034     <span class="string">' -N -p map -p stats -p images -p utils -p doc -p tools -v '</span><span class="keyword">...</span>
-0035     <span class="string">'VMT.m -a VMT.fig'</span>];
-0036 
-0037 <span class="comment">% Compile</span>
-0038 <span class="comment">% -------</span>
-0039 eval([<span class="string">'mcc '</span> com_str])
-0040 
-0041 <span class="comment">% Package documentation and externals</span>
-0042 <span class="comment">% -----------------------------------</span>
-0043 
-0044 <span class="comment">% Background image</span>
-0045 copyfile(<span class="string">'VMT_Background.png'</span>,[pathname <span class="string">'VMT_Background.png'</span>])
+0030 <span class="comment">% com_str = ['-o ' ...</span>
+0031 <span class="comment">%     filename ...</span>
+0032 <span class="comment">%     ' -W WinMain -T link:exe -d ' ...</span>
+0033 <span class="comment">%     pathname...</span>
+0034 <span class="comment">%     ' -N -p map -p stats -p images -p utils -p doc -p tools -v '...</span>
+0035 <span class="comment">%     'VMT.m -a VMT.fig'];</span>
+0036 com_str = [<span class="string">'-o '</span> <span class="keyword">...</span>
+0037     filename <span class="keyword">...</span>
+0038     <span class="string">' -W WinMain -T link:exe -d '</span> <span class="keyword">...</span>
+0039     pathname<span class="keyword">...</span>
+0040     <span class="string">' -N -p map -p stats -p utils -p doc -p tools -v '</span><span class="keyword">...</span>
+0041     <span class="string">'VMT.m -a VMT.fig'</span>];
+0042 
+0043 <span class="comment">% Compile</span>
+0044 <span class="comment">% -------</span>
+0045 eval([<span class="string">'mcc '</span> com_str])
 0046 
-0047 <span class="comment">% Documentation</span>
-0048 backup([pwd filesep <span class="string">'doc'</span>],[pathname <span class="string">'doc'</span>],[],<span class="string">'/E /Y'</span>)
+0047 <span class="comment">% Package documentation and externals</span>
+0048 <span class="comment">% -----------------------------------</span>
 0049 
-0050 <span class="comment">% Default colormaps</span>
-0051 backup([pwd filesep <span class="string">'cpt'</span>],[pathname <span class="string">'cpt'</span>],[],<span class="string">'/E /Y'</span>)
-0052</pre></div>
-<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0050 <span class="comment">% Background image</span>
+0051 copyfile(<span class="string">'VMT_Background.png'</span>,[pathname <span class="string">'VMT_Background.png'</span>])
+0052 
+0053 <span class="comment">% Documentation</span>
+0054 backup([pwd filesep <span class="string">'doc'</span>],[pathname <span class="string">'doc'</span>],[],<span class="string">'/E /Y'</span>)
+0055 
+0056 <span class="comment">% Default colormaps</span>
+0057 backup([pwd filesep <span class="string">'cpt'</span>],[pathname <span class="string">'cpt'</span>],[],<span class="string">'/E /Y'</span>)
+0058</pre></div>
+<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

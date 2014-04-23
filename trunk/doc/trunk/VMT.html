@@ -188,15 +188,15 @@ This function is called by:
 0115 <span class="comment">% -----------------</span>
 0116 pos = get(handles.figure1,<span class="string">'position'</span>);
 0117 axes(handles.VMTBackground);
-0118 <span class="keyword">if</span> ~isdeployed <span class="comment">%isempty(dir(fullfile(matlabroot,'toolbox','images')))</span>
+0118 <span class="comment">% if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))</span>
 0119     X = imread(<span class="string">'VMT_Background.png'</span>);
 0120     imdisp(X,<span class="string">'size'</span>,[pos(4) pos(3)]) <span class="comment">% Avoids problems with users not having Image Processing TB</span>
-0121 <span class="keyword">else</span>
-0122     X = imread(<span class="string">'VMT_Background.png'</span>);
-0123     X = imresize(X, [pos(4) pos(3)]);
-0124     X = uint8(X);
-0125     imshow(X,<span class="string">'Border'</span>,<span class="string">'tight'</span>)
-0126 <span class="keyword">end</span>
+0121 <span class="comment">% else</span>
+0122 <span class="comment">%     X = imread('VMT_Background.png');</span>
+0123 <span class="comment">%     X = imresize(X, [pos(4) pos(3)]);</span>
+0124 <span class="comment">%     X = uint8(X);</span>
+0125 <span class="comment">%     imshow(X,'Border','tight')</span>
+0126 <span class="comment">% end</span>
 0127 uistack(handles.VMTBackground,<span class="string">'bottom'</span>)
 0128 
 0129 <span class="comment">% Store the application data:</span>
@@ -242,15 +242,15 @@ This function is called by:
 0169 <span class="comment">% -----------------</span>
 0170 pos = get(handles.figure1,<span class="string">'position'</span>);
 0171 axes(handles.VMTBackground);
-0172 <span class="keyword">if</span> ~isdeployed <span class="comment">%isempty(dir(fullfile(matlabroot,'toolbox','images')))</span>
+0172 <span class="comment">% if ~isdeployed %isempty(dir(fullfile(matlabroot,'toolbox','images')))</span>
 0173     X = imread(<span class="string">'VMT_Background.png'</span>);
 0174     imdisp(X,<span class="string">'size'</span>,[pos(4) pos(3)]) <span class="comment">% Avoids problems with users not having Image Processing TB</span>
-0175 <span class="keyword">else</span>
-0176     X = imread(<span class="string">'VMT_Background.png'</span>);
-0177     X = imresize(X, [pos(4) pos(3)]);
-0178     X = uint8(X);
-0179     imshow(X,<span class="string">'Border'</span>,<span class="string">'tight'</span>)
-0180 <span class="keyword">end</span>
+0175 <span class="comment">% else</span>
+0176 <span class="comment">%     X = imread('VMT_Background.png');</span>
+0177 <span class="comment">%     X = imresize(X, [pos(4) pos(3)]);</span>
+0178 <span class="comment">%     X = uint8(X);</span>
+0179 <span class="comment">%     imshow(X,'Border','tight')</span>
+0180 <span class="comment">% end</span>
 0181 uistack(handles.VMTBackground,<span class="string">'bottom'</span>)
 0182 
 0183 <span class="comment">% --- Executes when user attempts to close figure1.</span>
@@ -660,7 +660,7 @@ This function is called by:
 0587 beam_angle             = guiparams.beam_angle; 
 0588 magnetic_variation     = guiparams.magnetic_variation; 
 0589 wse                    = guiparams.wse;
-0590 output_auxiliary_data = guiparams.output_auxiliary_data; 
+0590 output_auxiliary_data  = guiparams.output_auxiliary_data; 
 0591 
 0592 <span class="comment">% Open dialog and allow user to select settings</span>
 0593 <span class="comment">% ---------------------------------------------</span>
@@ -4289,7 +4289,7 @@ This function is called by:
 4216 handles.WSE = uicontrol(<span class="string">'Style'</span>,<span class="string">'edit'</span>, <span class="keyword">...</span>
 4217     <span class="string">'Parent'</span>,handles.BathymetryPanel, <span class="keyword">...</span>
 4218     <span class="keyword">...</span><span class="comment">'String','Magnetic Variation', ...</span>
-4219     <span class="string">'String'</span>,wse,<span class="keyword">...</span>
+4219     <span class="string">'String'</span>,num2str(wse),<span class="keyword">...</span>
 4220     <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
 4221     <span class="string">'Units'</span>,<span class="string">'pixels'</span>, <span class="keyword">...</span>
 4222     <span class="string">'Position'</span>,[w-dx-80 h-ph 50 22]);
@@ -4322,7 +4322,7 @@ This function is called by:
 4249 set(handles.BeamAngle,                   <span class="string">'Callback'</span>,       {@<a href="#_sub104" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
 4250 set(handles.MagneticVariation,           <span class="string">'Callback'</span>,       {@<a href="#_sub104" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
 4251 set(handles.WSE,                         <span class="string">'Callback'</span>,       {@<a href="#_sub104" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
-4252 set(handles.OutputauxiliaryData,        <span class="string">'Callback'</span>,       {@<a href="#_sub104" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
+4252 set(handles.OutputauxiliaryData,         <span class="string">'Callback'</span>,       {@<a href="#_sub104" class="code" title="subfunction dialogExportSettings(hObject,eventdata,handles)">dialogExportSettings</a>,handles})
 4253 set(handles.OK,                          <span class="string">'Callback'</span>,       {@<a href="#_sub100" class="code" title="subfunction dialogOK(hObject,eventdata,h_OK)">dialogOK</a>,      handles.OK})
 4254 set(handles.Cancel,                      <span class="string">'Callback'</span>,       {@<a href="#_sub101" class="code" title="subfunction dialogCancel(hObject,eventdata,handles)">dialogCancel</a>,  handles})
 4255 
@@ -4958,251 +4958,260 @@ This function is called by:
 4885 guiparams.contours(idx).string   = <span class="string">'North Velocity (N)'</span>;
 4886 guiparams.contours(idx).variable = <span class="string">'north'</span>;
 4887 idx = idx + 1;
-4888 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (zsd)'</span>;
-4889 guiparams.contours(idx).variable = <span class="string">'primary_zsd'</span>;
+4888 guiparams.contours(idx).string   = <span class="string">'Error Velocity'</span>;
+4889 guiparams.contours(idx).variable = <span class="string">'error'</span>;
 4890 idx = idx + 1;
-4891 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (zsd)'</span>;
-4892 guiparams.contours(idx).variable = <span class="string">'secondary_zsd'</span>;
+4891 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (zsd)'</span>;
+4892 guiparams.contours(idx).variable = <span class="string">'primary_zsd'</span>;
 4893 idx = idx + 1;
-4894 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (Roz)'</span>;
-4895 guiparams.contours(idx).variable = <span class="string">'primary_roz'</span>;
+4894 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (zsd)'</span>;
+4895 guiparams.contours(idx).variable = <span class="string">'secondary_zsd'</span>;
 4896 idx = idx + 1;
-4897 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (Roz)'</span>;
-4898 guiparams.contours(idx).variable = <span class="string">'secondary_roz'</span>;
+4897 guiparams.contours(idx).string   = <span class="string">'Primary Velocity (Roz)'</span>;
+4898 guiparams.contours(idx).variable = <span class="string">'primary_roz'</span>;
 4899 idx = idx + 1;
-4900 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Downstream Comp.)'</span>;
-4901 guiparams.contours(idx).variable = <span class="string">'primary_roz_x'</span>;
+4900 guiparams.contours(idx).string   = <span class="string">'Secondary Velocity (Roz)'</span>;
+4901 guiparams.contours(idx).variable = <span class="string">'secondary_roz'</span>;
 4902 idx = idx + 1;
-4903 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Cross-Stream Comp.)'</span>;
-4904 guiparams.contours(idx).variable = <span class="string">'primary_roz_y'</span>;
+4903 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Downstream Comp.)'</span>;
+4904 guiparams.contours(idx).variable = <span class="string">'primary_roz_x'</span>;
 4905 idx = idx + 1;
-4906 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Downstream Comp.)'</span>;
-4907 guiparams.contours(idx).variable = <span class="string">'secondary_roz_x'</span>;
+4906 guiparams.contours(idx).string   = <span class="string">'Prim. Vel. (Roz, Cross-Stream Comp.)'</span>;
+4907 guiparams.contours(idx).variable = <span class="string">'primary_roz_y'</span>;
 4908 idx = idx + 1;
-4909 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Cross-Stream Comp.)'</span>;
-4910 guiparams.contours(idx).variable = <span class="string">'secondary_roz_y'</span>;
+4909 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Downstream Comp.)'</span>;
+4910 guiparams.contours(idx).variable = <span class="string">'secondary_roz_x'</span>;
 4911 idx = idx + 1;
-4912 guiparams.contours(idx).string   = <span class="string">'Backscatter'</span>;
-4913 guiparams.contours(idx).variable = <span class="string">'backscatter'</span>;
+4912 guiparams.contours(idx).string   = <span class="string">'Sec. Vel. (Roz, Cross-Stream Comp.)'</span>;
+4913 guiparams.contours(idx).variable = <span class="string">'secondary_roz_y'</span>;
 4914 idx = idx + 1;
-4915 guiparams.contours(idx).string   = <span class="string">'Flow Direction (deg.)'</span>;
-4916 guiparams.contours(idx).variable = <span class="string">'flowangle'</span>;
-4917 
-4918 guiparams.contour = guiparams.contours(guiparams.idx_contour).variable;
-4919 
-4920 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4921 <span class="comment">% Secondary Flow Vector Variables %</span>
-4922 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4923 idx = 1;
-4924 guiparams.secondary_flows(idx).string   = <span class="string">'Transverse'</span>;
-4925 guiparams.secondary_flows(idx).variable = <span class="string">'transverse'</span>;
-4926 idx = idx + 1;
-4927 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (zsd)'</span>;
-4928 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_zsd'</span>;
+4915 guiparams.contours(idx).string   = <span class="string">'Backscatter'</span>;
+4916 guiparams.contours(idx).variable = <span class="string">'backscatter'</span>;
+4917 idx = idx + 1;
+4918 guiparams.contours(idx).string   = <span class="string">'Flow Direction (deg.)'</span>;
+4919 guiparams.contours(idx).variable = <span class="string">'flowangle'</span>;
+4920 
+4921 guiparams.contour = guiparams.contours(guiparams.idx_contour).variable;
+4922 
+4923 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4924 <span class="comment">% Secondary Flow Vector Variables %</span>
+4925 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4926 idx = 1;
+4927 guiparams.secondary_flows(idx).string   = <span class="string">'Transverse'</span>;
+4928 guiparams.secondary_flows(idx).variable = <span class="string">'transverse'</span>;
 4929 idx = idx + 1;
-4930 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz)'</span>;
-4931 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz'</span>;
+4930 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (zsd)'</span>;
+4931 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_zsd'</span>;
 4932 idx = idx + 1;
-4933 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz, Cross-Stream Comp)'</span>;
-4934 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz_y'</span>;
+4933 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz)'</span>;
+4934 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz'</span>;
 4935 idx = idx + 1;
-4936 guiparams.secondary_flows(idx).string   = <span class="string">'Primary (Roz, Cross-Stream Comp)'</span>;
-4937 guiparams.secondary_flows(idx).variable  = <span class="string">'primary_roz_y'</span>;
-4938 
-4939 guiparams.secondary_flow_vector_variable = <span class="keyword">...</span>
-4940     guiparams.secondary_flows(guiparams.idx_secondary_flow_vector_variable).variable;
+4936 guiparams.secondary_flows(idx).string   = <span class="string">'Secondary (Roz, Cross-Stream Comp)'</span>;
+4937 guiparams.secondary_flows(idx).variable = <span class="string">'secondary_roz_y'</span>;
+4938 idx = idx + 1;
+4939 guiparams.secondary_flows(idx).string   = <span class="string">'Primary (Roz, Cross-Stream Comp)'</span>;
+4940 guiparams.secondary_flows(idx).variable  = <span class="string">'primary_roz_y'</span>;
 4941 
-4942 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4943 <span class="comment">% INTERNAL SETTINGS &amp; DEFAULTS %</span>
-4944 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4945 <span class="comment">% Menu bar options</span>
-4946 guiparams.presentation                       = true;
-4947 guiparams.print                              = false;
-4948 guiparams.set_cross_section_endpoints        = false;
-4949 guiparams.unit_discharge_correction          = false;
-4950 
-4951 <span class="keyword">if</span> ispref(<span class="string">'VMT'</span>,<span class="string">'units'</span>)
-4952     <span class="keyword">switch</span> guiprefs.units
-4953         <span class="keyword">case</span> <span class="string">'metric'</span>
-4954             guiparams.english_units          = false;
-4955         <span class="keyword">case</span> <span class="string">'english'</span>
-4956             guiparams.english_units          = true;
-4957     <span class="keyword">end</span>
-4958 <span class="keyword">else</span>
-4959     guiparams.english_units                  = false;
-4960 <span class="keyword">end</span>
-4961 guiparams.vertical_offset                    = 0;
-4962 
-4963 <span class="keyword">if</span> ispref(<span class="string">'VMT'</span>,<span class="string">'renderer'</span>)
-4964     guiparams.renderer                       = guiprefs.renderer;
-4965 <span class="keyword">else</span>
-4966     guiparams.renderer                       = <span class="string">'OpenGL'</span>;
-4967 <span class="keyword">end</span>
-4968 <span class="comment">% guiparams.plot_ship_tracks                   = false;</span>
-4969 <span class="comment">% guiparams.plot_planview                      = false;</span>
-4970 <span class="comment">% guiparams.plot_cross_section                 = false;</span>
-4971 
-4972 <span class="comment">% File location defaults</span>
-4973 guiparams.ascii_path                        = pwd;
-4974 guiparams.ascii_file                        = <span class="string">''</span>;
-4975 guiparams.mat_path                          = pwd;
-4976 guiparams.mat_file                          = <span class="string">''</span>;
-4977 guiparams.tecplot_path                      = pwd;
-4978 guiparams.tecplot_file                      = <span class="string">''</span>;
-4979 guiparams.kmz_path                          = pwd;
-4980 guiparams.kmz_file                          = <span class="string">''</span>;
-4981 guiparams.multibeambathymetry_path          = pwd;
-4982 guiparams.multibeambathymetry_file          = <span class="string">''</span>;
-4983 guiparams.log_path                          = pwd;
-4984 guiparams.log_file                          = <span class="string">''</span>;
-4985 <span class="comment">% Avoids problems of not finding the MCR root when running as a standalone</span>
-4986 <span class="comment">% application</span>
-4987 <span class="keyword">if</span> isdeployed 
-4988     guiparams.has_mapping_toolbox           = true;
-4989 <span class="keyword">else</span>
-4990     guiparams.has_mapping_toolbox               = <span class="keyword">...</span>
-4991         ~isempty(dir(fullfile(matlabroot,<span class="string">'toolbox'</span>,<span class="string">'map'</span>)));
-4992 <span class="keyword">end</span>
-4993 
-4994 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4995 <span class="comment">% IN MEMORY DATA STORAGE %</span>
-4996 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-4997 guiparams.z                      = [];
-4998 guiparams.A                      = [];
-4999 guiparams.V                      = [];
-5000 guiparams.Map                    = [];
-5001 guiparams.savefile               = [];
-5002 guiparams.iric_anv_planview_data = [];
-5003 <span class="comment">% guiparams.zmin = []; % Don't need to store these?</span>
-5004 <span class="comment">% guiparams.zmax = [];</span>
-5005 <span class="comment">% guiprefs = getappdata(handles.figure1,'guiprefs');</span>
-5006 guiparams.data_folder = <span class="string">''</span>;
-5007 guiparams.data_files  = {<span class="string">''</span>};
-5008 guiparams.gui_state   = <span class="string">'init'</span>;
-5009 
-5010 <span class="comment">% [EOF] createGUIparams</span>
-5011 
-5012 <a name="_sub109" href="#_subfunctions" class="code">function ShiptracksZoom_Callback(obj,evd,handles)</a>
-5013 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+4942 guiparams.secondary_flow_vector_variable = <span class="keyword">...</span>
+4943     guiparams.secondary_flows(guiparams.idx_secondary_flow_vector_variable).variable;
+4944 
+4945 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4946 <span class="comment">% INTERNAL SETTINGS &amp; DEFAULTS %</span>
+4947 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4948 <span class="comment">% Menu bar options</span>
+4949 guiparams.presentation                       = true;
+4950 guiparams.print                              = false;
+4951 guiparams.set_cross_section_endpoints        = false;
+4952 guiparams.unit_discharge_correction          = false;
+4953 
+4954 <span class="keyword">if</span> ispref(<span class="string">'VMT'</span>,<span class="string">'units'</span>)
+4955     <span class="keyword">switch</span> guiprefs.units
+4956         <span class="keyword">case</span> <span class="string">'metric'</span>
+4957             guiparams.english_units          = false;
+4958         <span class="keyword">case</span> <span class="string">'english'</span>
+4959             guiparams.english_units          = true;
+4960     <span class="keyword">end</span>
+4961 <span class="keyword">else</span>
+4962     guiparams.english_units                  = false;
+4963 <span class="keyword">end</span>
+4964 guiparams.vertical_offset                    = 0;
+4965 
+4966 <span class="keyword">if</span> ispref(<span class="string">'VMT'</span>,<span class="string">'renderer'</span>)
+4967     guiparams.renderer                       = guiprefs.renderer;
+4968 <span class="keyword">else</span>
+4969     guiparams.renderer                       = <span class="string">'OpenGL'</span>;
+4970 <span class="keyword">end</span>
+4971 <span class="comment">% guiparams.plot_ship_tracks                   = false;</span>
+4972 <span class="comment">% guiparams.plot_planview                      = false;</span>
+4973 <span class="comment">% guiparams.plot_cross_section                 = false;</span>
+4974 
+4975 <span class="comment">% File location defaults</span>
+4976 guiparams.ascii_path                        = pwd;
+4977 guiparams.ascii_file                        = <span class="string">''</span>;
+4978 guiparams.mat_path                          = pwd;
+4979 guiparams.mat_file                          = <span class="string">''</span>;
+4980 guiparams.tecplot_path                      = pwd;
+4981 guiparams.tecplot_file                      = <span class="string">''</span>;
+4982 guiparams.kmz_path                          = pwd;
+4983 guiparams.kmz_file                          = <span class="string">''</span>;
+4984 guiparams.multibeambathymetry_path          = pwd;
+4985 guiparams.multibeambathymetry_file          = <span class="string">''</span>;
+4986 guiparams.log_path                          = pwd;
+4987 guiparams.log_file                          = <span class="string">''</span>;
+4988 <span class="comment">% Avoids problems of not finding the MCR root when running as a standalone</span>
+4989 <span class="comment">% application</span>
+4990 <span class="keyword">if</span> isdeployed 
+4991     guiparams.has_mapping_toolbox           = true;
+4992 <span class="keyword">else</span>
+4993     guiparams.has_mapping_toolbox               = <span class="keyword">...</span>
+4994         ~isempty(dir(fullfile(matlabroot,<span class="string">'toolbox'</span>,<span class="string">'map'</span>)));
+4995 <span class="keyword">end</span>
+4996 
+4997 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+4998 <span class="comment">% IN MEMORY DATA STORAGE %</span>
+4999 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+5000 guiparams.z                      = [];
+5001 guiparams.A                      = [];
+5002 guiparams.V                      = [];
+5003 guiparams.Map                    = [];
+5004 guiparams.savefile               = [];
+5005 guiparams.iric_anv_planview_data = [];
+5006 <span class="comment">% guiparams.zmin = []; % Don't need to store these?</span>
+5007 <span class="comment">% guiparams.zmax = [];</span>
+5008 <span class="comment">% guiprefs = getappdata(handles.figure1,'guiprefs');</span>
+5009 guiparams.data_folder = <span class="string">''</span>;
+5010 guiparams.data_files  = {<span class="string">''</span>};
+5011 guiparams.gui_state   = <span class="string">'init'</span>;
+5012 
+5013 <span class="comment">% [EOF] createGUIparams</span>
 5014 
-5015 <a name="_sub110" href="#_subfunctions" class="code">function ShiptracksPan_Callback(obj,evd,handles)</a>
-5016 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
+5015 <a name="_sub109" href="#_subfunctions" class="code">function ShiptracksZoom_Callback(obj,evd,handles)</a>
+5016 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
 5017 
-5018 <span class="comment">% [EOF] VMT</span>
-5019 
+5018 <a name="_sub110" href="#_subfunctions" class="code">function ShiptracksPan_Callback(obj,evd,handles)</a>
+5019 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span>
 5020 
-5021 
+5021 <span class="comment">% [EOF] VMT</span>
 5022 
 5023 
-5024 <span class="comment">% --- Hidden keyboard commands</span>
-5025 <a name="_sub111" href="#_subfunctions" class="code">function figure1_WindowKeyPressFcn(hObject, eventdata, handles)</a>
-5026 <span class="comment">% Used to pass specific hidden keyboard commands to VMT. Currently, the</span>
-5027 <span class="comment">% only use for this function is to open Beta support for SonTek M9 data.</span>
-5028 <span class="comment">%</span>
-5029 <span class="comment">% hObject    handle to figure1 (see GCBO)</span>
-5030 <span class="comment">% eventdata  structure with the following fields (see FIGURE)</span>
-5031 <span class="comment">%    Key: name of the key that was pressed, in lower case</span>
-5032 <span class="comment">%    Character: character interpretation of the key(s) that was pressed</span>
-5033 <span class="comment">%    Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed</span>
-5034 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
-5035 
-5036 in1 = eventdata.Modifier; 
-5037 in2 = eventdata.Key;
+5024 
+5025 
+5026 
+5027 <span class="comment">% --- Hidden keyboard commands</span>
+5028 <a name="_sub111" href="#_subfunctions" class="code">function figure1_WindowKeyPressFcn(hObject, eventdata, handles)</a>
+5029 <span class="comment">% Used to pass specific hidden keyboard commands to VMT. Currently, the</span>
+5030 <span class="comment">% only use for this function is to open Beta support for SonTek M9 data.</span>
+5031 <span class="comment">%</span>
+5032 <span class="comment">% hObject    handle to figure1 (see GCBO)</span>
+5033 <span class="comment">% eventdata  structure with the following fields (see FIGURE)</span>
+5034 <span class="comment">%    Key: name of the key that was pressed, in lower case</span>
+5035 <span class="comment">%    Character: character interpretation of the key(s) that was pressed</span>
+5036 <span class="comment">%    Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed</span>
+5037 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
 5038 
-5039 <span class="keyword">if</span> ~isempty(in1) <span class="comment">% User pressed at least one modifier key</span>
-5040     input = [in1{:} in2];
-5041 <span class="keyword">else</span>
-5042     input = in2;
-5043 <span class="keyword">end</span>
-5044 
-5045 <span class="keyword">switch</span> input
-5046     <span class="comment">% Hidden SonTek M9 support</span>
-5047     <span class="keyword">case</span> <span class="string">'shiftcontrols'</span>
-5048         msgtxt = {<span class="keyword">...</span>
-5049             <span class="string">'VMT offers limited support for SonTek M9/S5 data.'</span>;<span class="keyword">...</span>
-5050             <span class="string">'SonTek RiverSurveyorLive required data format:'</span>;<span class="keyword">...</span>
-5051             <span class="string">'      -ENU coordinates'</span>;<span class="keyword">...</span>
-5052             <span class="string">'      -Desired GPS reference (VTG/GGA)'</span>
-5053             <span class="string">''</span>;<span class="keyword">...</span>
-5054             <span class="string">'Abosolutely NO GUARANTEE is made or implied that this'</span>;<span class="keyword">...</span>
-5055             <span class="string">'functionality will work for all cases. Results are'</span>;<span class="keyword">...</span>
-5056             <span class="string">'PROVISIONAL at best.'</span>};
-5057         msgbox(msgtxt, <span class="string">'Hidden Functionality: Process SonTek M9'</span>, <span class="string">'warn'</span>,<span class="string">'replace'</span>)
-5058         
-5059         <span class="comment">% Get the Application data:</span>
-5060         <span class="comment">% -------------------------</span>
-5061         guiparams = getappdata(handles.figure1,<span class="string">'guiparams'</span>);
-5062         guiprefs = getappdata(handles.figure1,<span class="string">'guiprefs'</span>);
-5063         
-5064         <span class="comment">% Ask the user to select files:</span>
-5065         <span class="comment">% -----------------------------</span>
-5066         <span class="comment">% current_file = fullfile(guiparams.data_folder,guiparams.data_files{1});</span>
-5067         <span class="comment">% current_file = fullfile(guiprefs.mat_path,guiprefs.mat_file);</span>
-5068         <span class="keyword">if</span> iscell(guiprefs.mat_file)
-5069             uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file{1});
-5070         <span class="keyword">else</span>
-5071             uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file);
-5072         <span class="keyword">end</span>
-5073         [filename,pathname] = <span class="keyword">...</span>
-5074             uigetfile({<span class="string">'*.mat'</span>,<span class="string">'MAT-files (*.mat)'</span>}, <span class="keyword">...</span>
-5075             <span class="string">'Select SonTek RiverSurveyor Live v3.60 MAT File'</span>, <span class="keyword">...</span>
-5076             uifile, <span class="string">'MultiSelect'</span>,<span class="string">'on'</span>);
-5077         
-5078         <span class="keyword">if</span> ischar(pathname) <span class="comment">% The user did not hit &quot;Cancel&quot;</span>
-5079             guiparams.data_folder = pathname;
-5080             <span class="keyword">if</span> ischar(filename)
-5081                 filename = {filename};
-5082             <span class="keyword">end</span>
-5083             guiparams.data_files = filename;
-5084             guiparams.mat_file = <span class="string">''</span>;
-5085             
-5086             setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
-5087             
+5039 in1 = eventdata.Modifier; 
+5040 in2 = eventdata.Key;
+5041 
+5042 <span class="keyword">if</span> ~isempty(in1) <span class="comment">% User pressed at least one modifier key</span>
+5043     input = [in1{:} in2];
+5044 <span class="keyword">else</span>
+5045     input = in2;
+5046 <span class="keyword">end</span>
+5047 
+5048 <span class="keyword">switch</span> input
+5049     <span class="comment">% Hidden SonTek M9 support</span>
+5050     <span class="keyword">case</span> <span class="string">'shiftcontrols'</span>
+5051         msgtxt = {<span class="keyword">...</span>
+5052             <span class="string">'VMT offers limited support for SonTek M9/S5 data.'</span>;<span class="keyword">...</span>
+5053             <span class="string">'SonTek RiverSurveyorLive required data format:'</span>;<span class="keyword">...</span>
+5054             <span class="string">'      -ENU coordinates'</span>;<span class="keyword">...</span>
+5055             <span class="string">'      -Desired GPS reference (VTG/GGA)'</span>
+5056             <span class="string">''</span>;<span class="keyword">...</span>
+5057             <span class="string">'Abosolutely NO GUARANTEE is made or implied that this'</span>;<span class="keyword">...</span>
+5058             <span class="string">'functionality will work for all cases. Results are'</span>;<span class="keyword">...</span>
+5059             <span class="string">'PROVISIONAL at best.'</span>};
+5060         msgbox(msgtxt, <span class="string">'Hidden Functionality: Process SonTek M9'</span>, <span class="string">'warn'</span>,<span class="string">'replace'</span>)
+5061         
+5062         <span class="comment">% Get the Application data:</span>
+5063         <span class="comment">% -------------------------</span>
+5064         guiparams = getappdata(handles.figure1,<span class="string">'guiparams'</span>);
+5065         guiprefs = getappdata(handles.figure1,<span class="string">'guiprefs'</span>);
+5066         
+5067         <span class="comment">% Ask the user to select files:</span>
+5068         <span class="comment">% -----------------------------</span>
+5069         <span class="comment">% current_file = fullfile(guiparams.data_folder,guiparams.data_files{1});</span>
+5070         <span class="comment">% current_file = fullfile(guiprefs.mat_path,guiprefs.mat_file);</span>
+5071         <span class="keyword">if</span> iscell(guiprefs.mat_file)
+5072             uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file{1});
+5073         <span class="keyword">else</span>
+5074             uifile = fullfile(guiprefs.mat_path,guiprefs.mat_file);
+5075         <span class="keyword">end</span>
+5076         [filename,pathname] = <span class="keyword">...</span>
+5077             uigetfile({<span class="string">'*.mat'</span>,<span class="string">'MAT-files (*.mat)'</span>}, <span class="keyword">...</span>
+5078             <span class="string">'Select SonTek RiverSurveyor Live v3.60 MAT File'</span>, <span class="keyword">...</span>
+5079             uifile, <span class="string">'MultiSelect'</span>,<span class="string">'on'</span>);
+5080         
+5081         <span class="keyword">if</span> ischar(pathname) <span class="comment">% The user did not hit &quot;Cancel&quot;</span>
+5082             guiparams.data_folder = pathname;
+5083             <span class="keyword">if</span> ischar(filename)
+5084                 filename = {filename};
+5085             <span class="keyword">end</span>
+5086             guiparams.data_files = filename;
+5087             guiparams.mat_file = <span class="string">''</span>;
 5088             
-5089             
-5090             <span class="comment">% Update the preferences:</span>
-5091             <span class="comment">% -----------------------</span>
-5092             guiprefs = getappdata(handles.figure1,<span class="string">'guiprefs'</span>);
-5093             guiprefs.ascii_path = pathname;
-5094             guiprefs.ascii_file = filename;
-5095             setappdata(handles.figure1,<span class="string">'guiprefs'</span>,guiprefs)
-5096             <a href="#_sub93" class="code" title="subfunction store_prefs(hfigure,pref)">store_prefs</a>(handles.figure1,<span class="string">'ascii'</span>)
-5097             
-5098             <span class="comment">% Push messages to Log Window:</span>
-5099             <span class="comment">% ----------------------------</span>
-5100             log_text = {<span class="keyword">...</span>
-5101                 <span class="string">''</span>;<span class="keyword">...</span>
-5102                 [<span class="string">'%--- '</span> datestr(now) <span class="string">' ---%'</span>];<span class="keyword">...</span>
-5103                 <span class="string">'Current Project Directory:'</span>;<span class="keyword">...</span>
-5104                 guiparams.data_folder;
-5105                 <span class="string">'Loading the following files into memory:'</span>;<span class="keyword">...</span>
-5106                 char(filename)};
-5107             statusLogging(handles.LogWindow, log_text)
-5108             
-5109             <span class="comment">% Read the file(s)</span>
-5110             <span class="comment">% ----------------</span>
-5111             <span class="comment">%A = parseSonTekVMT(fullfile(pathname,filename));</span>
-5112             
-5113             [~,~,savefile,A,z] = <span class="keyword">...</span>
-5114                 <a href="VMT_ReadFiles_SonTek.html" class="code" title="function [zPathName,zFileName,savefile,A,z] = VMT_ReadFiles_SonTek(zPathName,zFileName)">VMT_ReadFiles_SonTek</a>(guiparams.data_folder,guiparams.data_files);
-5115             guiparams.savefile = savefile;
-5116             guiparams.A        = A;
-5117             guiparams.z        = z;
-5118             setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
-5119             
-5120             
-5121             <span class="comment">% Update the GUI:</span>
-5122             <span class="comment">% ---------------</span>
-5123             <a href="#_sub95" class="code" title="subfunction set_enable(handles,enable_state)">set_enable</a>(handles,<span class="string">'fileloaded'</span>)
-5124         <span class="keyword">end</span>  
-5125     <span class="keyword">case</span> <span class="string">'f1'</span> <span class="comment">% Call the VMT UsersGuide</span>
-5126         <a href="#_sub46" class="code" title="subfunction menuUsersGuide_Callback(hObject, eventdata, handles)">menuUsersGuide_Callback</a>(hObject, eventdata, handles)
-5127         
-5128     <span class="keyword">case</span> <span class="string">'controlalte'</span>
-5129         VMT_BuildCustomFlatFile;
-5130     <span class="keyword">otherwise</span>
-5131         <span class="comment">%disp(input)</span>
-5132 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Thu 10-Apr-2014 16:02:29 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+5089             setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
+5090             
+5091             
+5092             
+5093             <span class="comment">% Update the preferences:</span>
+5094             <span class="comment">% -----------------------</span>
+5095             guiprefs = getappdata(handles.figure1,<span class="string">'guiprefs'</span>);
+5096             guiprefs.ascii_path = pathname;
+5097             guiprefs.ascii_file = filename;
+5098             setappdata(handles.figure1,<span class="string">'guiprefs'</span>,guiprefs)
+5099             <a href="#_sub93" class="code" title="subfunction store_prefs(hfigure,pref)">store_prefs</a>(handles.figure1,<span class="string">'ascii'</span>)
+5100             
+5101             <span class="comment">% Push messages to Log Window:</span>
+5102             <span class="comment">% ----------------------------</span>
+5103             log_text = {<span class="keyword">...</span>
+5104                 <span class="string">''</span>;<span class="keyword">...</span>
+5105                 [<span class="string">'%--- '</span> datestr(now) <span class="string">' ---%'</span>];<span class="keyword">...</span>
+5106                 <span class="string">'Current Project Directory:'</span>;<span class="keyword">...</span>
+5107                 guiparams.data_folder;
+5108                 <span class="string">'Loading the following files into memory:'</span>;<span class="keyword">...</span>
+5109                 char(filename)};
+5110             statusLogging(handles.LogWindow, log_text)
+5111             
+5112             <span class="comment">% Read the file(s)</span>
+5113             <span class="comment">% ----------------</span>
+5114             <span class="comment">%A = parseSonTekVMT(fullfile(pathname,filename));</span>
+5115             
+5116             [~,~,savefile,A,z] = <span class="keyword">...</span>
+5117                 <a href="VMT_ReadFiles_SonTek.html" class="code" title="function [zPathName,zFileName,savefile,A,z] = VMT_ReadFiles_SonTek(zPathName,zFileName)">VMT_ReadFiles_SonTek</a>(guiparams.data_folder,guiparams.data_files);
+5118             guiparams.savefile = savefile;
+5119             guiparams.A        = A;
+5120             guiparams.z        = z;
+5121             setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
+5122             
+5123             
+5124             <span class="comment">% Update the GUI:</span>
+5125             <span class="comment">% ---------------</span>
+5126             <a href="#_sub95" class="code" title="subfunction set_enable(handles,enable_state)">set_enable</a>(handles,<span class="string">'fileloaded'</span>)
+5127         <span class="keyword">end</span>  
+5128     <span class="keyword">case</span> <span class="string">'f1'</span> <span class="comment">% Call the VMT UsersGuide</span>
+5129         <a href="#_sub46" class="code" title="subfunction menuUsersGuide_Callback(hObject, eventdata, handles)">menuUsersGuide_Callback</a>(hObject, eventdata, handles)
+5130         
+5131     <span class="keyword">case</span> <span class="string">'controlalte'</span>
+5132         VMT_BuildCustomFlatFile;
+5133     <span class="keyword">otherwise</span>
+5134         <span class="comment">%disp(input)</span>
+5135 <span class="keyword">end</span>
+5136 
+5137 
+5138 
+5139 
+5140 
+5141</pre></div>
+<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

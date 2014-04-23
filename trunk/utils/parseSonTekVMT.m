@@ -6,12 +6,22 @@ function A = parseSonTekVMT(fullName)
 % Dave Mueller, USGS
 % Frank L. Engel, USGS
 %
+% Last modified: 04/23/2014
+% 
 % SEE ALSO:
 
 % filesep     = '\';
 % fullName    = [pathname filesep filename{1}];
 
 load (fullName)
+
+if strcmpi(Setup.velocityReference, 'System')
+    errordlg({'VMT does not support Beam Coordinates.';
+        '';
+        'Re-export mat-file in RiverSurveyorLive';
+        'using BT, GGA, or VTG velocity reference'},'Velocity Reference Error');
+    error('parseSonTekVMT: VMT does not support Beam Coordinates.')
+end
 
 % For RSL versions <1.5, the variable units were included in the field
 % names. Check to see if units are in field names, if so ensure SI units
@@ -104,6 +114,8 @@ Wat.vNorth          =...
     squeeze(WaterTrack.Velocity(:,2,idx)).*cf.*100; % in cm/s
 Wat.vVert           =...
     squeeze(WaterTrack.Velocity(:,3,idx)).*cf.*100; % in cm/s
+Wat.vError          =... 
+    squeeze(WaterTrack.Vel_StdDev(:,4,idx)).*cf.*100; % in cm/s
 Wat.vMag            =...
     sqrt(Wat.vEast.^2 + Wat.vNorth.^2 + Wat.vVert.^2).*100; % in cm/s
 Wat.vDir            =...

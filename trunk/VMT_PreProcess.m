@@ -21,12 +21,13 @@ A = VMT_FilterBS(z,A);
 %% Variable Assignments
 
 for zi = 1:z
-    A(zi).Clean.bs=A(zi).Clean.bsf;
-    A(zi).Clean.vMag=A(zi).Wat.vMag;
-    A(zi).Clean.vEast=A(zi).Wat.vEast;
-    A(zi).Clean.vNorth=A(zi).Wat.vNorth;
-    A(zi).Clean.vVert=A(zi).Wat.vVert;
-    A(zi).Clean.vDir=A(zi).Wat.vDir;
+    A(zi).Clean.bs     = A(zi).Clean.bsf;
+    A(zi).Clean.vMag   = A(zi).Wat.vMag;
+    A(zi).Clean.vEast  = A(zi).Wat.vEast;
+    A(zi).Clean.vNorth = A(zi).Wat.vNorth;
+    A(zi).Clean.vVert  = A(zi).Wat.vVert;
+    A(zi).Clean.vDir   = A(zi).Wat.vDir;
+    A(zi).Clean.vError = A(zi).Wat.vError;
 end
 
 % if 0 %A(1).Sup.binSize_cm == 25  %Set to zero due to ringing issues (from St. Clair) --omit for now
