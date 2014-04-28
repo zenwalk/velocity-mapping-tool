@@ -77,7 +77,15 @@ else
             break
         end
     end
-    [I,J] = ind2sub(size(V.vp(i,:)),find(~isnan(V.vp(i,:))==1));
+    
+    % If a bad ensemble exists, the above while loop might not find a
+    % result. If that happens, just use row 1 anyway
+    try
+        [I,J] = ind2sub(size(V.vp(i,:)),find(~isnan(V.vp(i,:))==1));
+    catch err
+        [I,J] = ind2sub(size(V.vp(1,:)),find(~isnan(V.vp(1,:))==1));
+    end
+    
     et = J(1):qspchorz:J(end);
     [r c]=size(V.vp);
     bi = 1:qspcvert:r;
