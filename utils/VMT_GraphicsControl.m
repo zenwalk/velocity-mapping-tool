@@ -866,7 +866,13 @@ else
             break
         end
     end
-    [~,J] = ind2sub(size(guiparams.gp_vmt.V.vp(i,:)),find(~isnan(guiparams.gp_vmt.V.vp(i,:))==1));
+    % If a bad ensemble exists, the above while loop might not find a
+    % result. If that happens, just use row 1 anyway
+    try
+        [I,J] = ind2sub(size(guiparams.gp_vmt.V.vp(i,:)),find(~isnan(guiparams.gp_vmt.V.vp(i,:))==1));
+    catch err
+        [I,J] = ind2sub(size(guiparams.gp_vmt.V.vp(1,:)),find(~isnan(guiparams.gp_vmt.V.vp(1,:))==1));
+    end
     et = J(1):guiparams.gp_vmt.horizontal_vector_spacing:J(end);
     [r, ~]=size(guiparams.gp_vmt.V.vp);
     bi = 1:guiparams.gp_vmt.vertical_vector_spacing:r;
