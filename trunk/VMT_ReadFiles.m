@@ -105,9 +105,20 @@ end
 %     delete(h_waitbar)
 % end
 
-% Save data returned by tfile to .mat with same prefix as ASCII 
+% Save data returned by tfile to .mat with same prefix as ASCII
+% Handle varied WRII file structures (line numbers are always the LAST
+% token, even if user adds a measurement number, date, or whatever)
 [file_root_name,the_rest] = strtok(zFileName,'_');
-file_numbers = strtok(the_rest,'_');
+% file_numbers = strtok(the_rest,'_');
+for i = 1:length(zFileName)
+    d1(i) = textscan(zFileName{i},'%s','delimiter','_','multipleDelimsAsOne',1);
+    idx(i) = find(strcmpi(d1{:,i},'ASC.TXT'))-1;
+end
+for i = 1:length(d1)
+    d2  = d1{i}{idx(i)};
+    file_numbers(i) = {d2(end-2:end)};
+end
+clear d1 d2
 
 save_dir = fullfile(zPathName,'VMTProcFiles');
 [~,mess,~] = mkdir(save_dir); 

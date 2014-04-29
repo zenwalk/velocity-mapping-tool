@@ -155,97 +155,101 @@ This function is called by:
 0102 <span class="comment">% end</span>
 0103 
 0104 <span class="comment">% Save data returned by tfile to .mat with same prefix as ASCII</span>
-0105 [file_root_name,the_rest] = strtok(zFileName,<span class="string">'_'</span>);
-0106 file_numbers = strtok(the_rest,<span class="string">'_'</span>);
-0107 
-0108 save_dir = fullfile(zPathName,<span class="string">'VMTProcFiles'</span>);
-0109 [~,mess,~] = mkdir(save_dir); 
-0110 <span class="comment">% disp(mess)</span>
+0105 [file_root_name,the_rest] = strtok(zFileName,<span class="string">'.'</span>);
+0106 <span class="keyword">for</span> i = 1:length(zFileName)
+0107     d1 = file_root_name{i};
+0108     date{i} = d1(1:8);
+0109     time{i} = d1(9:end);
+0110 <span class="keyword">end</span>
 0111 
-0112 savefile = [file_root_name{1} <span class="string">'_'</span> file_numbers{1} <span class="string">'_'</span> file_numbers{end} <span class="string">'.mat'</span>];
-0113 savefile = fullfile(save_dir,savefile);
-0114 
-0115 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
-0116 <span class="comment">% Embedded Functions %</span>
-0117 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+0112 save_dir = fullfile(zPathName,<span class="string">'VMTProcFiles'</span>);
+0113 [~,mess,~] = mkdir(save_dir); 
+0114 <span class="comment">% disp(mess)</span>
+0115 
+0116 savefile = [date{1} <span class="string">'_s'</span> time{1} <span class="string">'_e'</span> time{end} <span class="string">'.mat'</span>];
+0117 savefile = fullfile(save_dir,savefile);
 0118 
-0119 <a name="_sub1" href="#_subfunctions" class="code">function A = initStructure(z)</a>
-0120    Sup = struct(<span class="string">'absorption_dbpm'</span>,{}, <span class="keyword">...</span>
-0121                 <span class="string">'bins'</span>,{}, <span class="keyword">...</span>
-0122                 <span class="string">'binSize_cm'</span>,{}, <span class="keyword">...</span>
-0123                 <span class="string">'nBins'</span>,{}, <span class="keyword">...</span>
-0124                 <span class="string">'blank_cm'</span>,{}, <span class="keyword">...</span>
-0125                 <span class="string">'draft_cm'</span>,{}, <span class="keyword">...</span>
-0126                 <span class="string">'ensNo'</span>,{}, <span class="keyword">...</span>
-0127                 <span class="string">'nPings'</span>,{}, <span class="keyword">...</span>
-0128                 <span class="string">'noEnsInSeg'</span>,{}, <span class="keyword">...</span>
-0129                 <span class="string">'noe'</span>,{}, <span class="keyword">...</span>
-0130                 <span class="string">'note1'</span>,{}, <span class="keyword">...</span>
-0131                 <span class="string">'note2'</span>,{}, <span class="keyword">...</span>
-0132                 <span class="string">'intScaleFact_dbpcnt'</span>,{}, <span class="keyword">...</span>
-0133                 <span class="string">'intUnits'</span>,{}, <span class="keyword">...</span>
-0134                 <span class="string">'vRef'</span>,{}, <span class="keyword">...</span>
-0135                 <span class="string">'wm'</span>,{}, <span class="keyword">...</span>
-0136                 <span class="string">'units'</span>,{}, <span class="keyword">...</span>
-0137                 <span class="string">'year'</span>,{}, <span class="keyword">...</span>
-0138                 <span class="string">'month'</span>,{}, <span class="keyword">...</span>
-0139                 <span class="string">'day'</span>,{}, <span class="keyword">...</span>
-0140                 <span class="string">'hour'</span>,{}, <span class="keyword">...</span>
-0141                 <span class="string">'minute'</span>,{}, <span class="keyword">...</span>
-0142                 <span class="string">'second'</span>,{}, <span class="keyword">...</span>
-0143                 <span class="string">'sec100'</span>,{}, <span class="keyword">...</span>
-0144                 <span class="string">'timeElapsed_sec'</span>,{}, <span class="keyword">...</span>
-0145                 <span class="string">'timeDelta_sec100'</span>,{});
-0146    Wat = struct(<span class="string">'binDepth'</span>,{}, <span class="keyword">...</span>
-0147                 <span class="string">'backscatter'</span>,{}, <span class="keyword">...</span>
-0148                 <span class="string">'vDir'</span>,{}, <span class="keyword">...</span>
-0149                 <span class="string">'vMag'</span>,{}, <span class="keyword">...</span>
-0150                 <span class="string">'vEast'</span>,{}, <span class="keyword">...</span>
-0151                 <span class="string">'vError'</span>,{}, <span class="keyword">...</span>
-0152                 <span class="string">'vNorth'</span>,{}, <span class="keyword">...</span>
-0153                 <span class="string">'vVert'</span>,{}, <span class="keyword">...</span>
-0154                 <span class="string">'percentGood'</span>,{});
-0155    Nav = struct(<span class="string">'bvEast'</span>,{}, <span class="keyword">...</span>
-0156                 <span class="string">'bvError'</span>,{}, <span class="keyword">...</span>
-0157                 <span class="string">'bvNorth'</span>,{}, <span class="keyword">...</span>
-0158                 <span class="string">'bvVert'</span>,{}, <span class="keyword">...</span>
-0159                 <span class="string">'depth'</span>,{}, <span class="keyword">...</span>
-0160                 <span class="string">'dsDepth'</span>,{}, <span class="keyword">...</span>
-0161                 <span class="string">'dmg'</span>,{}, <span class="keyword">...</span>
-0162                 <span class="string">'length'</span>,{}, <span class="keyword">...</span>
-0163                 <span class="string">'totDistEast'</span>,{}, <span class="keyword">...</span>
-0164                 <span class="string">'totDistNorth'</span>,{}, <span class="keyword">...</span>
-0165                 <span class="string">'altitude'</span>,{}, <span class="keyword">...</span>
-0166                 <span class="string">'altitudeChng'</span>,{}, <span class="keyword">...</span>
-0167                 <span class="string">'gpsTotDist'</span>,{}, <span class="keyword">...</span>
-0168                 <span class="string">'gpsVariable'</span>,{}, <span class="keyword">...</span>
-0169                 <span class="string">'gpsVeast'</span>,{}, <span class="keyword">...</span>
-0170                 <span class="string">'gpsVnorth'</span>,{}, <span class="keyword">...</span>
-0171                 <span class="string">'lat_deg'</span>,{}, <span class="keyword">...</span>
-0172                 <span class="string">'long_deg'</span>,{}, <span class="keyword">...</span>
-0173                 <span class="string">'nSats'</span>,{}, <span class="keyword">...</span>
-0174                 <span class="string">'hdop'</span>,{});
-0175    Sensor = struct(<span class="string">'pitch_deg'</span>,{}, <span class="keyword">...</span>
-0176                    <span class="string">'roll_deg'</span>,{}, <span class="keyword">...</span>
-0177                    <span class="string">'heading_deg'</span>,{}, <span class="keyword">...</span>
-0178                    <span class="string">'temp_degC'</span>,{});
-0179      Q = struct(<span class="string">'endDepth'</span>,{}, <span class="keyword">...</span>
-0180                 <span class="string">'endDist'</span>,{}, <span class="keyword">...</span>
-0181                 <span class="string">'bot'</span>,{}, <span class="keyword">...</span>
-0182                 <span class="string">'end'</span>,{}, <span class="keyword">...</span>
-0183                 <span class="string">'meas'</span>,{}, <span class="keyword">...</span>
-0184                 <span class="string">'start'</span>,{}, <span class="keyword">...</span>
-0185                 <span class="string">'top'</span>,{}, <span class="keyword">...</span>
-0186                 <span class="string">'unit'</span>,{}, <span class="keyword">...</span>
-0187                 <span class="string">'startDepth'</span>,{}, <span class="keyword">...</span>
-0188                 <span class="string">'startDist'</span>,{});
-0189             A(z).Sup = Sup;
-0190             A(z).Wat = Wat;
-0191             A(z).Nav = Nav;
-0192             A(z).Sensor = Sensor;
-0193             A(z).Q = Q;
-0194             
-0195             <span class="comment">% [EOF] initStructure</span></pre></div>
-<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0119 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+0120 <span class="comment">% Embedded Functions %</span>
+0121 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+0122 
+0123 <a name="_sub1" href="#_subfunctions" class="code">function A = initStructure(z)</a>
+0124    Sup = struct(<span class="string">'absorption_dbpm'</span>,{}, <span class="keyword">...</span>
+0125                 <span class="string">'bins'</span>,{}, <span class="keyword">...</span>
+0126                 <span class="string">'binSize_cm'</span>,{}, <span class="keyword">...</span>
+0127                 <span class="string">'nBins'</span>,{}, <span class="keyword">...</span>
+0128                 <span class="string">'blank_cm'</span>,{}, <span class="keyword">...</span>
+0129                 <span class="string">'draft_cm'</span>,{}, <span class="keyword">...</span>
+0130                 <span class="string">'ensNo'</span>,{}, <span class="keyword">...</span>
+0131                 <span class="string">'nPings'</span>,{}, <span class="keyword">...</span>
+0132                 <span class="string">'noEnsInSeg'</span>,{}, <span class="keyword">...</span>
+0133                 <span class="string">'noe'</span>,{}, <span class="keyword">...</span>
+0134                 <span class="string">'note1'</span>,{}, <span class="keyword">...</span>
+0135                 <span class="string">'note2'</span>,{}, <span class="keyword">...</span>
+0136                 <span class="string">'intScaleFact_dbpcnt'</span>,{}, <span class="keyword">...</span>
+0137                 <span class="string">'intUnits'</span>,{}, <span class="keyword">...</span>
+0138                 <span class="string">'vRef'</span>,{}, <span class="keyword">...</span>
+0139                 <span class="string">'wm'</span>,{}, <span class="keyword">...</span>
+0140                 <span class="string">'units'</span>,{}, <span class="keyword">...</span>
+0141                 <span class="string">'year'</span>,{}, <span class="keyword">...</span>
+0142                 <span class="string">'month'</span>,{}, <span class="keyword">...</span>
+0143                 <span class="string">'day'</span>,{}, <span class="keyword">...</span>
+0144                 <span class="string">'hour'</span>,{}, <span class="keyword">...</span>
+0145                 <span class="string">'minute'</span>,{}, <span class="keyword">...</span>
+0146                 <span class="string">'second'</span>,{}, <span class="keyword">...</span>
+0147                 <span class="string">'sec100'</span>,{}, <span class="keyword">...</span>
+0148                 <span class="string">'timeElapsed_sec'</span>,{}, <span class="keyword">...</span>
+0149                 <span class="string">'timeDelta_sec100'</span>,{});
+0150    Wat = struct(<span class="string">'binDepth'</span>,{}, <span class="keyword">...</span>
+0151                 <span class="string">'backscatter'</span>,{}, <span class="keyword">...</span>
+0152                 <span class="string">'vDir'</span>,{}, <span class="keyword">...</span>
+0153                 <span class="string">'vMag'</span>,{}, <span class="keyword">...</span>
+0154                 <span class="string">'vEast'</span>,{}, <span class="keyword">...</span>
+0155                 <span class="string">'vError'</span>,{}, <span class="keyword">...</span>
+0156                 <span class="string">'vNorth'</span>,{}, <span class="keyword">...</span>
+0157                 <span class="string">'vVert'</span>,{}, <span class="keyword">...</span>
+0158                 <span class="string">'percentGood'</span>,{});
+0159    Nav = struct(<span class="string">'bvEast'</span>,{}, <span class="keyword">...</span>
+0160                 <span class="string">'bvError'</span>,{}, <span class="keyword">...</span>
+0161                 <span class="string">'bvNorth'</span>,{}, <span class="keyword">...</span>
+0162                 <span class="string">'bvVert'</span>,{}, <span class="keyword">...</span>
+0163                 <span class="string">'depth'</span>,{}, <span class="keyword">...</span>
+0164                 <span class="string">'dsDepth'</span>,{}, <span class="keyword">...</span>
+0165                 <span class="string">'dmg'</span>,{}, <span class="keyword">...</span>
+0166                 <span class="string">'length'</span>,{}, <span class="keyword">...</span>
+0167                 <span class="string">'totDistEast'</span>,{}, <span class="keyword">...</span>
+0168                 <span class="string">'totDistNorth'</span>,{}, <span class="keyword">...</span>
+0169                 <span class="string">'altitude'</span>,{}, <span class="keyword">...</span>
+0170                 <span class="string">'altitudeChng'</span>,{}, <span class="keyword">...</span>
+0171                 <span class="string">'gpsTotDist'</span>,{}, <span class="keyword">...</span>
+0172                 <span class="string">'gpsVariable'</span>,{}, <span class="keyword">...</span>
+0173                 <span class="string">'gpsVeast'</span>,{}, <span class="keyword">...</span>
+0174                 <span class="string">'gpsVnorth'</span>,{}, <span class="keyword">...</span>
+0175                 <span class="string">'lat_deg'</span>,{}, <span class="keyword">...</span>
+0176                 <span class="string">'long_deg'</span>,{}, <span class="keyword">...</span>
+0177                 <span class="string">'nSats'</span>,{}, <span class="keyword">...</span>
+0178                 <span class="string">'hdop'</span>,{});
+0179    Sensor = struct(<span class="string">'pitch_deg'</span>,{}, <span class="keyword">...</span>
+0180                    <span class="string">'roll_deg'</span>,{}, <span class="keyword">...</span>
+0181                    <span class="string">'heading_deg'</span>,{}, <span class="keyword">...</span>
+0182                    <span class="string">'temp_degC'</span>,{});
+0183      Q = struct(<span class="string">'endDepth'</span>,{}, <span class="keyword">...</span>
+0184                 <span class="string">'endDist'</span>,{}, <span class="keyword">...</span>
+0185                 <span class="string">'bot'</span>,{}, <span class="keyword">...</span>
+0186                 <span class="string">'end'</span>,{}, <span class="keyword">...</span>
+0187                 <span class="string">'meas'</span>,{}, <span class="keyword">...</span>
+0188                 <span class="string">'start'</span>,{}, <span class="keyword">...</span>
+0189                 <span class="string">'top'</span>,{}, <span class="keyword">...</span>
+0190                 <span class="string">'unit'</span>,{}, <span class="keyword">...</span>
+0191                 <span class="string">'startDepth'</span>,{}, <span class="keyword">...</span>
+0192                 <span class="string">'startDist'</span>,{});
+0193             A(z).Sup = Sup;
+0194             A(z).Wat = Wat;
+0195             A(z).Nav = Nav;
+0196             A(z).Sensor = Sensor;
+0197             A(z).Q = Q;
+0198             
+0199             <span class="comment">% [EOF] initStructure</span></pre></div>
+<hr><address>Generated on Tue 29-Apr-2014 14:30:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

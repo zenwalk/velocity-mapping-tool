@@ -22,7 +22,7 @@ function varargout = VMT_BatchMode(varargin)
 
 % Edit the above text to modify the response to help VMT_BatchMode
 
-% Last Modified by GUIDE v2.5 10-Apr-2014 15:56:56
+% Last Modified by GUIDE v2.5 29-Apr-2014 13:07:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -405,10 +405,13 @@ guiparams = getappdata(handles.figure1,'guiparams');
 
 % Get whatever is in the UItable
 data = get(handles.TransectGroupings,'data');
+numXS = length(data);
 
 % Write to an Excel File
 [filename,pathname] = uiputfile('*.xlsx','Save Batch File As',guiparams.data_folder);
-data = [{guiparams.data_folder, []}; data];
+data = [...
+    {guiparams.data_folder, guiparams.horizontal_grid_node_spacing, guiparams.vertical_grid_node_spacing, guiparams.water_surface_elevation};...
+    data, cell(numXS,2)];
 xlswrite(fullfile(pathname,filename),data);
 
 
@@ -424,12 +427,19 @@ guiparams = getappdata(handles.figure1,'guiparams');
 
 [filename,pathname] = uigetfile('*.xlsx','Load Batch File',guiparams.data_folder);
 [ndata, text, alldata] = xlsread(fullfile(pathname,filename));
-data = alldata(2:end,:);
+data = alldata(2:end,1:2);
 set(handles.TransectGroupings,'data',data);
 
-guiparams.data_folder = alldata{1};
-guiparams.data_files  = data(:,2);
-guiparams.table_data  = get(handles.TransectGroupings,'data');
+guiparams.data_folder                  = alldata{1};
+guiparams.data_files                   = data(:,2);
+guiparams.horizontal_grid_node_spacing = ndata(1,2);
+guiparams.vertical_grid_node_spacing   = ndata(1,3);
+guiparams.water_surface_elevation      = ndata(1,4);
+guiparams.table_data                   = get(handles.TransectGroupings,'data');
+
+set(handles.HorizontalGridNodeSpacing, 'String', guiparams.horizontal_grid_node_spacing)
+set(handles.VerticalGridNodeSpacing,   'String', guiparams.vertical_grid_node_spacing)
+set(handles.WaterSurfaceElevation,     'String', guiparams.water_surface_elevation)
 
 setappdata(handles.figure1,'guiparams',guiparams)
 

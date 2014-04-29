@@ -86,7 +86,7 @@ This function is called by:
 0022 
 0023 <span class="comment">% Edit the above text to modify the response to help VMT_BatchMode</span>
 0024 
-0025 <span class="comment">% Last Modified by GUIDE v2.5 10-Apr-2014 15:56:56</span>
+0025 <span class="comment">% Last Modified by GUIDE v2.5 29-Apr-2014 13:07:42</span>
 0026 
 0027 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
 0028 gui_Singleton = 1;
@@ -469,39 +469,49 @@ This function is called by:
 0405 
 0406 <span class="comment">% Get whatever is in the UItable</span>
 0407 data = get(handles.TransectGroupings,<span class="string">'data'</span>);
-0408 
-0409 <span class="comment">% Write to an Excel File</span>
-0410 [filename,pathname] = uiputfile(<span class="string">'*.xlsx'</span>,<span class="string">'Save Batch File As'</span>,guiparams.data_folder);
-0411 data = [{guiparams.data_folder, []}; data];
-0412 xlswrite(fullfile(pathname,filename),data);
-0413 
-0414 
-0415 
-0416 <span class="comment">% --- Executes on button press in LoadBatchJob.</span>
-0417 <a name="_sub13" href="#_subfunctions" class="code">function LoadBatchJob_Callback(hObject, eventdata, handles)</a>
-0418 <span class="comment">% hObject    handle to LoadBatchJob (see GCBO)</span>
-0419 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
-0420 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
-0421 
-0422 <span class="comment">% Get application data</span>
-0423 guiparams = getappdata(handles.figure1,<span class="string">'guiparams'</span>);
+0408 numXS = length(data);
+0409 
+0410 <span class="comment">% Write to an Excel File</span>
+0411 [filename,pathname] = uiputfile(<span class="string">'*.xlsx'</span>,<span class="string">'Save Batch File As'</span>,guiparams.data_folder);
+0412 data = [<span class="keyword">...</span>
+0413     {guiparams.data_folder, guiparams.horizontal_grid_node_spacing, guiparams.vertical_grid_node_spacing, guiparams.water_surface_elevation};<span class="keyword">...</span>
+0414     data, cell(numXS,2)];
+0415 xlswrite(fullfile(pathname,filename),data);
+0416 
+0417 
+0418 
+0419 <span class="comment">% --- Executes on button press in LoadBatchJob.</span>
+0420 <a name="_sub13" href="#_subfunctions" class="code">function LoadBatchJob_Callback(hObject, eventdata, handles)</a>
+0421 <span class="comment">% hObject    handle to LoadBatchJob (see GCBO)</span>
+0422 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0423 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
 0424 
-0425 [filename,pathname] = uigetfile(<span class="string">'*.xlsx'</span>,<span class="string">'Load Batch File'</span>,guiparams.data_folder);
-0426 [ndata, text, alldata] = xlsread(fullfile(pathname,filename));
-0427 data = alldata(2:<span class="keyword">end</span>,:);
-0428 set(handles.TransectGroupings,<span class="string">'data'</span>,data);
-0429 
-0430 guiparams.data_folder = alldata{1};
-0431 guiparams.data_files  = data(:,2);
-0432 guiparams.table_data  = get(handles.TransectGroupings,<span class="string">'data'</span>);
-0433 
-0434 setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
-0435 
-0436 <a name="_sub14" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
-0437 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
-0438 
-0439 <a name="_sub15" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
-0440 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
-<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0425 <span class="comment">% Get application data</span>
+0426 guiparams = getappdata(handles.figure1,<span class="string">'guiparams'</span>);
+0427 
+0428 [filename,pathname] = uigetfile(<span class="string">'*.xlsx'</span>,<span class="string">'Load Batch File'</span>,guiparams.data_folder);
+0429 [ndata, text, alldata] = xlsread(fullfile(pathname,filename));
+0430 data = alldata(2:<span class="keyword">end</span>,1:2);
+0431 set(handles.TransectGroupings,<span class="string">'data'</span>,data);
+0432 
+0433 guiparams.data_folder                  = alldata{1};
+0434 guiparams.data_files                   = data(:,2);
+0435 guiparams.horizontal_grid_node_spacing = ndata(1,2);
+0436 guiparams.vertical_grid_node_spacing   = ndata(1,3);
+0437 guiparams.water_surface_elevation      = ndata(1,4);
+0438 guiparams.table_data                   = get(handles.TransectGroupings,<span class="string">'data'</span>);
+0439 
+0440 set(handles.HorizontalGridNodeSpacing, <span class="string">'String'</span>, guiparams.horizontal_grid_node_spacing)
+0441 set(handles.VerticalGridNodeSpacing,   <span class="string">'String'</span>, guiparams.vertical_grid_node_spacing)
+0442 set(handles.WaterSurfaceElevation,     <span class="string">'String'</span>, guiparams.water_surface_elevation)
+0443 
+0444 setappdata(handles.figure1,<span class="string">'guiparams'</span>,guiparams)
+0445 
+0446 <a name="_sub14" href="#_subfunctions" class="code">function mypostcallback_zoom(obj,evd)</a>
+0447 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when zooming)</span>
+0448 
+0449 <a name="_sub15" href="#_subfunctions" class="code">function mypostcallback_pan(obj,evd)</a>
+0450 ticks_format(<span class="string">'%6.0f'</span>,<span class="string">'%8.0f'</span>); <span class="comment">%formats the ticks for UTM (when panning)</span></pre></div>
+<hr><address>Generated on Tue 29-Apr-2014 14:30:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

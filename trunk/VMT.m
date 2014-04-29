@@ -1361,9 +1361,12 @@ function menuHelp_Callback(hObject, eventdata, handles)
 
 % --------------------------------------------------------------------
 function menuUsersGuide_Callback(hObject, eventdata, handles)
-try
-    web('http://code.google.com/p/velocity-mapping-tool/wiki/UserGuide?tm=6')
+guiparams = getappdata(handles.figure1,'guiparams');
+try % to open the User Guide PDF
+    open(['VMT User Guide ' guiparams.vmt_version '.pdf']);
+    
 catch err %#ok<NASGU>
+    
 	if isdeployed
         errLogFileName = fullfile(pwd,...
             ['errorLog' datestr(now,'yyyymmddHHMMSS') '.txt']);
