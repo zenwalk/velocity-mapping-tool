@@ -22,7 +22,7 @@ function varargout = ASCII2GIS_GUI(varargin)
 
 % Edit the above text to modify the response to help ASCII2GIS_GUI
 
-% Last Modified by GUIDE v2.5 20-Mar-2012 09:55:20
+% Last Modified by GUIDE v2.5 29-Apr-2014 13:04:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,11 +60,13 @@ guidata(hObject, handles);
 
 % Ensure path to utils & docs is available
 % ----------------------------------------
-filesep = '\'; % windows
-utilspath = [pwd filesep 'utils'];
-docspath  = [pwd filesep 'doc'];
-toolspath = [pwd filesep 'tools'];
-addpath(utilspath,docspath,toolspath)
+if ~isdeployed
+    filesep = '\'; % windows
+    utilspath = [pwd filesep 'utils'];
+    docspath  = [pwd filesep 'doc'];
+    toolspath = [pwd filesep 'tools'];
+    addpath(utilspath,docspath,toolspath)
+end
 
 % UIWAIT makes ASCII2GIS_GUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);

@@ -26,8 +26,10 @@ try
         end
     else
         %disp('WSE is a constant value')
+        warning off
         wsedata.elev = wsedata;
         wsefiletype = 0;
+        warning on
     end
     
     %% Step through each transect in the given set

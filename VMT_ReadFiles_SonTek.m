@@ -102,14 +102,18 @@ end
 % end
 
 % Save data returned by tfile to .mat with same prefix as ASCII 
-[file_root_name,the_rest] = strtok(zFileName,'_');
-file_numbers = strtok(the_rest,'_');
+[file_root_name,the_rest] = strtok(zFileName,'.');
+for i = 1:length(zFileName)
+    d1 = file_root_name{i};
+    date{i} = d1(1:8);
+    time{i} = d1(9:end);
+end
 
 save_dir = fullfile(zPathName,'VMTProcFiles');
 [~,mess,~] = mkdir(save_dir); 
 % disp(mess)
 
-savefile = [file_root_name{1} '_' file_numbers{1} '_' file_numbers{end} '.mat'];
+savefile = [date{1} '_s' time{1} '_e' time{end} '.mat'];
 savefile = fullfile(save_dir,savefile);
 
 %%%%%%%%%%%%%%%%%%%%%%

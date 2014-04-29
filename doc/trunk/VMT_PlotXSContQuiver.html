@@ -129,260 +129,268 @@ This function is called by:
 0077             <span class="keyword">break</span>
 0078         <span class="keyword">end</span>
 0079     <span class="keyword">end</span>
-0080     [I,J] = ind2sub(size(V.vp(i,:)),find(~isnan(V.vp(i,:))==1));
-0081     et = J(1):qspchorz:J(end);
-0082     [r c]=size(V.vp);
-0083     bi = 1:qspcvert:r;
-0084 <span class="keyword">end</span>
-0085 
-0086 <span class="comment">%zmin = floor(nanmin(nanmin(V.vp)));</span>
-0087 <span class="comment">%zmax = ceil(nanmax(nanmax(V.vp)));</span>
-0088 <span class="comment">%zinc = (zmax - zmin) / clvls;</span>
-0089 <span class="comment">%zlevs = zmin:zinc:zmax;</span>
-0090 
-0091 <span class="comment">%Set the vertical velocity component</span>
-0092 <span class="keyword">if</span> vvelcomp  <span class="comment">%include vertical velocity compoent in vector?</span>
-0093     vertcomp = V.wSmooth;
-0094 <span class="keyword">else</span>
-0095     vertcomp = zeros(size(V.wSmooth));
-0096 <span class="keyword">end</span>
-0097 
-0098 figure(fig_contour_handle); hold all
-0099 <span class="comment">%quiver(V.mcsDist(bi,et),V.mcsDepth(bi,et),-sf.*V.vsSmooth(bi,et),-sf.*V.wSmooth(bi,et),0,'k')</span>
-0100 <span class="keyword">switch</span> secvecvar
-0101     <span class="keyword">case</span>{<span class="string">'transverse'</span>}  <span class="comment">%uses secondary velocity computed in the plane of the mean cross section (i.e. transverse)</span>
-0102         vr = sqrt(abs((-sf.*V.vSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
-0103     <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>} <span class="comment">%Uses secondary velocity computed with a zero secondary discharge</span>
-0104         vr = sqrt(abs((-sf.*V.vsSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));  
-0105     <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
-0106         vr = sqrt(abs((-sf.*V.Roz.usSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
-0107     <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
-0108         vr = sqrt(abs((-sf.*V.Roz.usySmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
-0109     <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
-0110         vr = sqrt(abs((-sf.*V.Roz.upySmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
-0111 <span class="keyword">end</span>
-0112         
-0113 <span class="comment">%vr=sqrt(abs(-sf.*V.vsSmooth(bi,et).^2+-sf./exag.*V.wSmooth(bi,et).^2));</span>
-0114 [rw cl] = size(V.mcsDist(bi,et));
-0115 toquiv(:,1) = reshape(V.mcsDist(bi,et),rw*cl,1);
-0116 toquiv(:,2) = reshape(V.mcsDepth(bi,et),rw*cl,1);
-0117 <span class="keyword">switch</span> secvecvar
-0118     <span class="keyword">case</span>{<span class="string">'transverse'</span>}
-0119         toquiv(:,3) = reshape(-sf.*V.vSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
-0120         refvel = ceil(max(max(abs(V.vSmooth(bi,et)))));
-0121         <span class="comment">%meansecvec = mean(mean(V.vSmooth(bi,et)));</span>
-0122     <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
-0123         toquiv(:,3) = reshape(-sf.*V.vsSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
-0124         refvel = ceil(max(max(abs(V.vsSmooth(bi,et)))));
-0125         <span class="comment">%meansecvec = mean(mean(V.vsSmooth(bi,et)));</span>
-0126     <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
-0127         toquiv(:,3) = reshape(-sf.*V.Roz.usSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
-0128         refvel = ceil(max(max(abs(V.Roz.usSmooth(bi,et)))));
-0129         <span class="comment">%meansecvec = mean(mean(V.Roz.us(bi,et)));</span>
-0130     <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
-0131         toquiv(:,3) = reshape(-sf.*V.Roz.usySmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
-0132         refvel = ceil(max(max(abs(V.Roz.usySmooth(bi,et)))));
-0133         <span class="comment">%meansecvec = mean(mean(V.Roz.usy(bi,et)));</span>
-0134     <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
-0135         toquiv(:,3) = reshape(-sf.*V.Roz.upySmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
-0136         refvel = ceil(max(max(abs(V.Roz.upySmooth(bi,et)))));
-0137         <span class="comment">%meansecvec = mean(mean(V.Roz.upy(bi,et))));</span>
-0138 <span class="keyword">end</span>
-0139 toquiv(:,4) = reshape(-sf./exag.*vertcomp(bi,et),rw*cl,1);  <span class="comment">%Add negative sign to account for flipped vertical axes</span>
-0140 toquiv(:,5) = reshape(vr,rw*cl,1);
-0141 
-0142 <span class="comment">%Ref arrow</span>
-0143 <span class="keyword">if</span> isempty(distance)
-0144     x1 = 0.06*max(max(V.mcsDist));
-0145     x2 = 0.95*max(max(V.mcsBed));
-0146     <span class="keyword">if</span> AS == 0
-0147         refvel = MANrefvel; <span class="comment">%manual scaling</span>
-0148     <span class="keyword">end</span>
-0149 <span class="keyword">else</span>
-0150     x1 = distance;
-0151     x2 = depth;
-0152     refvel = reference_velocity;
-0153 <span class="keyword">end</span>
-0154 x3=sf.*refvel; <span class="comment">%Set to rounded max secondary velocity (absolute value added 3/29/12 PRJ) (autoscaling)</span>
-0155 x4=0;
-0156 x5=x3;
-0157 toquiv(end+1,1) = x1;
-0158 toquiv(<span class="keyword">end</span>,2) = x2;
-0159 toquiv(<span class="keyword">end</span>,3) = x3;
-0160 toquiv(<span class="keyword">end</span>,4) = x4;
-0161 toquiv(<span class="keyword">end</span>,5) = x5;
-0162 <span class="comment">%quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),sf); hold on</span>
-0163 
-0164 <span class="keyword">if</span> plot_english
-0165     unitlabel = <span class="string">'(ft/s)'</span>;
-0166 <span class="keyword">else</span>
-0167     unitlabel = <span class="string">'(cm/s)'</span>;
-0168 <span class="keyword">end</span>
-0169 
-0170 <span class="keyword">if</span> plot_english <span class="comment">%english units</span>
-0171     convfact = 0.03281; <span class="comment">%cm/s to ft/s</span>
-0172     <span class="keyword">switch</span> var
-0173         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
-0174             convfact = 1.0; 
-0175         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
-0176             convfact = 1.0;
-0177     <span class="keyword">end</span>
-0178     
-0179     hh = quiverc2wcmap(toquiv(:,1)*3.281,toquiv(:,2)*3.281,toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,0,toquiv(:,5)*0.03281,exag);
-0180     <span class="comment">%plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,'w', 'LineWidth',2); hold on</span>
-0181     ylim([0 max(V.mcsBed*3.281)])
-0182     caxis([zmin*convfact zmax*convfact]) <span class="comment">%Reset the color bar to match that in the original contour plot</span>
-0183     <span class="keyword">switch</span> var        
-0184         <span class="keyword">case</span>{<span class="string">'streamwise'</span>}
-0185             title_handle = title({[<span class="string">'Streamwise Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0186         <span class="keyword">case</span>{<span class="string">'transverse'</span>}
-0187             title_handle = title({[<span class="string">'Transverse Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0188         <span class="keyword">case</span>{<span class="string">'vertical'</span>}
-0189             title_handle = title({[<span class="string">'Vertical Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0190         <span class="keyword">case</span>{<span class="string">'mag'</span>}
-0191             title_handle = title({[<span class="string">'Velocity Magnitude (Streamwise and Transverse) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0192         <span class="keyword">case</span>{<span class="string">'east'</span>}
-0193             title_handle = title({[<span class="string">'East Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0194         <span class="keyword">case</span>{<span class="string">'error'</span>}
-0195             title_handle = title({[<span class="string">'Error Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0196         <span class="keyword">case</span>{<span class="string">'north'</span>}
-0197             title_handle = title({[<span class="string">'North Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0198         <span class="keyword">case</span>{<span class="string">'primary_zsd'</span>}
-0199             title_handle = title({[<span class="string">'Primary Velocity (Zero Secondary Discharge Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0200         <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
-0201             title_handle = title({[<span class="string">'Secondary Velocity (Zero Secondary Discharge Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0202         <span class="keyword">case</span>{<span class="string">'primary_roz'</span>}
-0203             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0204         <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
-0205             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0206         <span class="keyword">case</span>{<span class="string">'primary_roz_x'</span>}
-0207             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition; Downstream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>); 
-0208         <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
-0209             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition; Cross-Stream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
-0210         <span class="keyword">case</span>{<span class="string">'secondary_roz_x'</span>}
-0211             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition; Downstream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
-0212         <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
-0213             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition; Cross-Stream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0214         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
-0215             title({<span class="string">'Backscatter Intensity (dB)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0216         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
-0217             title_handle = title({<span class="string">'Flow Direction (deg)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0218     <span class="keyword">end</span>
-0219 
-0220     ylabel_handle = ylabel(<span class="string">'Depth (ft)'</span>);
-0221     xlabel_handle = xlabel(<span class="string">'Distance (ft)'</span>);
-0222     ref_vector_text_handle = text(x1*3.281, x2*3.281+.5,[num2str(refvel*0.03281,3) <span class="string">' ft/s'</span>],<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'w'</span>);
-0223 <span class="keyword">else</span> <span class="comment">%metric units</span>
-0224     hh = quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,toquiv(:,5),exag);
-0225     <span class="comment">%plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on</span>
-0226     ylim([0 max(V.mcsBed)])
-0227     <span class="comment">%Reset the color bar to match that in the original contour plot</span>
-0228     <span class="keyword">if</span> strcmp(var,<span class="string">'vorticity_vw'</span>)||strcmp(var,<span class="string">'vorticity_zsd'</span>)||strcmp(var,<span class="string">'vorticity_roz'</span>)
-0229         rng = zmax - zmin;
-0230         caxis([-rng/2 rng/2])
-0231     <span class="keyword">else</span>
-0232         caxis([zmin zmax])
-0233     <span class="keyword">end</span>
-0234     <span class="keyword">switch</span> var        
-0235         <span class="keyword">case</span>{<span class="string">'streamwise'</span>}
-0236             title_handle = title({<span class="string">'Streamwise Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0237         <span class="keyword">case</span>{<span class="string">'transverse'</span>}
-0238             title_handle = title({<span class="string">'Transverse Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0239         <span class="keyword">case</span>{<span class="string">'vertical'</span>}
-0240             title_handle = title({<span class="string">'Vertical Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0241         <span class="keyword">case</span>{<span class="string">'mag'</span>}
-0242             title_handle = title({<span class="string">'Velocity Magnitude (Streamwise and Transverse) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0243         <span class="keyword">case</span>{<span class="string">'east'</span>}
-0244             title_handle = title({<span class="string">'East Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0245         <span class="keyword">case</span>{<span class="string">'error'</span>}
-0246             title_handle = title({<span class="string">'Error Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0247         <span class="keyword">case</span>{<span class="string">'north'</span>}
-0248             title_handle = title({<span class="string">'North Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0249         <span class="keyword">case</span>{<span class="string">'primary_zsd'</span>}
-0250             title_handle = title({<span class="string">'Primary Velocity (Zero Secondary Discharge Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0251         <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
-0252             title_handle = title({<span class="string">'Secondary Velocity (Zero Secondary Discharge Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0253         <span class="keyword">case</span>{<span class="string">'primary_roz'</span>}
-0254             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0255         <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
-0256             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);   
-0257         <span class="keyword">case</span>{<span class="string">'primary_roz_x'</span>}
-0258             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition; Downstream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0259         <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
-0260             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition; Cross-Stream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0261         <span class="keyword">case</span>{<span class="string">'secondary_roz_x'</span>}
-0262             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition; Downstream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
-0263         <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
-0264             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition; Cross-Stream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0265         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
-0266             title_handle = title({<span class="string">'Backscatter Intensity (dB)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0267         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
-0268             title_handle = title({<span class="string">'Flow Direction (deg)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0269         <span class="keyword">case</span>{<span class="string">'vorticity_vw'</span>}
-0270             title_handle = title({<span class="string">'Streamwise Vorticity'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0271         <span class="keyword">case</span>{<span class="string">'vorticity_zsd'</span>}
-0272             title_handle = title({<span class="string">'Streamwise Vorticity (Zero Secondary Discharge Definition)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0273         <span class="keyword">case</span>{<span class="string">'vorticity_roz'</span>}
-0274             title_handle = title({<span class="string">'Streamwise Vorticity (Rozovskii Definition)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
-0275     <span class="keyword">end</span>
-0276 
-0277     ylabel_handle = ylabel(<span class="string">'Depth (m)'</span>);
-0278     xlabel_handle = xlabel(<span class="string">'Distance (m)'</span>);
-0279     ref_vector_text_handle = text(x1, x2+.16,[num2str(refvel) <span class="string">' cm/s'</span>],<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'w'</span>);
-0280 <span class="keyword">end</span>
-0281 
-0282 <span class="comment">% Tag the elements in the figure</span>
-0283 secondary_vector_handles = findobj(gcf,<span class="string">'Type'</span>,<span class="string">'line'</span>,<span class="string">'-not'</span>,<span class="string">'tag'</span>,<span class="string">'PlotBedElevation'</span>);
-0284 set(secondary_vector_handles,       <span class="string">'Tag'</span>,<span class="string">'SecondaryVectors'</span>)
-0285 set(ref_vector_text_handle,         <span class="string">'Tag'</span>,<span class="string">'ReferenceVectorText'</span>)
-0286 set(title_handle,                   <span class="string">'Tag'</span>,<span class="string">'ContourPlotTitle'</span>)
-0287 set(ylabel_handle,                  <span class="string">'Tag'</span>,<span class="string">'yLabelText'</span>)
-0288 set(xlabel_handle,                  <span class="string">'Tag'</span>,<span class="string">'xLabelText'</span>)
+0080     
+0081     <span class="comment">% If a bad ensemble exists, the above while loop might not find a</span>
+0082     <span class="comment">% result. If that happens, just use row 1 anyway</span>
+0083     <span class="keyword">try</span>
+0084         [I,J] = ind2sub(size(V.vp(i,:)),find(~isnan(V.vp(i,:))==1));
+0085     <span class="keyword">catch</span> err
+0086         [I,J] = ind2sub(size(V.vp(1,:)),find(~isnan(V.vp(1,:))==1));
+0087     <span class="keyword">end</span>
+0088     
+0089     et = J(1):qspchorz:J(end);
+0090     [r c]=size(V.vp);
+0091     bi = 1:qspcvert:r;
+0092 <span class="keyword">end</span>
+0093 
+0094 <span class="comment">%zmin = floor(nanmin(nanmin(V.vp)));</span>
+0095 <span class="comment">%zmax = ceil(nanmax(nanmax(V.vp)));</span>
+0096 <span class="comment">%zinc = (zmax - zmin) / clvls;</span>
+0097 <span class="comment">%zlevs = zmin:zinc:zmax;</span>
+0098 
+0099 <span class="comment">%Set the vertical velocity component</span>
+0100 <span class="keyword">if</span> vvelcomp  <span class="comment">%include vertical velocity compoent in vector?</span>
+0101     vertcomp = V.wSmooth;
+0102 <span class="keyword">else</span>
+0103     vertcomp = zeros(size(V.wSmooth));
+0104 <span class="keyword">end</span>
+0105 
+0106 figure(fig_contour_handle); hold all
+0107 <span class="comment">%quiver(V.mcsDist(bi,et),V.mcsDepth(bi,et),-sf.*V.vsSmooth(bi,et),-sf.*V.wSmooth(bi,et),0,'k')</span>
+0108 <span class="keyword">switch</span> secvecvar
+0109     <span class="keyword">case</span>{<span class="string">'transverse'</span>}  <span class="comment">%uses secondary velocity computed in the plane of the mean cross section (i.e. transverse)</span>
+0110         vr = sqrt(abs((-sf.*V.vSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
+0111     <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>} <span class="comment">%Uses secondary velocity computed with a zero secondary discharge</span>
+0112         vr = sqrt(abs((-sf.*V.vsSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));  
+0113     <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
+0114         vr = sqrt(abs((-sf.*V.Roz.usSmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
+0115     <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
+0116         vr = sqrt(abs((-sf.*V.Roz.usySmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
+0117     <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
+0118         vr = sqrt(abs((-sf.*V.Roz.upySmooth(bi,et)).^2 + (-sf./exag.*vertcomp(bi,et)).^2));
+0119 <span class="keyword">end</span>
+0120         
+0121 <span class="comment">%vr=sqrt(abs(-sf.*V.vsSmooth(bi,et).^2+-sf./exag.*V.wSmooth(bi,et).^2));</span>
+0122 [rw cl] = size(V.mcsDist(bi,et));
+0123 toquiv(:,1) = reshape(V.mcsDist(bi,et),rw*cl,1);
+0124 toquiv(:,2) = reshape(V.mcsDepth(bi,et),rw*cl,1);
+0125 <span class="keyword">switch</span> secvecvar
+0126     <span class="keyword">case</span>{<span class="string">'transverse'</span>}
+0127         toquiv(:,3) = reshape(-sf.*V.vSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
+0128         refvel = ceil(max(max(abs(V.vSmooth(bi,et)))));
+0129         <span class="comment">%meansecvec = mean(mean(V.vSmooth(bi,et)));</span>
+0130     <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
+0131         toquiv(:,3) = reshape(-sf.*V.vsSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
+0132         refvel = ceil(max(max(abs(V.vsSmooth(bi,et)))));
+0133         <span class="comment">%meansecvec = mean(mean(V.vsSmooth(bi,et)));</span>
+0134     <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
+0135         toquiv(:,3) = reshape(-sf.*V.Roz.usSmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
+0136         refvel = ceil(max(max(abs(V.Roz.usSmooth(bi,et)))));
+0137         <span class="comment">%meansecvec = mean(mean(V.Roz.us(bi,et)));</span>
+0138     <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
+0139         toquiv(:,3) = reshape(-sf.*V.Roz.usySmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
+0140         refvel = ceil(max(max(abs(V.Roz.usySmooth(bi,et)))));
+0141         <span class="comment">%meansecvec = mean(mean(V.Roz.usy(bi,et)));</span>
+0142     <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
+0143         toquiv(:,3) = reshape(-sf.*V.Roz.upySmooth(bi,et),rw*cl,1); <span class="comment">%Add negative sign to reverse the +x direction (we take RHR with +x into the page lookign DS, matlab uses opposite convention)</span>
+0144         refvel = ceil(max(max(abs(V.Roz.upySmooth(bi,et)))));
+0145         <span class="comment">%meansecvec = mean(mean(V.Roz.upy(bi,et))));</span>
+0146 <span class="keyword">end</span>
+0147 toquiv(:,4) = reshape(-sf./exag.*vertcomp(bi,et),rw*cl,1);  <span class="comment">%Add negative sign to account for flipped vertical axes</span>
+0148 toquiv(:,5) = reshape(vr,rw*cl,1);
+0149 
+0150 <span class="comment">%Ref arrow</span>
+0151 <span class="keyword">if</span> isempty(distance)
+0152     x1 = 0.06*max(max(V.mcsDist));
+0153     x2 = 0.95*max(max(V.mcsBed));
+0154     <span class="keyword">if</span> AS == 0
+0155         refvel = MANrefvel; <span class="comment">%manual scaling</span>
+0156     <span class="keyword">end</span>
+0157 <span class="keyword">else</span>
+0158     x1 = distance;
+0159     x2 = depth;
+0160     refvel = reference_velocity;
+0161 <span class="keyword">end</span>
+0162 x3=sf.*refvel; <span class="comment">%Set to rounded max secondary velocity (absolute value added 3/29/12 PRJ) (autoscaling)</span>
+0163 x4=0;
+0164 x5=x3;
+0165 toquiv(end+1,1) = x1;
+0166 toquiv(<span class="keyword">end</span>,2) = x2;
+0167 toquiv(<span class="keyword">end</span>,3) = x3;
+0168 toquiv(<span class="keyword">end</span>,4) = x4;
+0169 toquiv(<span class="keyword">end</span>,5) = x5;
+0170 <span class="comment">%quiverc(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),sf); hold on</span>
+0171 
+0172 <span class="keyword">if</span> plot_english
+0173     unitlabel = <span class="string">'(ft/s)'</span>;
+0174 <span class="keyword">else</span>
+0175     unitlabel = <span class="string">'(cm/s)'</span>;
+0176 <span class="keyword">end</span>
+0177 
+0178 <span class="keyword">if</span> plot_english <span class="comment">%english units</span>
+0179     convfact = 0.03281; <span class="comment">%cm/s to ft/s</span>
+0180     <span class="keyword">switch</span> var
+0181         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
+0182             convfact = 1.0; 
+0183         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
+0184             convfact = 1.0;
+0185     <span class="keyword">end</span>
+0186     
+0187     hh = quiverc2wcmap(toquiv(:,1)*3.281,toquiv(:,2)*3.281,toquiv(:,3)*0.03281,toquiv(:,4)*0.03281,0,toquiv(:,5)*0.03281,exag);
+0188     <span class="comment">%plot(V.mcsDist(1,:)*3.281,V.mcsBed*3.281,'w', 'LineWidth',2); hold on</span>
+0189     ylim([0 max(V.mcsBed*3.281)])
+0190     caxis([zmin*convfact zmax*convfact]) <span class="comment">%Reset the color bar to match that in the original contour plot</span>
+0191     <span class="keyword">switch</span> var        
+0192         <span class="keyword">case</span>{<span class="string">'streamwise'</span>}
+0193             title_handle = title({[<span class="string">'Streamwise Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0194         <span class="keyword">case</span>{<span class="string">'transverse'</span>}
+0195             title_handle = title({[<span class="string">'Transverse Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0196         <span class="keyword">case</span>{<span class="string">'vertical'</span>}
+0197             title_handle = title({[<span class="string">'Vertical Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0198         <span class="keyword">case</span>{<span class="string">'mag'</span>}
+0199             title_handle = title({[<span class="string">'Velocity Magnitude (Streamwise and Transverse) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0200         <span class="keyword">case</span>{<span class="string">'east'</span>}
+0201             title_handle = title({[<span class="string">'East Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0202         <span class="keyword">case</span>{<span class="string">'error'</span>}
+0203             title_handle = title({[<span class="string">'Error Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0204         <span class="keyword">case</span>{<span class="string">'north'</span>}
+0205             title_handle = title({[<span class="string">'North Velocity '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0206         <span class="keyword">case</span>{<span class="string">'primary_zsd'</span>}
+0207             title_handle = title({[<span class="string">'Primary Velocity (Zero Secondary Discharge Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0208         <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
+0209             title_handle = title({[<span class="string">'Secondary Velocity (Zero Secondary Discharge Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0210         <span class="keyword">case</span>{<span class="string">'primary_roz'</span>}
+0211             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0212         <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
+0213             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0214         <span class="keyword">case</span>{<span class="string">'primary_roz_x'</span>}
+0215             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition; Downstream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>); 
+0216         <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
+0217             title_handle = title({[<span class="string">'Primary Velocity (Rozovskii Definition; Cross-Stream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
+0218         <span class="keyword">case</span>{<span class="string">'secondary_roz_x'</span>}
+0219             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition; Downstream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
+0220         <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
+0221             title_handle = title({[<span class="string">'Secondary Velocity (Rozovskii Definition; Cross-Stream Component) '</span> unitlabel];[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0222         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
+0223             title({<span class="string">'Backscatter Intensity (dB)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0224         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
+0225             title_handle = title({<span class="string">'Flow Direction (deg)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0226     <span class="keyword">end</span>
+0227 
+0228     ylabel_handle = ylabel(<span class="string">'Depth (ft)'</span>);
+0229     xlabel_handle = xlabel(<span class="string">'Distance (ft)'</span>);
+0230     ref_vector_text_handle = text(x1*3.281, x2*3.281+.5,[num2str(refvel*0.03281,3) <span class="string">' ft/s'</span>],<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0231 <span class="keyword">else</span> <span class="comment">%metric units</span>
+0232     hh = quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,toquiv(:,5),exag);
+0233     <span class="comment">%plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on</span>
+0234     ylim([0 max(V.mcsBed)])
+0235     <span class="comment">%Reset the color bar to match that in the original contour plot</span>
+0236     <span class="keyword">if</span> strcmp(var,<span class="string">'vorticity_vw'</span>)||strcmp(var,<span class="string">'vorticity_zsd'</span>)||strcmp(var,<span class="string">'vorticity_roz'</span>)
+0237         rng = zmax - zmin;
+0238         caxis([-rng/2 rng/2])
+0239     <span class="keyword">else</span>
+0240         caxis([zmin zmax])
+0241     <span class="keyword">end</span>
+0242     <span class="keyword">switch</span> var        
+0243         <span class="keyword">case</span>{<span class="string">'streamwise'</span>}
+0244             title_handle = title({<span class="string">'Streamwise Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0245         <span class="keyword">case</span>{<span class="string">'transverse'</span>}
+0246             title_handle = title({<span class="string">'Transverse Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0247         <span class="keyword">case</span>{<span class="string">'vertical'</span>}
+0248             title_handle = title({<span class="string">'Vertical Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0249         <span class="keyword">case</span>{<span class="string">'mag'</span>}
+0250             title_handle = title({<span class="string">'Velocity Magnitude (Streamwise and Transverse) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0251         <span class="keyword">case</span>{<span class="string">'east'</span>}
+0252             title_handle = title({<span class="string">'East Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0253         <span class="keyword">case</span>{<span class="string">'error'</span>}
+0254             title_handle = title({<span class="string">'Error Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0255         <span class="keyword">case</span>{<span class="string">'north'</span>}
+0256             title_handle = title({<span class="string">'North Velocity (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0257         <span class="keyword">case</span>{<span class="string">'primary_zsd'</span>}
+0258             title_handle = title({<span class="string">'Primary Velocity (Zero Secondary Discharge Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0259         <span class="keyword">case</span>{<span class="string">'secondary_zsd'</span>}
+0260             title_handle = title({<span class="string">'Secondary Velocity (Zero Secondary Discharge Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0261         <span class="keyword">case</span>{<span class="string">'primary_roz'</span>}
+0262             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0263         <span class="keyword">case</span>{<span class="string">'secondary_roz'</span>}
+0264             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);   
+0265         <span class="keyword">case</span>{<span class="string">'primary_roz_x'</span>}
+0266             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition; Downstream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0267         <span class="keyword">case</span>{<span class="string">'primary_roz_y'</span>}
+0268             title_handle = title({<span class="string">'Primary Velocity (Rozovskii Definition; Cross-Stream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0269         <span class="keyword">case</span>{<span class="string">'secondary_roz_x'</span>}
+0270             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition; Downstream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);       
+0271         <span class="keyword">case</span>{<span class="string">'secondary_roz_y'</span>}
+0272             title_handle = title({<span class="string">'Secondary Velocity (Rozovskii Definition; Cross-Stream Component) (cm/s)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0273         <span class="keyword">case</span>{<span class="string">'backscatter'</span>}
+0274             title_handle = title({<span class="string">'Backscatter Intensity (dB)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0275         <span class="keyword">case</span>{<span class="string">'flowangle'</span>}
+0276             title_handle = title({<span class="string">'Flow Direction (deg)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0277         <span class="keyword">case</span>{<span class="string">'vorticity_vw'</span>}
+0278             title_handle = title({<span class="string">'Streamwise Vorticity'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0279         <span class="keyword">case</span>{<span class="string">'vorticity_zsd'</span>}
+0280             title_handle = title({<span class="string">'Streamwise Vorticity (Zero Secondary Discharge Definition)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0281         <span class="keyword">case</span>{<span class="string">'vorticity_roz'</span>}
+0282             title_handle = title({<span class="string">'Streamwise Vorticity (Rozovskii Definition)'</span>;[<span class="string">'with secondary flow vectors ('</span> secvecvar <span class="string">')'</span>]},<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0283     <span class="keyword">end</span>
+0284 
+0285     ylabel_handle = ylabel(<span class="string">'Depth (m)'</span>);
+0286     xlabel_handle = xlabel(<span class="string">'Distance (m)'</span>);
+0287     ref_vector_text_handle = text(x1, x2+.16,[num2str(refvel) <span class="string">' cm/s'</span>],<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0288 <span class="keyword">end</span>
 0289 
-0290 <span class="comment">% Adjust the plot</span>
-0291 set(gca,<span class="keyword">...</span>
-0292     <span class="string">'DataAspectRatio'</span>,   [exag 1 1],<span class="keyword">...</span>
-0293     <span class="string">'PlotBoxAspectRatio'</span>,[exag 1 1]<span class="keyword">...</span>
-0294     <span class="keyword">...</span><span class="comment">'FontSize',          14)</span>
-0295     )
-0296 <span class="comment">% set(get(gca,'Title'),   'FontSize',14,'Color','w')</span>
-0297 <span class="comment">% set(get(gca,'xlabel'),  'FontSize',14,'Color','w')</span>
-0298 <span class="comment">% set(get(gca,'ylabel'),  'FontSize',14,'Color','w')</span>
-0299 <span class="comment">% set(gca,...</span>
-0300 <span class="comment">%     'XColor','w',...</span>
-0301 <span class="comment">%     'YColor','w',...</span>
-0302 <span class="comment">%     'ZColor','w',...</span>
-0303 <span class="comment">%     'Color',[0.3 0.3 0.3])</span>
-0304 <span class="comment">% set(gcf,...</span>
-0305 <span class="comment">%     'InvertHardCopy','off',...</span>
-0306 <span class="comment">%     'Color','k')</span>
-0307 <span class="keyword">if</span> 1  <span class="comment">%Set the vector line widths</span>
-0308     VectorLineWidth = 1.0;
-0309     set(secondary_vector_handles  ,<span class="string">'LineWidth'</span>,VectorLineWidth)
-0310 <span class="keyword">end</span>
-0311 
-0312 
-0313 
-0314 <span class="comment">% scrsz = get(0,'ScreenSize');</span>
-0315 <span class="comment">% figure('OuterPosition',[1 scrsz(4) scrsz(3) scrsz(4)])</span>
-0316 
-0317 <span class="comment">%Display the ratio of the mean secondary and primary velocity magnitudes</span>
-0318 spratio_zsd = nanmedian(nanmedian(abs(V.vs)))./nanmedian(nanmedian(abs(V.vp)));
-0319 spratio_roz = nanmedian(nanmedian(abs(V.Roz.usy)))./nanmedian(nanmedian(abs(V.Roz.up)));
-0320 <span class="comment">% disp(['Ratio of median Secondary to median Primary Velocity (zsd) = ' num2str(spratio_zsd)])</span>
-0321 <span class="comment">% disp(['Ratio of median Secondary to median Primary Velocity (roz) = ' num2str(spratio_roz)])</span>
-0322 log_text = vertcat(log_text,<span class="keyword">...</span>
-0323     {[<span class="string">'   Ratio of median Secondary to median Primary Velocity (zsd) = '</span> num2str(spratio_zsd)];<span class="keyword">...</span>
-0324     [<span class="string">'   Ratio of median Secondary to median Primary Velocity (roz) = '</span> num2str(spratio_roz)]}<span class="keyword">...</span>
-0325     );
-0326 
-0327 <span class="keyword">return</span>
-0328 
-0329 
-0330 <span class="comment">%Add labels to the reference arrow and colorbar</span>
-0331 <span class="comment">% text(50,12,['Vertical Distances Exaggerated by ',num2str(exag)],'FontSize',16)</span>
-0332 <span class="comment">% text(140,17,'10 cm/s','FontSize',16)</span>
-0333</pre></div>
-<hr><address>Generated on Wed 23-Apr-2014 12:39:15 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0290 <span class="comment">% Tag the elements in the figure</span>
+0291 secondary_vector_handles = findobj(gcf,<span class="string">'Type'</span>,<span class="string">'line'</span>,<span class="string">'-not'</span>,<span class="string">'tag'</span>,<span class="string">'PlotBedElevation'</span>);
+0292 set(secondary_vector_handles,       <span class="string">'Tag'</span>,<span class="string">'SecondaryVectors'</span>)
+0293 set(ref_vector_text_handle,         <span class="string">'Tag'</span>,<span class="string">'ReferenceVectorText'</span>)
+0294 set(title_handle,                   <span class="string">'Tag'</span>,<span class="string">'ContourPlotTitle'</span>)
+0295 set(ylabel_handle,                  <span class="string">'Tag'</span>,<span class="string">'yLabelText'</span>)
+0296 set(xlabel_handle,                  <span class="string">'Tag'</span>,<span class="string">'xLabelText'</span>)
+0297 
+0298 <span class="comment">% Adjust the plot</span>
+0299 set(gca,<span class="keyword">...</span>
+0300     <span class="string">'DataAspectRatio'</span>,   [exag 1 1],<span class="keyword">...</span>
+0301     <span class="string">'PlotBoxAspectRatio'</span>,[exag 1 1]<span class="keyword">...</span>
+0302     <span class="keyword">...</span><span class="comment">'FontSize',          14)</span>
+0303     )
+0304 <span class="comment">% set(get(gca,'Title'),   'FontSize',14,'Color','w')</span>
+0305 <span class="comment">% set(get(gca,'xlabel'),  'FontSize',14,'Color','w')</span>
+0306 <span class="comment">% set(get(gca,'ylabel'),  'FontSize',14,'Color','w')</span>
+0307 <span class="comment">% set(gca,...</span>
+0308 <span class="comment">%     'XColor','w',...</span>
+0309 <span class="comment">%     'YColor','w',...</span>
+0310 <span class="comment">%     'ZColor','w',...</span>
+0311 <span class="comment">%     'Color',[0.3 0.3 0.3])</span>
+0312 <span class="comment">% set(gcf,...</span>
+0313 <span class="comment">%     'InvertHardCopy','off',...</span>
+0314 <span class="comment">%     'Color','k')</span>
+0315 <span class="keyword">if</span> 1  <span class="comment">%Set the vector line widths</span>
+0316     VectorLineWidth = 1.0;
+0317     set(secondary_vector_handles  ,<span class="string">'LineWidth'</span>,VectorLineWidth)
+0318 <span class="keyword">end</span>
+0319 
+0320 
+0321 
+0322 <span class="comment">% scrsz = get(0,'ScreenSize');</span>
+0323 <span class="comment">% figure('OuterPosition',[1 scrsz(4) scrsz(3) scrsz(4)])</span>
+0324 
+0325 <span class="comment">%Display the ratio of the mean secondary and primary velocity magnitudes</span>
+0326 spratio_zsd = nanmedian(nanmedian(abs(V.vs)))./nanmedian(nanmedian(abs(V.vp)));
+0327 spratio_roz = nanmedian(nanmedian(abs(V.Roz.usy)))./nanmedian(nanmedian(abs(V.Roz.up)));
+0328 <span class="comment">% disp(['Ratio of median Secondary to median Primary Velocity (zsd) = ' num2str(spratio_zsd)])</span>
+0329 <span class="comment">% disp(['Ratio of median Secondary to median Primary Velocity (roz) = ' num2str(spratio_roz)])</span>
+0330 log_text = vertcat(log_text,<span class="keyword">...</span>
+0331     {[<span class="string">'   Ratio of median Secondary to median Primary Velocity (zsd) = '</span> num2str(spratio_zsd)];<span class="keyword">...</span>
+0332     [<span class="string">'   Ratio of median Secondary to median Primary Velocity (roz) = '</span> num2str(spratio_roz)]}<span class="keyword">...</span>
+0333     );
+0334 
+0335 <span class="keyword">return</span>
+0336 
+0337 
+0338 <span class="comment">%Add labels to the reference arrow and colorbar</span>
+0339 <span class="comment">% text(50,12,['Vertical Distances Exaggerated by ',num2str(exag)],'FontSize',16)</span>
+0340 <span class="comment">% text(140,17,'10 cm/s','FontSize',16)</span>
+0341</pre></div>
+<hr><address>Generated on Tue 29-Apr-2014 14:30:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
