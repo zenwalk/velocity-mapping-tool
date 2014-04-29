@@ -1363,7 +1363,7 @@ function menuHelp_Callback(hObject, eventdata, handles)
 function menuUsersGuide_Callback(hObject, eventdata, handles)
 guiparams = getappdata(handles.figure1,'guiparams');
 try % to open the User Guide PDF
-    open(['VMT User Guide ' guiparams.vmt_version '.pdf']);
+    open([pwd filesep 'doc' filesep 'VMT User Guide ' guiparams.vmt_version '.pdf']);
     
 catch err %#ok<NASGU>
     
