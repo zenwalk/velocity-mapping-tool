@@ -5179,6 +5179,8 @@ switch input
             % ---------------
             set_enable(handles,'fileloaded')
         end  
+    case 'shiftcontroll' % Call SontekMAT2KML
+        SontekMAT2KML;
     case 'f1' % Call the VMT UsersGuide
         menuUsersGuide_Callback(hObject, eventdata, handles)
         
