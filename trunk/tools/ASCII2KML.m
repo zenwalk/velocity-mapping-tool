@@ -8,7 +8,7 @@ function [log_text,zPathName,zFileName] = ASCII2KML(inpath,infile)
 %(adapted from code by J. Czuba)
 
 % P.R. Jackson 9/4/09
-% Last Modified: Frank L. Engel, 3/13/2013
+% Last Modified: Frank L. Engel, 6/4/2014
 
 %% Read and Convert the Data
 
@@ -16,7 +16,7 @@ function [log_text,zPathName,zFileName] = ASCII2KML(inpath,infile)
 % Prompt user for directory containing files
 current_file = fullfile(inpath,infile);
 [zFileName,zPathName] = uigetfile({'*_ASC.TXT','ASCII (*_ASC.TXT)'}, ...
-    'Select the ASCII Output Files', ...
+    'Convert WRII ASCII output file(s) to KML: Select the ASCII Output Files', ...
     current_file, ...
     'MultiSelect','on');
 if ~ischar(zFileName) && ~iscell(zFileName) % User hit cancel, get out quick
