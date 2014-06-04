@@ -1249,6 +1249,32 @@ if ~isempty(hf) &&  any(ishandle(hf))
                     set(get(gca,'Title'),'FontSize',FntSize,'Color',AxColor)
                     set(get(gca,'xLabel'),'FontSize',FntSize,'Color',AxColor)
                     set(get(gca,'yLabel'),'FontSize',FntSize,'Color',AxColor)
+                    
+                    % Add a text object at the bottom of the figure with
+                    % the file(s) and path for the data
+                    ismultiplot = numel(guiparams.mat_file)>1;
+                    if ~ismultiplot
+                        filestr = guiparams.savefile;
+                        wd = length(filestr);
+                        hd = 1;
+                    else
+                        % Construct a filename
+                        filestr   = [{guiparams.mat_path};guiparams.mat_file'];
+                        wd        = max(cellfun(@length,filestr));
+                        hd        = numel(filestr);
+                            
+                    end
+                    
+                    fileinfotxt = uicontrol('style','text','units','characters');
+                    set(fileinfotxt,...
+                        'string',filestr)
+                    set(fileinfotxt,...
+                        'position',[0,0,wd,hd],...
+                        'Fontsize',FntSize/2,...
+                        'ForegroundColor',AxColor,...
+                        'BackgroundColor',BkgdColor,...
+                        'HorizontalAlignment','Left')
+                    
                 end
             case 'Mean Cross Section Contour'
                 % Focus the figure
@@ -1270,6 +1296,31 @@ if ~isempty(hf) &&  any(ishandle(hf))
                     set(get(gca,'yLabel'),'FontSize',FntSize,'Color',AxColor)
                     set(findobj(gca,'tag','PlotBedElevation')   ,'color'    ,AxColor)
                     set(findobj(gca,'tag','ReferenceVectorText'),'color'    ,AxColor)
+                    
+                    % Add a text object at the bottom of the figure with
+                    % the file(s) and path for the data
+                    ismultiplot = numel(guiparams.mat_file)>1;
+                    if ~ismultiplot
+                        filestr = guiparams.savefile;
+                        wd = length(filestr);
+                        hd = 1;
+                    else
+                        % Construct a filename
+                        filestr   = [{guiparams.mat_path};guiparams.mat_file'];
+                        wd        = max(cellfun(@length,filestr));
+                        hd        = numel(filestr);
+                            
+                    end
+                    
+                    fileinfotxt = uicontrol('style','text','units','characters');
+                    set(fileinfotxt,...
+                        'string',filestr)
+                    set(fileinfotxt,...
+                        'position',[0,0,wd,hd],...
+                        'Fontsize',FntSize/2,...
+                        'ForegroundColor',AxColor,...
+                        'BackgroundColor',BkgdColor,...
+                        'HorizontalAlignment','Left')
                 end
             otherwise
         end

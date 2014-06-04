@@ -220,14 +220,15 @@ if plot_english %english units
         case{'secondary_roz_y'}
             title_handle = title({['Secondary Velocity (Rozovskii Definition; Cross-Stream Component) ' unitlabel];['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'backscatter'}
-            title({'Backscatter Intensity (dB)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
+            title_handle = title({'Backscatter Intensity (dB)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
         case{'flowangle'}
             title_handle = title({'Flow Direction (deg)';['with secondary flow vectors (' secvecvar ')']},'Interpreter','none');
     end
 
     ylabel_handle = ylabel('Depth (ft)');
     xlabel_handle = xlabel('Distance (ft)');
-    ref_vector_text_handle = text(x1*3.281, x2*3.281+.5,[num2str(refvel*0.03281,3) ' ft/s'],'FontSize',12,'Color','w');
+    rf_label_pos = [0.06*max(max(V.mcsDist)) 0.9*max(max(V.mcsBed))].*3.28084; % Conversion is to meters
+    ref_vector_text_handle = text(rf_label_pos(1), rf_label_pos(2),[num2str(refvel*0.03281,3) ' ft/s'],'FontSize',12,'Color','w');
 else %metric units
     hh = quiverc2wcmap(toquiv(:,1),toquiv(:,2),toquiv(:,3),toquiv(:,4),0,toquiv(:,5),exag);
     %plot(V.mcsDist(1,:),V.mcsBed,'w', 'LineWidth',2); hold on
@@ -284,7 +285,8 @@ else %metric units
 
     ylabel_handle = ylabel('Depth (m)');
     xlabel_handle = xlabel('Distance (m)');
-    ref_vector_text_handle = text(x1, x2+.16,[num2str(refvel) ' cm/s'],'FontSize',12,'Color','w');
+    rf_label_pos = [0.06*max(max(V.mcsDist)) 0.9*max(max(V.mcsBed))]; 
+    ref_vector_text_handle = text(rf_label_pos(1), rf_label_pos(2),[num2str(refvel) ' cm/s'],'FontSize',12,'Color','w');
 end
 
 % Tag the elements in the figure
