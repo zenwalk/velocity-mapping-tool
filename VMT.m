@@ -1266,6 +1266,12 @@ if ~isempty(hf) &&  any(ishandle(hf))
                     end
                     
                     fileinfotxt = uicontrol('style','text','units','characters');
+                    
+                    % Have to turn the toolbar back on after adding a uicontrol
+                    set(figure(hff), 'toolbar','figure')  
+                    % Turn off the menu bar, and keep only specified tools
+                    disableMenuBar(hff)
+                    
                     set(fileinfotxt,...
                         'string',filestr)
                     set(fileinfotxt,...
@@ -1313,6 +1319,12 @@ if ~isempty(hf) &&  any(ishandle(hf))
                     end
                     
                     fileinfotxt = uicontrol('style','text','units','characters');
+                    
+                    % Have to turn the toolbar back on after adding a uicontrol
+                    set(figure(hff), 'toolbar','figure')  
+                    % Turn off the menu bar, and keep only specified tools
+                    disableMenuBar(hff)
+                    
                     set(fileinfotxt,...
                         'string',filestr)
                     set(fileinfotxt,...
