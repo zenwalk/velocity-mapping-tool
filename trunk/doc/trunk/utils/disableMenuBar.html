@@ -66,13 +66,13 @@ This function is called by:
 0018 hide_tools = vertcat(hide_tools,findall(all_tools,<span class="string">'ToolTipString'</span>,<span class="string">'Save'</span>)); 
 0019 hide_tools = vertcat(hide_tools,findall(all_tools,<span class="string">'ToolTipString'</span>,<span class="string">'Brush/Select Data'</span>)); 
 0020 hide_tools = vertcat(hide_tools,findall(all_tools,<span class="string">'ToolTipString'</span>,<span class="string">'Link Plot'</span>)); 
-0021 <span class="comment">% set(hide_tools,'Visible','Off')</span>
+0021 set(hide_tools,<span class="string">'Visible'</span>,<span class="string">'Off'</span>)
 0022 
 0023 hide_menu = findall(all_tools,<span class="string">'tag'</span>,<span class="string">'figMenuDesktop'</span>);
 0024 hide_menu = vertcat(hide_menu,findall(all_tools,<span class="string">'tag'</span>,<span class="string">'figMenuWindow'</span>));
 0025 hide_menu = vertcat(hide_menu,findall(all_tools,<span class="string">'tag'</span>,<span class="string">'figMenuTools'</span>));
 0026 hide_menu = vertcat(hide_menu,findall(all_tools,<span class="string">'tag'</span>,<span class="string">'figMenuInsert'</span>));
-0027 <span class="comment">% set(hide_menu,'visible','off')</span></pre></div>
-<hr><address>Generated on Wed 04-Jun-2014 14:21:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+0027 set(hide_menu,<span class="string">'visible'</span>,<span class="string">'off'</span>)</pre></div>
+<hr><address>Generated on Thu 19-Jun-2014 12:17:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

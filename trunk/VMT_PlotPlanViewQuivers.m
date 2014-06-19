@@ -55,8 +55,9 @@ else
     %set(gca,'DataAspectRatio',[1 1 1],'PlotBoxAspectRatio',[1 1 1])
 end
 
-% Turn off the menu bar, and keep only specified tools
-disableMenuBar(fig_planview_handle)
+% Turn off the menu bar, and keep only specified tools (moved into
+% print/presentation callback, VMT.m)
+% disableMenuBar(fig_planview_handle)
 
 % Parse optional arguements
 minrng       = [];

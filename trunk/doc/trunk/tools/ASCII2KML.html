@@ -53,7 +53,7 @@ This function is called by:
 0008 <span class="comment">%(adapted from code by J. Czuba)</span>
 0009 
 0010 <span class="comment">% P.R. Jackson 9/4/09</span>
-0011 <span class="comment">% Last Modified: Frank L. Engel, 3/13/2013</span>
+0011 <span class="comment">% Last Modified: Frank L. Engel, 6/4/2014</span>
 0012 
 0013 <span class="comment">%% Read and Convert the Data</span>
 0014 
@@ -61,7 +61,7 @@ This function is called by:
 0016 <span class="comment">% Prompt user for directory containing files</span>
 0017 current_file = fullfile(inpath,infile);
 0018 [zFileName,zPathName] = uigetfile({<span class="string">'*_ASC.TXT'</span>,<span class="string">'ASCII (*_ASC.TXT)'</span>}, <span class="keyword">...</span>
-0019     <span class="string">'Select the ASCII Output Files'</span>, <span class="keyword">...</span>
+0019     <span class="string">'Convert WRII ASCII output file(s) to KML: Select the ASCII Output Files'</span>, <span class="keyword">...</span>
 0020     current_file, <span class="keyword">...</span>
 0021     <span class="string">'MultiSelect'</span>,<span class="string">'on'</span>);
 0022 <span class="keyword">if</span> ~ischar(zFileName) &amp;&amp; ~iscell(zFileName) <span class="comment">% User hit cancel, get out quick</span>
@@ -162,6 +162,6 @@ This function is called by:
 0117 fprintf(fid, <span class="string">'%s'</span>, footer);
 0118 fclose(fid);
 0119</pre></div>
-<hr><address>Generated on Wed 04-Jun-2014 14:21:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 19-Jun-2014 12:17:52 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
