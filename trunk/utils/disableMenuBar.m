@@ -22,6 +22,6 @@ set(hide_tools,'Visible','Off')
 
 hide_menu = findall(all_tools,'tag','figMenuDesktop');
 hide_menu = vertcat(hide_menu,findall(all_tools,'tag','figMenuWindow'));
-hide_menu = vertcat(hide_menu,findall(all_tools,'tag','figMenuTools'));
+% hide_menu = vertcat(hide_menu,findall(all_tools,'tag','figMenuTools'));
 hide_menu = vertcat(hide_menu,findall(all_tools,'tag','figMenuInsert'));
 set(hide_menu,'visible','off')
