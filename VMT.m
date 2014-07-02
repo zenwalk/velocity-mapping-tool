@@ -1265,7 +1265,9 @@ if ~isempty(hf) &&  any(ishandle(hf))
                             
                     end
                     
-                    fileinfotxt = uicontrol('style','text','units','characters');
+                    fileinfotxt = uicontrol('style','text',...
+                        'units','characters',...
+                        'tag','fileinfotxt');
                     
                     % Have to turn the toolbar back on after adding a uicontrol
                     set(figure(hff), 'toolbar','figure')  
@@ -1318,7 +1320,9 @@ if ~isempty(hf) &&  any(ishandle(hf))
                             
                     end
                     
-                    fileinfotxt = uicontrol('style','text','units','characters');
+                    fileinfotxt = uicontrol('style','text',...
+                        'units','characters',...
+                        'tag','fileinfotxt');
                     
                     % Have to turn the toolbar back on after adding a uicontrol
                     set(figure(hff), 'toolbar','figure')  
